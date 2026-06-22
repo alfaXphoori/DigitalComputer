@@ -1,10 +1,10 @@
 /* ============================================================
-   เทคโนโลยีดิจิทัลสำหรับวิศวกรรม (Digital Technology for Engineering) — site styles
+   ลอจิกและดิจิทัล (Logic and Digital) — site styles
    ============================================================ */
 
 :root {
-  --indigo: #0d9488;
-  --indigo-dark: #0f766e;
+  --indigo: #4f46e5;
+  --indigo-dark: #4338ca;
   --cyan: #06b6d4;
   --amber: #f59e0b;
   --amber-soft: #fef3c7;
@@ -17,7 +17,7 @@
   --radius: 16px;
   --shadow-sm: 0 1px 2px rgba(15, 23, 42, .06), 0 1px 3px rgba(15, 23, 42, .08);
   --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, .10), 0 8px 10px -6px rgba(15, 23, 42, .06);
-  --grad: linear-gradient(135deg, #0891b2 0%, #0d9488 45%, #10b981 100%);
+  --grad: linear-gradient(135deg, #4f46e5 0%, #6366f1 40%, #06b6d4 100%);
 }
 
 * { box-sizing: border-box; }
@@ -133,7 +133,7 @@ a:hover { text-decoration: underline; }
 }
 .clo__tag {
   font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: .85rem;
-  color: var(--indigo); background: #ccfbf1; padding: 4px 10px; border-radius: 8px; display: inline-block; margin-bottom: 12px;
+  color: var(--indigo); background: #eef2ff; padding: 4px 10px; border-radius: 8px; display: inline-block; margin-bottom: 12px;
 }
 .clo h3 { margin: 0 0 8px; font-size: 1.1rem; color: var(--ink); }
 .clo p { margin: 0; color: var(--muted); font-size: .96rem; }
@@ -287,7 +287,7 @@ table.schedule tbody tr:hover { background: #f8fafc; }
   display: grid;
   place-items: center;
   border-radius: 12px;
-  background: #ccfbf1;
+  background: #eef2ff;
   color: var(--indigo);
   font-size: 1.35rem;
 }
@@ -309,7 +309,7 @@ table.schedule tbody tr:hover { background: #f8fafc; }
 
 /* ---------- Footer ---------- */
 .site-footer { background: var(--ink); color: #cbd5e1; padding: 40px 0; margin-top: 0; }
-.site-footer a { color: #5eead4; }
+.site-footer a { color: #93c5fd; }
 .footer__grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; }
 .footer__brand { font-weight: 700; color: #fff; font-size: 1.05rem; }
 .footer__heading { font-weight: 700; color: #fff; font-size: .95rem; margin-bottom: 6px; }
@@ -328,7 +328,7 @@ table.schedule tbody tr:hover { background: #f8fafc; }
 .prose code { background: #f1f5f9; padding: 2px 6px; border-radius: 6px; font-family: "JetBrains Mono", monospace; font-size: .9em; }
 .prose pre { background: var(--ink); color: #e2e8f0; padding: 18px; border-radius: 12px; overflow-x: auto; }
 .prose pre code { background: none; padding: 0; color: inherit; }
-.prose blockquote { margin: 1.2em 0; padding: 12px 18px; border-left: 4px solid var(--indigo); background: #ecfdf5; border-radius: 0 10px 10px 0; color: #334155; }
+.prose blockquote { margin: 1.2em 0; padding: 12px 18px; border-left: 4px solid var(--indigo); background: #eef2ff; border-radius: 0 10px 10px 0; color: #334155; }
 .prose img { max-width: 100%; height: auto; border-radius: 10px; }
 .prose hr { border: none; border-top: 1px solid var(--line); margin: 2em 0; }
 .back-link { display: inline-flex; align-items: center; gap: 6px; margin: 28px auto 0; max-width: 920px; padding: 0 20px; color: var(--muted); }
@@ -355,50 +355,4 @@ table.schedule tbody tr:hover { background: #f8fafc; }
     border-radius: 10px;
     font-size: 1.15rem;
   }
-}
-
-/* ---------- Grade bar chart (horizontal) ---------- */
-.grade-chart {
-  max-width: 760px; margin: 0 auto;
-  background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
-  padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-sm);
-}
-.grade-row {
-  display: grid; grid-template-columns: 46px 1fr 168px; align-items: center;
-  gap: 14px; margin-bottom: 12px;
-}
-.grade-row:last-of-type { margin-bottom: 0; }
-.grade-row__label {
-  font-family: "JetBrains Mono", monospace; font-weight: 800;
-  color: var(--ink); text-align: center; font-size: 1.02rem;
-}
-.grade-row__track {
-  position: relative; height: 28px; background: #f1f5f9;
-  border-radius: 8px; overflow: hidden;
-}
-.grade-row__bar {
-  position: absolute; top: 0; bottom: 0; border-radius: 7px;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.18);
-  transition: filter .15s ease;
-}
-.grade-row:hover .grade-row__bar { filter: brightness(1.08); }
-.grade-row__meta { font-size: .9rem; color: var(--muted); line-height: 1.4; }
-.grade-row__meta b { color: var(--ink); font-family: "JetBrains Mono", monospace; }
-.grade-A  { background: #15803d; }
-.grade-Bp { background: #16a34a; }
-.grade-B  { background: #65a30d; }
-.grade-Cp { background: #ca8a04; }
-.grade-C  { background: #d97706; }
-.grade-Dp { background: #ea580c; }
-.grade-D  { background: #dc2626; }
-.grade-F  { background: #991b1b; }
-.grade-axis { display: grid; grid-template-columns: 46px 1fr 168px; gap: 14px; margin-top: 10px; }
-.grade-axis__scale {
-  grid-column: 2; display: flex; justify-content: space-between;
-  font-size: .72rem; color: var(--muted); font-family: "JetBrains Mono", monospace;
-}
-@media (max-width: 560px) {
-  .grade-row { grid-template-columns: 36px 1fr; }
-  .grade-row__meta { grid-column: 2; font-size: .82rem; }
-  .grade-axis { grid-template-columns: 36px 1fr; }
 }

@@ -1,88 +1,89 @@
-# สรุปบทเรียนรายวิชา Digital Computer Logic
+# Summary: สรุปภาพรวมวิชา Digital Logic
 
-เอกสารนี้ใช้ทบทวนภาพรวมก่อนสอบกลางภาคและสอบปลายภาค โดยเชื่อมโยงบทเรียน 10 บทกับทักษะที่ต้องทำได้จริงในการออกแบบวงจรดิจิทัล
+วิชา Digital Logic (ลอจิกดิจิทัล) เป็นพื้นฐานสำคัญของวิศวกรรมคอมพิวเตอร์และระบบสมองกลฝังตัว โดยแบ่งเนื้อหาหลักออกเป็น 2 ส่วนใหญ่ ๆ คือ วงจรเชิงผสม (Combinational Logic) และ วงจรเชิงลำดับ (Sequential Logic)
 
-## แผนที่แนวคิด
+---
 
-```text
-ระบบตัวเลขและรหัส
-      ↓
-เกตตรรกะและนิพจน์ → พีชคณิตบูลีน → K-map → Quine-McCluskey
-      ↓                                      ↓
-วงจรเชิงผสม: adder/subtractor, decoder, encoder, MUX/DEMUX, tristate/timing
-      ↓
-วงจรเชิงลำดับ: latch/flip-flop → counter/register → FSM เบื้องต้น
-```
+## 1. เนื้อหาหลักที่เรียน
 
-## ตารางสรุป 10 บท
+### 1.1 พื้นฐาน (Fundamentals)
+- **ระบบเลขฐาน:** การแปลงเลขฐาน 2, 8, 10, 16, ทศนิยม IEEE 754 และการคำนวณ (Binary Arithmetic / 2's Complement)
+- **รหัสดิจิทัล:** BCD, Gray Code, ASCII, Unicode และการตรวจจับข้อผิดพลาด (Parity, Hamming Code)
+- **ลอจิกเกต:** AND, OR, NOT, NAND, NOR, XOR, XNOR (พร้อมเรื่อง Tri-State, Open-Collector)
 
-| บท | หัวข้อ | สิ่งที่ต้องทำได้ |
-|:---:|---|---|
-| 1 | ระบบตัวเลขและรหัส | แปลงฐาน 2/8/10/16, ใช้ two's complement, อธิบาย BCD/Gray/ASCII |
-| 2 | เกตตรรกะ | เขียนตารางความจริงและสร้างวงจรจากเกตพื้นฐาน/เกตสากล |
-| 3 | พีชคณิตบูลีน | ลดรูปด้วยกฎบูลีนและแปลง SOP/POS, minterm/maxterm |
-| 4 | K-map | จับกลุ่ม K-map 2-5 ตัวแปรและใช้ don't care อย่างถูกต้อง |
-| 5 | วิธีตาราง | หา prime implicant, essential PI และสร้าง PI chart |
-| 6 | วงจรบวก/ลบ | ออกแบบ half/full adder, subtractor, BCD adder และตรวจ overflow |
-| 7 | Decoder/Encoder/MUX | ใช้ decoder, encoder, MUX/DEMUX, 7-segment และวงจรแสดงผลพหุคูณ |
-| 8 | Tristate/Timing | อธิบาย bus, delay, fan-out, glitch/hazard และการแก้ไข |
-| 9 | Flip-flop | ใช้ characteristic/excitation table และวาด timing diagram |
-| 10 | Counter/Register | ออกแบบ counter, register, shift register และ FSM เบื้องต้น |
+### 1.2 วงจรเชิงผสม (Combinational Logic)
+- **การลดรูป:** Boolean Algebra, DeMorgan's Theorem, Shannon's Expansion และ K-Map (รวมถึง 5 ตัวแปร)
+- **วงจรคำนวณ:** Adder (Ripple Carry, CLA), Subtractor, Comparator, ALU
+- **วงจรจัดการข้อมูล:** Encoder, Decoder, Multiplexer (MUX), Demultiplexer (DEMUX), Barrel Shifter
 
-## สูตรและกฎที่ใช้บ่อย
+### 1.3 วงจรเชิงลำดับ (Sequential Logic)
+- **หน่วยความจำพื้นฐาน:** Latches และ Flip-Flops (SR, D, JK, T) รวมปัญหา Race-Around และ Metastability
+- **ตัวนับและรีจิสเตอร์:** Async/Sync Counter, Clock Divider, Shift Registers (SISO, SIPO, PISO, PIPO), LFSR
+- **การออกแบบระบบ:** Finite State Machines (FSM) - Moore และ Mealy Machines พร้อมเทคนิค State Reduction
 
-| เรื่อง | สูตร/กฎ |
-|---|---|
-| two's complement | กลับบิตแล้วบวก 1 |
-| XOR | `A ⊕ B = A'B + AB'` |
-| De Morgan | `(AB)' = A' + B'`, `(A+B)' = A'B'` |
-| full adder | `S = A ⊕ B ⊕ Cin`, `Cout = AB + ACin + BCin` |
-| overflow signed | `V = Cin(MSB) ⊕ Cout(MSB)` |
-| D flip-flop | `Q_next = D` |
-| T flip-flop | `Q_next = T ⊕ Q` |
+### 1.4 ระบบขั้นสูง (Advanced Systems)
+- **หน่วยความจำ:** RAM (SRAM, DRAM) และ ROM (PROM, EPROM, EEPROM, NAND/NOR Flash)
+- **อุปกรณ์ลอจิกโปรแกรมได้:** PLA, PAL, CPLD และ FPGA
+- **การเชื่อมต่อ:** ADC (Analog-to-Digital) และ DAC (Digital-to-Analog) พร้อม Serial Protocols (UART, I2C, SPI)
 
-## Checklist ก่อนสอบ
+---
 
-- [ ] ทำโจทย์แปลงฐานและ two's complement ได้โดยไม่ใช้เครื่องคิดเลข
-- [ ] เขียน truth table จากวงจรและวาดวงจรจาก truth table ได้
-- [ ] ลดรูปฟังก์ชันด้วย algebra, K-map และ tabulation อย่างน้อยวิธีละ 1 ข้อ
-- [ ] ออกแบบ adder/subtractor 4 บิตและอธิบาย overflow ได้
-- [ ] ใช้ MUX implement ฟังก์ชัน 3 ตัวแปรได้
-- [ ] อ่าน timing diagram ของ flip-flop และ counter ได้
-- [ ] ออกแบบ synchronous counter จาก state table ได้
+## 2. สูตรลัดและตารางสรุปที่สำคัญ (Cheat Sheet)
 
-## ลิงก์บทเรียน
+### ลอจิกเกตพื้นฐาน
 
-- [บทที่ 1 ระบบตัวเลขและรหัส](ch01-number-systems/)
-- [บทที่ 2 เกตตรรกะ](ch02-logic-gates/)
-- [บทที่ 3 พีชคณิตบูลีน](ch03-boolean-algebra/)
-- [บทที่ 4 ผังคาร์โนห์](ch04-karnaugh-map/)
-- [บทที่ 5 วิธีการใช้ตาราง](ch05-tabulation-method/)
-- [บทที่ 6 วงจรบวกและวงจรลบ](ch06-combinational-arithmetic/)
-- [บทที่ 7 Decoder/Encoder/MUX](ch07-decoder-encoder-mux/)
-- [บทที่ 8 Tristate และ Timing](ch08-tristate-timing/)
-- [บทที่ 9 Sequential และ Flip-flop](ch09-sequential-flipflop/)
-- [บทที่ 10 Counter และ Register](ch10-counter-register/)
+| Gate | Output = 1 เมื่อ... | สมการ |
+|:---:|:---|:---:|
+| **AND** | ทุกอินพุตเป็น 1 | $Y = AB$ |
+| **OR** | มีอินพุตใดอินพุตหนึ่งเป็น 1 | $Y = A+B$ |
+| **NOT** | อินพุตเป็น 0 | $Y = \bar{A}$ |
+| **NAND**| อินพุตไม่เป็น 1 พร้อมกันหมด | $Y = \overline{AB}$ |
+| **NOR** | ทุกอินพุตเป็น 0 | $Y = \overline{A+B}$ |
+| **XOR** | อินพุตต่างกัน | $Y = A \oplus B$ |
+| **XNOR**| อินพุตเหมือนกัน | $Y = A \odot B$ |
 
-## ลิงก์ปฏิบัติการ (Labs)
+### เอกลักษณ์บูลีน (Boolean Identities) ที่ใช้บ่อย
 
-- [Lab 1 — รู้จัก Logisim และระบบตัวเลข/การแปลงฐาน](../labs/lab01-logisim-number-systems.html)
-- [Lab 2 — รหัส BCD, Gray code และการแปลงรหัส](../labs/lab02-codes-bcd-gray.html)
-- [Lab 3 — เกตตรรกะพื้นฐานและตารางความจริง](../labs/lab03-logic-gates.html)
-- [Lab 4 — พิสูจน์ทฤษฎีบูลีน เดอมอร์แกน และ universal gates](../labs/lab04-boolean-demorgan.html)
-- [Lab 5 — ลดรูปด้วยผังคาร์โนห์และสร้างวงจร](../labs/lab05-karnaugh-map.html)
-- [Lab 6 — วิธีการใช้ตาราง (Quine–McCluskey)](../labs/lab06-tabulation-method.html)
-- [Lab 7 — วงจรบวกครึ่งและบวกเต็ม](../labs/lab07-half-full-adder.html)
-- [Lab 8 — วงจรบวก/ลบ 4 บิตและการตรวจ overflow](../labs/lab08-adder-subtractor.html)
-- [Lab 9 — วงจรถอดรหัสและการขับ 7-segment](../labs/lab09-decoder-7segment.html)
-- [Lab 10 — วงจรลงรหัสและ priority encoder](../labs/lab10-encoder-priority.html)
-- [Lab 11 — มัลติเพล็กเซอร์/ดีมัลติเพล็กเซอร์](../labs/lab11-mux-demux.html)
-- [Lab 12 — ฟลิปฟลอป SR/D/JK/T และ timing diagram](../labs/lab12-flip-flops.html)
-- [Lab 13 — เคาน์เตอร์อะซิงโครนัสและซิงโครนัส](../labs/lab13-counters.html)
-- [Lab 14 — เรจิสเตอร์และชิฟต์เรจิสเตอร์](../labs/lab14-shift-registers.html)
-- [Lab 15 — โปรเจกต์ย่อย: ออกแบบวงจรดิจิทัล](../labs/lab15-mini-project.html)
+- **Double Negation:** $\bar{\bar{A}} = A$
+- **DeMorgan:** $\overline{AB} = \bar{A} + \bar{B}$ และ $\overline{A+B} = \bar{A}\cdot\bar{B}$
+- **Absorption:** $A + AB = A$ และ $A(A+B) = A$
+- **Complement:** $A + \bar{A} = 1$ และ $A \cdot \bar{A} = 0$
+- **Distributive:** $A + BC = (A+B)(A+C)$  *(ใช้บ่อยมากในการลดรูป!)*
 
-## เอกสารที่เกี่ยวข้อง
+---
 
-- [แผนการจัดการเรียนรู้รายสัปดาห์ (ฉบับเต็ม)](../weekly-lesson-plan.html)
-- [กลับหน้าแรกรายวิชา](../)
+## 3. ตารางสรุปไอซี (IC Reference)
+
+| IC | หน้าที่ | ประเภท |
+|:---:|:---|:---|
+| **7408** | Quad 2-input AND | Logic Gate |
+| **7432** | Quad 2-input OR | Logic Gate |
+| **7404** | Hex Inverter (NOT) | Logic Gate |
+| **7400** | Quad 2-input NAND | Logic Gate |
+| **7402** | Quad 2-input NOR | Logic Gate |
+| **7486** | Quad 2-input XOR | Logic Gate |
+| **7483** | 4-bit Binary Full Adder | Arithmetic |
+| **74138** | 3-to-8 Decoder / DEMUX | Data Routing |
+| **74151** | 8:1 Multiplexer | Data Routing |
+| **7473** | Dual JK Flip-Flop | Sequential |
+| **7474** | Dual D Flip-Flop | Sequential |
+| **7490** | Decade Counter (MOD-10) | Counter |
+| **74194** | 4-bit Universal Shift Register | Register |
+| **4511** | BCD to 7-Segment Decoder | Display |
+
+---
+
+## 4. แหล่งเรียนรู้เพิ่มเติม (Resources)
+
+- **Simulator:** 
+  - [Tinkercad Circuits](https://www.tinkercad.com/circuits) (วงจร IC จริง)
+  - [CircuitVerse](https://circuitverse.org/) (วาด Logic Gate ง่ายๆ)
+- **หนังสือแนะนำ:**
+  - *Digital Fundamentals* โดย Thomas L. Floyd
+  - *Digital Design* โดย M. Morris Mano
+- **คอร์สออนไลน์:**
+  - [Coursera: Digital Systems: From Logic Gates to Processors](https://www.coursera.org/learn/digital-systems)
+
+---
+
+> 🚀 **ความสำเร็จในการเรียน:** คือการเข้าใจหลักการและสามารถ "ออกแบบ" วงจรเพื่อแก้ปัญหาจริงในระดับฮาร์ดแวร์ได้ ขอให้สนุกกับการเรียน Digital Logic ครับ!
