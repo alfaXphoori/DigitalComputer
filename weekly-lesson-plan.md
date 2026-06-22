@@ -5,7 +5,7 @@
 | รายการ | รายละเอียด |
 |---|---|
 | **หน่วยกิต** | 3(2-3-6) — ทฤษฎี 2 ชม. ปฏิบัติ 3 ชม. ศึกษาด้วยตนเอง 6 ชม. ต่อสัปดาห์ |
-| **หลักสูตร** | วิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมคอมพิวเตอร์ สาขาวิชาวิศวกรรมคอมพิวเตอร์ (หมวดวิชาเฉพาะ : วิชาบังคับ) |
+| **หลักสูตร** | วิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมคอมพิวเตอร์ (หมวดวิชาเฉพาะ : วิชาบังคับ) |
 | **ชั้นปี / ภาคการศึกษา** | ชั้นปีที่ 1 — ภาคการศึกษาที่ 2 ปีการศึกษา 2568 |
 | **อาจารย์ผู้สอน** | นายภูริ จันทิมา (ผู้รับผิดชอบรายวิชาและผู้สอน) |
 | **รูปแบบ / สถานที่** | ออนไซต์ 100% ณ อาคารโรงงานวิศวกรรมคอมพิวเตอร์และระบบอัตโนมัติ — ผู้เรียนประมาณ 30 คน |
@@ -49,27 +49,27 @@
 
 | สัปดาห์ | บทเรียน | เนื้อหา | ปฏิบัติการ |
 |:---:|---|---|---|
-| 1 | บทที่ 1 | ระบบตัวเลข ฐานเลข การแปลงฐาน และ Logisim | [Lab 1](labs/lab01-logisim-number-systems.html) |
-| 2 | บทที่ 1/2 | รหัส BCD Gray ASCII และเริ่มเกตตรรกะ | [Lab 2](labs/lab02-codes-bcd-gray.html) |
-| 3 | บทที่ 2 | เกตตรรกะ ตารางความจริง และ universal gates | [Lab 3](labs/lab03-logic-gates.html) |
-| 4 | บทที่ 3 | พีชคณิตบูลีน เดอมอร์แกน SOP/POS | [Lab 4](labs/lab04-boolean-demorgan.html) |
-| 5 | บทที่ 4 | K-map 2-5 ตัวแปร และ don't care | [Lab 5](labs/lab05-karnaugh-map.html) |
-| 6 | บทที่ 5 | Quine-McCluskey และ prime implicant chart | [Lab 6](labs/lab06-tabulation-method.html) |
-| 7 | บทที่ 6 | half/full adder และ ripple-carry | [Lab 7](labs/lab07-half-full-adder.html) |
-| 8 | สอบกลางภาค + บทที่ 6 | สอบกลางภาค วงจรบวก/ลบ 4 บิต และ overflow | [Lab 8](labs/lab08-adder-subtractor.html) |
-| 9 | บทที่ 7 | decoder และ 7-segment | [Lab 9](labs/lab09-decoder-7segment.html) |
-| 10 | บทที่ 7 | encoder และ priority encoder | [Lab 10](labs/lab10-encoder-priority.html) |
-| 11 | บทที่ 7 | MUX/DEMUX และ implement ฟังก์ชัน | [Lab 11](labs/lab11-mux-demux.html) |
-| 12 | บทที่ 8 + เกริ่นบทที่ 9 | tristate bus, delay, hazard และฟลิปฟลอป | [Lab 12](labs/lab12-flip-flops.html) |
-| 13 | บทที่ 9/10 | ฟลิปฟลอปและ counter | [Lab 13](labs/lab13-counters.html) |
-| 14 | บทที่ 10 | register และ shift register | [Lab 14](labs/lab14-shift-registers.html) |
-| 15 | บทที่ 10 + นำเสนอ | FSM เบื้องต้น โปรเจกต์ย่อย และสอบปลายภาค | [Lab 15](labs/lab15-mini-project.html) |
+| 1 | [บทที่ 1](chapters/ch01-number-systems/) | ระบบตัวเลข ฐานเลข การแปลงฐาน และ Logisim | [Lab 1](labs/lab01-logisim-number-systems.html) |
+| 2 | [บทที่ 1](chapters/ch01-number-systems/)/[2](chapters/ch02-logic-gates/) | รหัส BCD Gray ASCII และเริ่มเกตตรรกะ | [Lab 2](labs/lab02-codes-bcd-gray.html) |
+| 3 | [บทที่ 2](chapters/ch02-logic-gates/) | เกตตรรกะ ตารางความจริง และ universal gates | [Lab 3](labs/lab03-logic-gates.html) |
+| 4 | [บทที่ 3](chapters/ch03-boolean-algebra/) | พีชคณิตบูลีน เดอมอร์แกน SOP/POS | [Lab 4](labs/lab04-boolean-demorgan.html) |
+| 5 | [บทที่ 4](chapters/ch04-karnaugh-map/) | K-map 2-5 ตัวแปร และ don't care | [Lab 5](labs/lab05-karnaugh-map.html) |
+| 6 | [บทที่ 5](chapters/ch05-tabulation-method/) | Quine-McCluskey และ prime implicant chart | [Lab 6](labs/lab06-tabulation-method.html) |
+| 7 | [บทที่ 6](chapters/ch06-combinational-arithmetic/) | half/full adder และ ripple-carry | [Lab 7](labs/lab07-half-full-adder.html) |
+| 8 | สอบกลางภาค + [บทที่ 6](chapters/ch06-combinational-arithmetic/) | สอบกลางภาค วงจรบวก/ลบ 4 บิต และ overflow | [Lab 8](labs/lab08-adder-subtractor.html) |
+| 9 | [บทที่ 7](chapters/ch07-decoder-encoder-mux/) | decoder และ 7-segment | [Lab 9](labs/lab09-decoder-7segment.html) |
+| 10 | [บทที่ 7](chapters/ch07-decoder-encoder-mux/) | encoder และ priority encoder | [Lab 10](labs/lab10-encoder-priority.html) |
+| 11 | [บทที่ 7](chapters/ch07-decoder-encoder-mux/) | MUX/DEMUX และ implement ฟังก์ชัน | [Lab 11](labs/lab11-mux-demux.html) |
+| 12 | [บทที่ 8](chapters/ch08-tristate-timing/) + เกริ่น[บทที่ 9](chapters/ch09-sequential-flipflop/) | tristate bus, delay, hazard และฟลิปฟลอป | [Lab 12](labs/lab12-flip-flops.html) |
+| 13 | [บทที่ 9](chapters/ch09-sequential-flipflop/)/[10](chapters/ch10-counter-register/) | ฟลิปฟลอปและ counter | [Lab 13](labs/lab13-counters.html) |
+| 14 | [บทที่ 10](chapters/ch10-counter-register/) | register และ shift register | [Lab 14](labs/lab14-shift-registers.html) |
+| 15 | [บทที่ 10](chapters/ch10-counter-register/) + นำเสนอ | FSM เบื้องต้น โปรเจกต์ย่อย และสอบปลายภาค | [Lab 15](labs/lab15-mini-project.html) |
 
 ---
 
 ## แผนการสอนรายสัปดาห์ฉบับเต็ม
 
-### สัปดาห์ที่ 1 — บทที่ 1: ระบบตัวเลข ฐานเลข การแปลงฐาน และ Logisim
+### สัปดาห์ที่ 1 — [บทที่ 1](chapters/ch01-number-systems/): ระบบตัวเลข ฐานเลข การแปลงฐาน และ Logisim
 
 **LLO**
 - **LLO1.1** อธิบายแนวคิดหลักของหัวข้อ `ระบบตัวเลข ฐานเลข การแปลงฐาน และ Logisim` และเชื่อมโยงกับ CLO1 ได้
@@ -81,7 +81,7 @@
 - **กิจกรรม/สื่อ:** บรรยายแบบมีปฏิสัมพันธ์, ตัวอย่างคำนวณบนกระดาน, Logisim Evolution, ดาต้าชีตไอซี 74xx และใบงานกลุ่ม
 - **ศึกษาด้วยตนเอง (6 ชม.):** อ่านบทเรียนที่เกี่ยวข้อง ทำแบบฝึกหัดท้ายบท เตรียมวงจรใน Logisim และเขียน reflection สั้น ๆ หลังปฏิบัติการ
 
-### สัปดาห์ที่ 2 — บทที่ 1/2: รหัส BCD Gray ASCII และเริ่มเกตตรรกะ
+### สัปดาห์ที่ 2 — [บทที่ 1](chapters/ch01-number-systems/)/[2](chapters/ch02-logic-gates/): รหัส BCD Gray ASCII และเริ่มเกตตรรกะ
 
 **LLO**
 - **LLO2.1** อธิบายแนวคิดหลักของหัวข้อ `รหัส BCD Gray ASCII และเริ่มเกตตรรกะ` และเชื่อมโยงกับ CLO1 ได้
@@ -93,7 +93,7 @@
 - **กิจกรรม/สื่อ:** บรรยายแบบมีปฏิสัมพันธ์, ตัวอย่างคำนวณบนกระดาน, Logisim Evolution, ดาต้าชีตไอซี 74xx และใบงานกลุ่ม
 - **ศึกษาด้วยตนเอง (6 ชม.):** อ่านบทเรียนที่เกี่ยวข้อง ทำแบบฝึกหัดท้ายบท เตรียมวงจรใน Logisim และเขียน reflection สั้น ๆ หลังปฏิบัติการ
 
-### สัปดาห์ที่ 3 — บทที่ 2: เกตตรรกะ ตารางความจริง และ universal gates
+### สัปดาห์ที่ 3 — [บทที่ 2](chapters/ch02-logic-gates/): เกตตรรกะ ตารางความจริง และ universal gates
 
 **LLO**
 - **LLO3.1** อธิบายแนวคิดหลักของหัวข้อ `เกตตรรกะ ตารางความจริง และ universal gates` และเชื่อมโยงกับ CLO2 ได้
@@ -105,7 +105,7 @@
 - **กิจกรรม/สื่อ:** บรรยายแบบมีปฏิสัมพันธ์, ตัวอย่างคำนวณบนกระดาน, Logisim Evolution, ดาต้าชีตไอซี 74xx และใบงานกลุ่ม
 - **ศึกษาด้วยตนเอง (6 ชม.):** อ่านบทเรียนที่เกี่ยวข้อง ทำแบบฝึกหัดท้ายบท เตรียมวงจรใน Logisim และเขียน reflection สั้น ๆ หลังปฏิบัติการ
 
-### สัปดาห์ที่ 4 — บทที่ 3: พีชคณิตบูลีน เดอมอร์แกน SOP/POS
+### สัปดาห์ที่ 4 — [บทที่ 3](chapters/ch03-boolean-algebra/): พีชคณิตบูลีน เดอมอร์แกน SOP/POS
 
 **LLO**
 - **LLO4.1** อธิบายแนวคิดหลักของหัวข้อ `พีชคณิตบูลีน เดอมอร์แกน SOP/POS` และเชื่อมโยงกับ CLO2 ได้
@@ -117,7 +117,7 @@
 - **กิจกรรม/สื่อ:** บรรยายแบบมีปฏิสัมพันธ์, ตัวอย่างคำนวณบนกระดาน, Logisim Evolution, ดาต้าชีตไอซี 74xx และใบงานกลุ่ม
 - **ศึกษาด้วยตนเอง (6 ชม.):** อ่านบทเรียนที่เกี่ยวข้อง ทำแบบฝึกหัดท้ายบท เตรียมวงจรใน Logisim และเขียน reflection สั้น ๆ หลังปฏิบัติการ
 
-### สัปดาห์ที่ 5 — บทที่ 4: K-map 2-5 ตัวแปร และ don't care
+### สัปดาห์ที่ 5 — [บทที่ 4](chapters/ch04-karnaugh-map/): K-map 2-5 ตัวแปร และ don't care
 
 **LLO**
 - **LLO5.1** อธิบายแนวคิดหลักของหัวข้อ `K-map 2-5 ตัวแปร และ don't care` และเชื่อมโยงกับ CLO2 ได้
@@ -129,7 +129,7 @@
 - **กิจกรรม/สื่อ:** บรรยายแบบมีปฏิสัมพันธ์, ตัวอย่างคำนวณบนกระดาน, Logisim Evolution, ดาต้าชีตไอซี 74xx และใบงานกลุ่ม
 - **ศึกษาด้วยตนเอง (6 ชม.):** อ่านบทเรียนที่เกี่ยวข้อง ทำแบบฝึกหัดท้ายบท เตรียมวงจรใน Logisim และเขียน reflection สั้น ๆ หลังปฏิบัติการ
 
-### สัปดาห์ที่ 6 — บทที่ 5: Quine-McCluskey และ prime implicant chart
+### สัปดาห์ที่ 6 — [บทที่ 5](chapters/ch05-tabulation-method/): Quine-McCluskey และ prime implicant chart
 
 **LLO**
 - **LLO6.1** อธิบายแนวคิดหลักของหัวข้อ `Quine-McCluskey และ prime implicant chart` และเชื่อมโยงกับ CLO3 ได้
@@ -141,7 +141,7 @@
 - **กิจกรรม/สื่อ:** บรรยายแบบมีปฏิสัมพันธ์, ตัวอย่างคำนวณบนกระดาน, Logisim Evolution, ดาต้าชีตไอซี 74xx และใบงานกลุ่ม
 - **ศึกษาด้วยตนเอง (6 ชม.):** อ่านบทเรียนที่เกี่ยวข้อง ทำแบบฝึกหัดท้ายบท เตรียมวงจรใน Logisim และเขียน reflection สั้น ๆ หลังปฏิบัติการ
 
-### สัปดาห์ที่ 7 — บทที่ 6: half/full adder และ ripple-carry
+### สัปดาห์ที่ 7 — [บทที่ 6](chapters/ch06-combinational-arithmetic/): half/full adder และ ripple-carry
 
 **LLO**
 - **LLO7.1** อธิบายแนวคิดหลักของหัวข้อ `half/full adder และ ripple-carry` และเชื่อมโยงกับ CLO3 ได้
@@ -153,7 +153,7 @@
 - **กิจกรรม/สื่อ:** บรรยายแบบมีปฏิสัมพันธ์, ตัวอย่างคำนวณบนกระดาน, Logisim Evolution, ดาต้าชีตไอซี 74xx และใบงานกลุ่ม
 - **ศึกษาด้วยตนเอง (6 ชม.):** อ่านบทเรียนที่เกี่ยวข้อง ทำแบบฝึกหัดท้ายบท เตรียมวงจรใน Logisim และเขียน reflection สั้น ๆ หลังปฏิบัติการ
 
-### สัปดาห์ที่ 8 — สอบกลางภาค + บทที่ 6: สอบกลางภาค วงจรบวก/ลบ 4 บิต และ overflow
+### สัปดาห์ที่ 8 — สอบกลางภาค + [บทที่ 6](chapters/ch06-combinational-arithmetic/): สอบกลางภาค วงจรบวก/ลบ 4 บิต และ overflow
 
 **LLO**
 - **LLO8.1** อธิบายแนวคิดหลักของหัวข้อ `สอบกลางภาค วงจรบวก/ลบ 4 บิต และ overflow` และเชื่อมโยงกับ CLO3 ได้
@@ -165,7 +165,7 @@
 - **กิจกรรม/สื่อ:** บรรยายแบบมีปฏิสัมพันธ์, ตัวอย่างคำนวณบนกระดาน, Logisim Evolution, ดาต้าชีตไอซี 74xx และใบงานกลุ่ม
 - **ศึกษาด้วยตนเอง (6 ชม.):** อ่านบทเรียนที่เกี่ยวข้อง ทำแบบฝึกหัดท้ายบท เตรียมวงจรใน Logisim และเขียน reflection สั้น ๆ หลังปฏิบัติการ
 
-### สัปดาห์ที่ 9 — บทที่ 7: decoder และ 7-segment
+### สัปดาห์ที่ 9 — [บทที่ 7](chapters/ch07-decoder-encoder-mux/): decoder และ 7-segment
 
 **LLO**
 - **LLO9.1** อธิบายแนวคิดหลักของหัวข้อ `decoder และ 7-segment` และเชื่อมโยงกับ CLO4 ได้
@@ -177,7 +177,7 @@
 - **กิจกรรม/สื่อ:** บรรยายแบบมีปฏิสัมพันธ์, ตัวอย่างคำนวณบนกระดาน, Logisim Evolution, ดาต้าชีตไอซี 74xx และใบงานกลุ่ม
 - **ศึกษาด้วยตนเอง (6 ชม.):** อ่านบทเรียนที่เกี่ยวข้อง ทำแบบฝึกหัดท้ายบท เตรียมวงจรใน Logisim และเขียน reflection สั้น ๆ หลังปฏิบัติการ
 
-### สัปดาห์ที่ 10 — บทที่ 7: encoder และ priority encoder
+### สัปดาห์ที่ 10 — [บทที่ 7](chapters/ch07-decoder-encoder-mux/): encoder และ priority encoder
 
 **LLO**
 - **LLO10.1** อธิบายแนวคิดหลักของหัวข้อ `encoder และ priority encoder` และเชื่อมโยงกับ CLO4 ได้
@@ -189,7 +189,7 @@
 - **กิจกรรม/สื่อ:** บรรยายแบบมีปฏิสัมพันธ์, ตัวอย่างคำนวณบนกระดาน, Logisim Evolution, ดาต้าชีตไอซี 74xx และใบงานกลุ่ม
 - **ศึกษาด้วยตนเอง (6 ชม.):** อ่านบทเรียนที่เกี่ยวข้อง ทำแบบฝึกหัดท้ายบท เตรียมวงจรใน Logisim และเขียน reflection สั้น ๆ หลังปฏิบัติการ
 
-### สัปดาห์ที่ 11 — บทที่ 7: MUX/DEMUX และ implement ฟังก์ชัน
+### สัปดาห์ที่ 11 — [บทที่ 7](chapters/ch07-decoder-encoder-mux/): MUX/DEMUX และ implement ฟังก์ชัน
 
 **LLO**
 - **LLO11.1** อธิบายแนวคิดหลักของหัวข้อ `MUX/DEMUX และ implement ฟังก์ชัน` และเชื่อมโยงกับ CLO4 ได้
@@ -201,7 +201,7 @@
 - **กิจกรรม/สื่อ:** บรรยายแบบมีปฏิสัมพันธ์, ตัวอย่างคำนวณบนกระดาน, Logisim Evolution, ดาต้าชีตไอซี 74xx และใบงานกลุ่ม
 - **ศึกษาด้วยตนเอง (6 ชม.):** อ่านบทเรียนที่เกี่ยวข้อง ทำแบบฝึกหัดท้ายบท เตรียมวงจรใน Logisim และเขียน reflection สั้น ๆ หลังปฏิบัติการ
 
-### สัปดาห์ที่ 12 — บทที่ 8 + เกริ่นบทที่ 9: tristate bus, delay, hazard และฟลิปฟลอป
+### สัปดาห์ที่ 12 — [บทที่ 8](chapters/ch08-tristate-timing/) + เกริ่น[บทที่ 9](chapters/ch09-sequential-flipflop/): tristate bus, delay, hazard และฟลิปฟลอป
 
 **LLO**
 - **LLO12.1** อธิบายแนวคิดหลักของหัวข้อ `tristate bus, delay, hazard และฟลิปฟลอป` และเชื่อมโยงกับ CLO4 ได้
@@ -213,7 +213,7 @@
 - **กิจกรรม/สื่อ:** บรรยายแบบมีปฏิสัมพันธ์, ตัวอย่างคำนวณบนกระดาน, Logisim Evolution, ดาต้าชีตไอซี 74xx และใบงานกลุ่ม
 - **ศึกษาด้วยตนเอง (6 ชม.):** อ่านบทเรียนที่เกี่ยวข้อง ทำแบบฝึกหัดท้ายบท เตรียมวงจรใน Logisim และเขียน reflection สั้น ๆ หลังปฏิบัติการ
 
-### สัปดาห์ที่ 13 — บทที่ 9/10: ฟลิปฟลอปและ counter
+### สัปดาห์ที่ 13 — [บทที่ 9](chapters/ch09-sequential-flipflop/)/[10](chapters/ch10-counter-register/): ฟลิปฟลอปและ counter
 
 **LLO**
 - **LLO13.1** อธิบายแนวคิดหลักของหัวข้อ `ฟลิปฟลอปและ counter` และเชื่อมโยงกับ CLO4 ได้
@@ -225,7 +225,7 @@
 - **กิจกรรม/สื่อ:** บรรยายแบบมีปฏิสัมพันธ์, ตัวอย่างคำนวณบนกระดาน, Logisim Evolution, ดาต้าชีตไอซี 74xx และใบงานกลุ่ม
 - **ศึกษาด้วยตนเอง (6 ชม.):** อ่านบทเรียนที่เกี่ยวข้อง ทำแบบฝึกหัดท้ายบท เตรียมวงจรใน Logisim และเขียน reflection สั้น ๆ หลังปฏิบัติการ
 
-### สัปดาห์ที่ 14 — บทที่ 10: register และ shift register
+### สัปดาห์ที่ 14 — [บทที่ 10](chapters/ch10-counter-register/): register และ shift register
 
 **LLO**
 - **LLO14.1** อธิบายแนวคิดหลักของหัวข้อ `register และ shift register` และเชื่อมโยงกับ CLO4 ได้
@@ -237,7 +237,7 @@
 - **กิจกรรม/สื่อ:** บรรยายแบบมีปฏิสัมพันธ์, ตัวอย่างคำนวณบนกระดาน, Logisim Evolution, ดาต้าชีตไอซี 74xx และใบงานกลุ่ม
 - **ศึกษาด้วยตนเอง (6 ชม.):** อ่านบทเรียนที่เกี่ยวข้อง ทำแบบฝึกหัดท้ายบท เตรียมวงจรใน Logisim และเขียน reflection สั้น ๆ หลังปฏิบัติการ
 
-### สัปดาห์ที่ 15 — บทที่ 10 + นำเสนอ: FSM เบื้องต้น โปรเจกต์ย่อย และสอบปลายภาค
+### สัปดาห์ที่ 15 — [บทที่ 10](chapters/ch10-counter-register/) + นำเสนอ: FSM เบื้องต้น โปรเจกต์ย่อย และสอบปลายภาค
 
 **LLO**
 - **LLO15.1** อธิบายแนวคิดหลักของหัวข้อ `FSM เบื้องต้น โปรเจกต์ย่อย และสอบปลายภาค` และเชื่อมโยงกับ CLO4 ได้

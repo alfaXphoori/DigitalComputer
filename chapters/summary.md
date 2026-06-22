@@ -63,3 +63,26 @@
 - [บทที่ 8 Tristate และ Timing](ch08-tristate-timing/)
 - [บทที่ 9 Sequential และ Flip-flop](ch09-sequential-flipflop/)
 - [บทที่ 10 Counter และ Register](ch10-counter-register/)
+
+## ลิงก์ปฏิบัติการ (Labs)
+
+- [Lab 1 — รู้จัก Logisim และระบบตัวเลข/การแปลงฐาน](../labs/lab01-logisim-number-systems.html)
+- [Lab 2 — รหัส BCD, Gray code และการแปลงรหัส](../labs/lab02-codes-bcd-gray.html)
+- [Lab 3 — เกตตรรกะพื้นฐานและตารางความจริง](../labs/lab03-logic-gates.html)
+- [Lab 4 — พิสูจน์ทฤษฎีบูลีน เดอมอร์แกน และ universal gates](../labs/lab04-boolean-demorgan.html)
+- [Lab 5 — ลดรูปด้วยผังคาร์โนห์และสร้างวงจร](../labs/lab05-karnaugh-map.html)
+- [Lab 6 — วิธีการใช้ตาราง (Quine–McCluskey)](../labs/lab06-tabulation-method.html)
+- [Lab 7 — วงจรบวกครึ่งและบวกเต็ม](../labs/lab07-half-full-adder.html)
+- [Lab 8 — วงจรบวก/ลบ 4 บิตและการตรวจ overflow](../labs/lab08-adder-subtractor.html)
+- [Lab 9 — วงจรถอดรหัสและการขับ 7-segment](../labs/lab09-decoder-7segment.html)
+- [Lab 10 — วงจรลงรหัสและ priority encoder](../labs/lab10-encoder-priority.html)
+- [Lab 11 — มัลติเพล็กเซอร์/ดีมัลติเพล็กเซอร์](../labs/lab11-mux-demux.html)
+- [Lab 12 — ฟลิปฟลอป SR/D/JK/T และ timing diagram](../labs/lab12-flip-flops.html)
+- [Lab 13 — เคาน์เตอร์อะซิงโครนัสและซิงโครนัส](../labs/lab13-counters.html)
+- [Lab 14 — เรจิสเตอร์และชิฟต์เรจิสเตอร์](../labs/lab14-shift-registers.html)
+- [Lab 15 — โปรเจกต์ย่อย: ออกแบบวงจรดิจิทัล](../labs/lab15-mini-project.html)
+
+## เอกสารที่เกี่ยวข้อง
+
+- [แผนการจัดการเรียนรู้รายสัปดาห์ (ฉบับเต็ม)](../weekly-lesson-plan.html)
+- [กลับหน้าแรกรายวิชา](../)
