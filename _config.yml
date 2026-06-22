@@ -1,0 +1,20 @@
+title: ตรรกศาสตร์ของดิจิตอลคอมพิวเตอร์ (Digital Computer Logic)
+description: >-
+  แผนการจัดการเรียนรู้รายสัปดาห์และเอกสารประกอบรายวิชา ตรรกศาสตร์ของดิจิตอลคอมพิวเตอร์
+  หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมคอมพิวเตอร์
+lang: th
+
+url: "https://alfaxphoori.github.io"
+baseurl: "/DigitalComputer"
+repository: alfaXphoori/DigitalComputer
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+
+exclude:
+  - .DS_Store
+  - "**/.DS_Store"
+  - README.md
