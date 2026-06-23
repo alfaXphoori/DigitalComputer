@@ -1,4 +1,4 @@
-# Chapter 6: ฟลิปฟลอปและวงจรเชิงลำดับ
+# Chapter 6: สัญญาณนาฬิกาและฟลิปฟลอป
 
 ## Flip-Flops & Sequential Logic
 

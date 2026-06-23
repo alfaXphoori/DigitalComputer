@@ -9,22 +9,22 @@
 
 | สัปดาห์ที่ | หัวข้อการเรียน | รายละเอียดเนื้อหา | ไฟล์อ้างอิง |
 |:---:|:---|:---|:---|
-| **1** | **บทนำรายวิชาและระบบดิจิทัล** | สัญญาณแอนะล็อกกับดิจิทัล, หลักการระบบดิจิทัล, ระบบเลขฐาน (2, 8, 10, 16), รหัสดิจิทัล (BCD, Gray, ASCII) | [Number Systems](chapters/ch01-number-systems/) |
-| **2** | **เลขคณิตในระบบดิจิทัล** | การบวก/ลบเลขฐานสอง, คอมพลีเมนต์ 1's และ 2's, การแทนเลขมีเครื่องหมาย | [Number Systems](chapters/ch01-number-systems/) |
-| **3** | **ลอจิกเกตพื้นฐาน** | สัญลักษณ์และตารางความจริงของ AND, OR, NOT, NAND, NOR, XOR, XNOR, การอ่านดาต้าชีต IC 74xx | [Logic Gates](chapters/ch02-logic-gates/) |
-| **4** | **คุณสมบัติดิจิทัลไอซีและการเชื่อมต่อลอจิกเกต** | ตระกูล TTL/CMOS, ระดับแรงดันลอจิก, fan-in/fan-out, noise margin, propagation delay, ตัวต้านทาน pull-up/down | [Logic Gates](chapters/ch02-logic-gates/) |
-| **5** | **พีชคณิตบูลีนและการลดรูปสมการลอจิก** | ทฤษฎีบทพีชคณิตบูลีน, ทฤษฎีบทเดอมอร์แกน, การลดรูปสมการด้วยพีชคณิต | [Boolean Algebra](chapters/ch03-boolean-algebra/) |
-| **6** | **แผนผังคาร์โนห์ (Karnaugh Map)** | K-Map 2–4 ตัวแปร, รูปแบบ SOP/POS, เงื่อนไข don't-care | [Karnaugh Maps](chapters/ch04-karnaugh-maps/) |
-| **7** | **การออกแบบวงจรคอมบิเนชัน** | ขั้นตอนการออกแบบจากโจทย์สู่วงจร, การใช้เกตสากล (NAND-only / NOR-only), การแปลงรูปวงจร | [Combinational Circuits](chapters/ch05-combinational-circuits/) |
-| **8** | **วงจรคำนวณทางคณิตศาสตร์** | Half/Full Adder, วงจรบวกขนานและวงจรลบ, การใช้ไอซี 7483 | [Combinational Circuits](chapters/ch05-combinational-circuits/) |
+| **1** | **บทนำรายวิชาและระบบตัวเลข** | สัญญาณแอนะล็อกกับดิจิทัล, ระบบเลขฐาน (2, 8, 10, 16), รหัสดิจิทัล (BCD, Gray, ASCII) | [บทที่ 1 ระบบตัวเลขและรหัส](chapters/ch01-number-systems/) |
+| **2** | **เลขคณิตในระบบดิจิทัล** | การบวก/ลบเลขฐานสอง, คอมพลีเมนต์ 1's และ 2's, การแทนเลขมีเครื่องหมาย | [บทที่ 1 ระบบตัวเลขและรหัส](chapters/ch01-number-systems/) |
+| **3** | **เกตตรรกะและนิพจน์ตรรกะ** | AND, OR, NOT, NAND, NOR, XOR, XNOR, ตารางความจริง, เกตสากล, ดาต้าชีต IC 74xx | [บทที่ 2 เกตตรรกะและคุณสมบัติดิจิทัลไอซี](chapters/ch02-logic-gates/) |
+| **4** | **คุณสมบัติดิจิทัลไอซีและการเชื่อมต่อ** | ตระกูล TTL/CMOS, ระดับแรงดันลอจิก, fan-in/fan-out, noise margin, propagation delay | [บทที่ 2 เกตตรรกะและคุณสมบัติดิจิทัลไอซี](chapters/ch02-logic-gates/) |
+| **5** | **พีชคณิตบูลีนและการลดรูปสมการ** | ทฤษฎีบทพีชคณิตบูลีน, ทฤษฎีบทเดอมอร์แกน, SOP/POS | [บทที่ 3 พีชคณิตบูลีน](chapters/ch03-boolean-algebra/) |
+| **6** | **ผังคาร์โนห์ (Karnaugh Map)** | K-Map 2–4 ตัวแปร, รูปแบบ SOP/POS, เงื่อนไข don't-care | [บทที่ 4 ผังคาร์โนห์](chapters/ch04-karnaugh-maps/) |
+| **7** | **วงจรคอมบิเนชันและวงจรคำนวณ** | ขั้นตอนการออกแบบ, เกตสากล, Half/Full Adder, วงจรบวก/ลบ, ไอซี 7483 | [บทที่ 5 วงจรคอมบิเนชันและการประยุกต์](chapters/ch05-combinational-circuits/) |
+| **8** | **วงจรเปรียบเทียบ ถอด/ลงรหัส และมัลติเพล็กเซอร์** | Comparator, Encoder/Decoder, 7-segment, MUX/DEMUX | [บทที่ 5 วงจรคอมบิเนชันและการประยุกต์](chapters/ch05-combinational-circuits/) |
 | **—** | **🟧 สอบกลางภาค (Midterm Exam)** | **ครอบคลุมเนื้อหาสัปดาห์ที่ 1–8 \| สัดส่วน 20%** | - |
-| **9** | **วงจรเปรียบเทียบ เข้ารหัส ถอดรหัส และภาคแสดงผล** | Comparator, Encoder/Decoder, การขับ 7-segment display | [Combinational Circuits](chapters/ch05-combinational-circuits/) |
-| **10** | **วงจรมัลติเพล็กซ์และดีมัลติเพล็กซ์** | หลักการ MUX/DEMUX, การสร้างฟังก์ชันลอจิกด้วย MUX | [Combinational Circuits](chapters/ch05-combinational-circuits/) |
-| **11** | **วงจรกำเนิดสัญญาณนาฬิกาและมัลติไวเบรเตอร์** | สัญญาณนาฬิกาและ duty cycle, มัลติไวเบรเตอร์ astable/monostable, ไอซีไทเมอร์ 555 | [Digital Interfacing](chapters/ch10-digital-interfacing/) |
-| **12** | **แลตช์และฟลิปฟลอป** | SR Latch, Gated Latch, ฟลิปฟลอป D/JK/T, Clock, Trigger และตารางสถานะ | [Flip-Flops](chapters/ch06-flip-flops/) |
-| **13** | **การออกแบบวงจรซีเควนเชียลและวงจรนับ** | หลักการออกแบบวงจรซีเควนเชียล, วงจรนับ asynchronous และ synchronous, ตัวนับ mod-N | [Counters & Registers](chapters/ch07-counters-registers/) |
-| **14** | **วงจรเลื่อนข้อมูล (Shift Register)** | โหมด SISO/SIPO/PISO/PIPO, Universal shift register, การประยุกต์ใช้งาน | [Counters & Registers](chapters/ch07-counters-registers/) |
-| **15** | **วงจรแปลงสัญญาณและหน่วยความจำ** | การแปลงสัญญาณ DAC/ADC, ความละเอียดและอัตราการสุ่ม, โครงสร้างและคุณสมบัติหน่วยความจำ RAM/ROM | [Memory & PLD](chapters/ch08-memory-pld/) · [Digital Interfacing](chapters/ch10-digital-interfacing/) |
+| **9** | **สัญญาณนาฬิกาและแลตช์** | Clock, duty cycle, มัลติไวเบรเตอร์/ไอซี 555, SR/Gated Latch | [บทที่ 6 สัญญาณนาฬิกาและฟลิปฟลอป](chapters/ch06-flip-flops/) |
+| **10** | **ฟลิปฟลอป** | ฟลิปฟลอป D/JK/T, Trigger, ตารางสถานะ/ตารางกระตุ้น, timing diagram | [บทที่ 6 สัญญาณนาฬิกาและฟลิปฟลอป](chapters/ch06-flip-flops/) |
+| **11** | **วงจรนับ (Counters)** | ตัวนับ asynchronous/synchronous, mod-N, การออกแบบด้วยตารางกระตุ้น | [บทที่ 7 วงจรนับและเรจิสเตอร์](chapters/ch07-counters-registers/) |
+| **12** | **เรจิสเตอร์และวงจรเลื่อนข้อมูล** | Register, Shift register SISO/SIPO/PISO/PIPO, Universal shift register | [บทที่ 7 วงจรนับและเรจิสเตอร์](chapters/ch07-counters-registers/) |
+| **13** | **การออกแบบวงจรเชิงลำดับและ FSM** | Mealy/Moore, state diagram, state table, การออกแบบ FSM | [บทที่ 8 การออกแบบวงจรเชิงลำดับและ FSM](chapters/ch08-fsm/) |
+| **14** | **หน่วยความจำ PLD และการแปลงสัญญาณ** | RAM/ROM, PLD, DAC/ADC, ความละเอียดและอัตราการสุ่ม | [บทที่ 9 หน่วยความจำ PLD และ ADC/DAC](chapters/ch09-memory-interfacing/) |
+| **15** | **แนะนำ HDL: Verilog + EDA Playground** | module/port, assign/always, testbench, การจำลองบน EDA Playground | [บทที่ 10 แนะนำ HDL: Verilog](chapters/ch10-hdl-verilog/) |
 | **—** | **🟧 สอบปลายภาค (Final Exam)** | **ครอบคลุมเนื้อหาสัปดาห์ที่ 9–15 \| สัดส่วน 25%** | [summary.md](chapters/summary.md) |
 
 ---
