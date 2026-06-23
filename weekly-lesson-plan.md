@@ -242,7 +242,7 @@
 - **LLO15.2** จำลองและทดสอบวงจรด้วย testbench บน EDA Playground ได้ (CLO4)
 
 - **เนื้อหาภาคทฤษฎี (2 ชม.):** HDL/RTL · โครงสร้าง module/port · `assign` กับ `always` · testbench · การเชื่อมโยงเนื้อหาทั้งเทอมเข้ากับ Verilog
-- **ปฏิบัติการ/ใบงาน (3 ชม.):** ใบงานที่ 15 โปรเจกต์ย่อย · เขียน Verilog (full adder/counter/FSM) และจำลองบน EDA Playground · นำเสนอผลงาน
+- **ปฏิบัติการ/ใบงาน (3 ชม.):** ใบงานที่ 16 Verilog Simulation บน EDA Playground · เขียน Verilog (full adder/counter) เขียน testbench รัน simulation และอ่าน waveform (EPWave) · นำเสนอผลงาน
 - **กิจกรรม/สื่อ:** สาธิต EDA Playground + ปฏิบัติการบนเครื่อง + นำเสนอโปรเจกต์ — คอมพิวเตอร์ เว็บ EDA Playground
 - **ศึกษาด้วยตนเอง (6 ชม.):** ทำโปรเจกต์ย่อยให้เสร็จ ทบทวนเนื้อหาสัปดาห์ที่ 9–15 เพื่อสอบปลายภาค
 

@@ -103,7 +103,7 @@
 - [บทที่ 9 หน่วยความจำ PLD และการแปลงสัญญาณ ADC/DAC](ch09-memory-interfacing/)
 - [บทที่ 10 แนะนำ HDL: Verilog และ EDA Playground](ch10-hdl-verilog/)
 
-## 6. ลิงก์ปฏิบัติการ (15 แลป)
+## 6. ลิงก์ปฏิบัติการ (16 แลป)
 
 - [Lab 1 — ระบบตัวเลขและการแปลงเลขฐาน](../labs/lab01-number-systems.html)
 - [Lab 2 — รหัสดิจิทัล (BCD, Gray)](../labs/lab02-digital-codes.html)
@@ -120,6 +120,7 @@
 - [Lab 13 — การสร้าง FSM](../labs/lab13-fsm-implementation.html)
 - [Lab 14 — ROM Logic](../labs/lab14-rom-logic.html)
 - [Lab 15 — โปรเจกต์ย่อย](../labs/lab15-mini-project.html)
+- [Lab 16 — Verilog Simulation บน EDA Playground](../labs/lab16-verilog-eda.html)
 
 ## 7. เอกสารที่เกี่ยวข้อง
 
