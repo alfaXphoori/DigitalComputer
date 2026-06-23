@@ -202,8 +202,10 @@ $$\boxed{F = \overline{B}\,\overline{D} + \overline{B}\,\overline{C} + \overline
   - C=1, D=1 คงที่ → **$CD$**
 - **กลุ่ม 3** (ขนาด 2): m0, m8 — คอลัมน์ CD=00 แถว AB=00,10
   - A เปลี่ยน, B=0, C=0, D=0 คงที่ → **$\overline{B}\,\overline{C}\,\overline{D}$**
+- **กลุ่ม 4** (ขนาด 2): m5, m7 — แถว AB=01 คอลัมน์ CD=01,11
+  - A=0, B=1, D=1 คงที่, C เปลี่ยน → **$\overline{A}\,B\,D$**
 
-$$\boxed{F = \overline{B}\,D + CD + \overline{B}\,\overline{C}\,\overline{D}}$$
+$$\boxed{F = \overline{B}\,D + CD + \overline{B}\,\overline{C}\,\overline{D} + \overline{A}\,B\,D}$$
 
 ---
 
