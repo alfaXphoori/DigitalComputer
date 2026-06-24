@@ -328,6 +328,104 @@ HDL ไม่ใช่เรื่องใหม่ทั้งหมด แต
 
 ---
 
+## Verilog Syntax Cheat Sheet (โพยสรุปไวยากรณ์พื้นฐาน)
+
+หน้านี้สรุปโครงสร้างไวยากรณ์ที่ใช้บ่อยสำหรับการทำแลปและการบ้านวิชาลอจิกดิจิทัล
+
+### 1. ตัวดำเนินการ (Operators)
+
+| ประเภท | เครื่องหมาย | ตัวอย่างคำอธิบาย |
+|---|---|---|
+| **Bitwise** (ลอจิกระดับบิต) | `~` (NOT), `&` (AND), `|` (OR), `^` (XOR), `~^` (XNOR) | `y = a & b;` (ทำทีละบิต) |
+| **Arithmetic** (เลขคณิต) | `+` (บวก), `-` (ลบ), `*` (คูณ) | `count <= count + 1;` |
+| **Relational** (เปรียบเทียบ) | `==` (เท่ากับ), `!=` (ไม่เท่ากับ), `<`, `>`, `<=`, `>=` | `if (state == 2'b10)` |
+| **Reduction** (ลดมิติระดับบิต) | `&` (AND ทุกบิตในเวกเตอร์), `|` (OR ทุกบิต) | `&4'b1111` ผลลัพธ์คือ `1'b1` |
+| **Logical** (เปรียบเทียบลอจิก) | `!` (Logical NOT), `&&` (AND), `||` (OR) | `if (a == 1 && b == 0)` |
+| **Concatenation** (ต่อบิต) | `{}` (รวมบิตเข้าด้วยกัน) | `{carry, sum} = a + b + cin;` |
+| **Conditional** (เลือกค่า) | `? :` (เหมือนคำสั่ง if-else บรรทัดเดียว) | `assign y = select ? b : a;` |
+
+---
+
+### 2. โครงสร้างโค้ดตามประเภทวงจร (Standard Coding Patterns)
+
+#### ก. วงจรเชิงผสม (Combinational Logic) - แบบ Dataflow
+ใช้ลวด (`wire`) และคำสั่ง `assign` (ทำงานแบบขนานตลอดเวลา)
+```verilog
+wire y;
+assign y = (a & ~b) | (c ^ d);
+```
+
+#### ข. วงจรเชิงผสม (Combinational Logic) - แบบ Behavioral
+ใช้ตัวแปรแบบ `reg` และบล็อก `always @(*)` โดยกำหนดค่าภายในแบบ **Blocking (`=`)**
+```verilog
+reg y;
+always @(*) begin
+    if (select)
+        y = b;
+    else
+        y = a;
+end
+```
+
+#### ค. วงจรเชิงลำดับ (Sequential Logic)
+ใช้ตัวแปรแบบ `reg` และบล็อก `always @(posedge clk)` โดยใช้การกำหนดค่าแบบ **Non-blocking (`<=`)**
+```verilog
+reg [3:0] count;
+always @(posedge clk or posedge reset) begin
+    if (reset)
+        count <= 4'b0000;
+    else
+        count <= count + 1'b1;
+end
+```
+
+---
+
+### 3. โครงสร้างแม่แบบ Testbench สำหรับจำลองการทำงาน
+```verilog
+`timescale 1ns/1ps // กำหนดมาตราส่วนเวลา (หน่วย/ความละเอียด)
+
+module testbench;
+    // 1. ประกาศตัวแปรสัญญาณ
+    reg clk;
+    reg reset;
+    reg a;
+    wire y;
+
+    // 2. เรียกใช้งานวงจรที่ต้องการทดสอบ (Instantiation)
+    my_design uut (
+        .clk(clk),
+        .reset(reset),
+        .a(a),
+        .y(y)
+    );
+
+    // 3. บล็อกสร้างสัญญาณนาฬิกา (Clock Generator) - คาบ 10ns
+    always begin
+        #5 clk = ~clk;
+    end
+
+    // 4. บล็อกทดสอบป้อนอินพุต (Stimulus)
+    initial begin
+        // บันทึกไฟล์คลื่นคลื่นสัญญาณ (EPWave)
+        $dumpfile("dump.vcd");
+        $dumpvars(0, testbench);
+
+        // กำหนดค่าเริ่มต้น
+        clk = 0;
+        reset = 1;
+        a = 0;
+        
+        #15 reset = 0; // ปลดรีเซ็ตหลังจากผ่านไป 15ns
+        #10 a = 1;
+        #20 a = 0;
+        #50 $finish;   // สิ้นสุดการจำลอง
+    end
+endmodule
+```
+
+---
+
 ## 10.9 ข้อผิดพลาดที่พบบ่อยของผู้เริ่มต้น
 
 - ใช้ `=` (blocking) ในวงจรเชิงลำดับ แทนที่จะใช้ `<=` (nonblocking) ทำให้พฤติกรรมจำลองผิด

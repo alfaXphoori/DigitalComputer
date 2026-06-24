@@ -505,6 +505,59 @@ $$ f(A, B, C, \dots) = A \cdot f(1, B, C, \dots) + \overline{A} \cdot f(0, B, C,
 
 ---
 
+## 📝 แบบทดสอบความรู้สั้นๆ (Quick Quiz)
+
+ลองทดสอบความเข้าใจของตัวคุณเองด้วยคำถามสั้นๆ เหล่านี้ (คลิกเพื่อเลือกคำตอบและตรวจคะแนนได้ทันที):
+
+<div class="quiz-container" style="margin-bottom: 25px; padding: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: #ffffff; box-shadow: var(--shadow-sm);">
+  
+  <div class="quiz-item" style="margin-bottom: 20px;">
+    <p style="margin-bottom: 10px; font-weight: 600;"><strong>ข้อที่ 1:</strong> สมการบูลีน $A + \overline{A}B$ สามารถลดรูปได้เป็นข้อใด?</p>
+    <label style="display: block; margin-bottom: 6px; cursor: pointer;"><input type="radio" name="q1" value="A" style="margin-right: 8px;"> A</label>
+    <label style="display: block; margin-bottom: 6px; cursor: pointer;"><input type="radio" name="q1" value="B" style="margin-right: 8px;"> B</label>
+    <label style="display: block; margin-bottom: 6px; cursor: pointer;"><input type="radio" name="q1" value="A+B" style="margin-right: 8px;"> $A + B$</label>
+    <label style="display: block; margin-bottom: 6px; cursor: pointer;"><input type="radio" name="q1" value="AB" style="margin-right: 8px;"> $AB$</label>
+  </div>
+
+  <hr style="border: 0; border-top: 1px solid var(--line); margin: 20px 0;">
+
+  <div class="quiz-item" style="margin-bottom: 20px;">
+    <p style="margin-bottom: 10px; font-weight: 600;"><strong>ข้อที่ 2:</strong> Complement ของฟังก์ชัน $Y = AB$ (ตามกฎของเดอมอร์แกน) คือข้อใด?</p>
+    <label style="display: block; margin-bottom: 6px; cursor: pointer;"><input type="radio" name="q2" value="A+B" style="margin-right: 8px;"> $\overline{A} + \overline{B}$</label>
+    <label style="display: block; margin-bottom: 6px; cursor: pointer;"><input type="radio" name="q2" value="AB" style="margin-right: 8px;"> $\overline{A}\cdot\overline{B}$</label>
+    <label style="display: block; margin-bottom: 6px; cursor: pointer;"><input type="radio" name="q2" value="A'+B'" style="margin-right: 8px;"> $\overline{A+B}$</label>
+  </div>
+
+  <button class="btn btn--light" onclick="checkAnswers()" style="margin-top: 10px; font-size: 0.95rem; background: var(--indigo); color: white;">ตรวจคำตอบ</button>
+  <div id="quiz-result" style="margin-top: 15px; font-weight: 600; font-size: 1rem;"></div>
+</div>
+
+<script>
+function checkAnswers() {
+  var score = 0;
+  var q1 = document.querySelector('input[name="q1"]:checked');
+  var q2 = document.querySelector('input[name="q2"]:checked');
+  
+  if (!q1 || !q2) {
+    document.getElementById('quiz-result').innerHTML = '<span style="color: #d97706;">⚠️ กรุณาตอบคำถามให้ครบทุกข้อ</span>';
+    return;
+  }
+  
+  if (q1.value === 'A+B') score++;
+  if (q2.value === 'A+B') score++;
+  
+  var resultText = '';
+  if (score === 2) {
+    resultText = '<span style="color: #10b981;">🎉 ถูกต้องทั้งหมด! คุณได้คะแนน 2/2 ยอดเยี่ยมมากครับ</span>';
+  } else {
+    resultText = '<span style="color: #ef4444;">❌ คุณได้คะแนน ' + score + '/2 คะแนน ลองทบทวนข้อผิดพลาดและเลือกตรวจคำตอบอีกครั้งนะ</span>';
+  }
+  document.getElementById('quiz-result').innerHTML = resultText;
+}
+</script>
+
+---
+
 ## แบบฝึกหัดท้ายบท
 
 1. ลดรูป $F = AB + A(B+C) + B(B+C)$
