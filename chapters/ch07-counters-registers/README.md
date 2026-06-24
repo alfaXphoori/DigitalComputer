@@ -573,6 +573,14 @@ Register คือกลุ่ม Flip-Flop ที่เก็บข้อมู
 
 การใช้ Flip-Flop หรือ Counter มาหารความถี่ Clock หลักให้ต่ำลง เช่น Clock 50MHz หารด้วย 50,000,000 จะได้ 1Hz (1 วินาทีพอดี) ใช้ในการสร้างสัญญาณ Timer หรือควบคุมการแสดงผลที่สายตามนุษย์มองทัน
 
+---
+
+**🔬 ทดลองการทำงาน (Interactive Shift Register Simulator):**
+
+{% include shift-register.html %}
+
+---
+
 ## 7.9 SISO — Serial-In Serial-Out
 
 ข้อมูลเข้าทีละ 1 บิต และออกทีละ 1 บิต — ทำหน้าที่เป็น **Time Delay (n clock cycles)**

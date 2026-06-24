@@ -58,6 +58,10 @@ A:    _____|‾‾‾‾‾|_____|‾‾‾‾‾|____
 - **t2:** A เปลี่ยนกลับเป็น 0 → Falling Edge
 - **t3–t4:** วนซ้ำ
 
+**🔬 ลองเล่นกราฟสัญญาณ (Interactive Timing Diagram):**
+
+{% include timing-diagram.html preset="gate-selector" id="ch2-intro" %}
+
 > 💡 **ประโยชน์:** ดูว่าเอาต์พุตตอบสนองต่ออินพุตถูกต้องหรือไม่ ตรวจสอบ Propagation Delay และออกแบบวงจรลำดับ (Sequential Circuit)
 
 ---
@@ -205,6 +209,10 @@ $$Y = \overline{A \cdot B}$$
 
 ![NAND Gate](images/NAND.svg)
 
+**🔬 ลองกดเล่น (Interactive):**
+
+{% include logic-gate.html type="NAND" %}
+
 **IC: 7400** (Quad 2-input NAND gate)
 
 > ⭐ **NAND เป็น Universal Gate** — สามารถสร้างเกตอื่นทุกชนิดได้จาก NAND เพียงอย่างเดียว
@@ -245,6 +253,10 @@ $$Y = \overline{A + B}$$
 | 1 | 1 | 0 |
 
 ![NOR Gate](images/NOR.svg)
+
+**🔬 ลองกดเล่น (Interactive):**
+
+{% include logic-gate.html type="NOR" %}
 
 **IC: 7402** (Quad 2-input NOR gate)
 
@@ -333,6 +345,10 @@ $$Y = \overline{A \oplus B} = AB + \overline{A}\,\overline{B}$$
 | 1 | 1 | **1** |
 
 ![XNOR Gate](images/XNOR.svg)
+
+**🔬 ลองกดเล่น (Interactive):**
+
+{% include logic-gate.html type="XNOR" %}
 
 **IC: 74266** (Quad 2-input XNOR gate)
 

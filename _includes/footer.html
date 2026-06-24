@@ -204,5 +204,1240 @@ document.addEventListener("DOMContentLoaded", function() {
       startTimer();
     }
   });
+
+  /* ============================================================
+     Timing Diagram Widget JS
+     ============================================================ */
+  document.querySelectorAll('.timing-diagram').forEach(function(demo) {
+    var preset = demo.dataset.preset || 'gate-selector';
+    var signalsAttr = demo.dataset.signals;
+    
+    var playBtn = demo.querySelector('.td-btn--play');
+    var stepBtn = demo.querySelector('.td-btn--step');
+    var resetBtn = demo.querySelector('.td-btn--reset');
+    var speedIn = demo.querySelector('.td-speed');
+    var speedVal = demo.querySelector('.td-speed-val');
+    var gateSelect = demo.querySelector('.td-gate-select');
+    
+    var svg = demo.querySelector('.td-svg');
+    var gridG = demo.querySelector('.td-grid');
+    var tracksG = demo.querySelector('.td-tracks');
+    var playhead = demo.querySelector('.td-playhead');
+    
+    var speedMap = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4];
+    var progress = 0; // 0 to 8
+    var timer = null;
+    var lastTime = null;
+    
+    var W_A = [0, 1, 0, 1, 0, 1, 1, 0];
+    var W_B = [0, 0, 1, 1, 1, 0, 1, 0];
+    var W_Y = [];
+    var signalNames = ['A', 'B', 'Y'];
+    
+    var isCustom = false;
+    var customSignals = {};
+    if (signalsAttr) {
+      isCustom = true;
+      var pairs = signalsAttr.split(',');
+      signalNames = [];
+      pairs.forEach(function(pair) {
+        var parts = pair.split(':');
+        if (parts.length === 2) {
+          var name = parts[0].trim();
+          var states = parts[1].trim().split('').map(Number);
+          customSignals[name] = states;
+          signalNames.push(name);
+        }
+      });
+    }
+    
+    function getGateType() {
+      return gateSelect ? gateSelect.value : 'AND';
+    }
+    
+    function calculateY() {
+      if (isCustom) return;
+      var gate = getGateType();
+      W_Y = [];
+      for (var i = 0; i < W_A.length; i++) {
+        var a = W_A[i] === 1;
+        var b = W_B[i] === 1;
+        W_Y.push(computeGate(gate, a, b) ? 1 : 0);
+      }
+      var readB = demo.querySelector('.td-readout--b');
+      if (gate === 'NOT') {
+        if (readB) readB.style.display = 'none';
+      } else {
+        if (readB) readB.style.display = 'block';
+      }
+    }
+    
+    function getSignalData(name) {
+      if (isCustom) return customSignals[name] || [];
+      if (name === 'A') return W_A;
+      if (name === 'B') return W_B;
+      if (name === 'Y') return W_Y;
+      return [];
+    }
+    
+    function buildReadouts() {
+      var readoutsContainer = demo.querySelector('.td-readouts');
+      if (readoutsContainer) {
+        if (isCustom) {
+          readoutsContainer.innerHTML = '';
+          signalNames.forEach(function(name) {
+            var div = document.createElement('div');
+            div.className = 'td-readout td-readout--' + name.toLowerCase();
+            
+            var lbl = document.createElement('span');
+            lbl.className = 'td-readout-label';
+            lbl.textContent = name + ' = ';
+            
+            var valSpan = document.createElement('span');
+            valSpan.className = 'val';
+            valSpan.textContent = '-';
+            
+            div.appendChild(lbl);
+            div.appendChild(valSpan);
+            readoutsContainer.appendChild(div);
+          });
+        }
+      }
+    }
+    
+    function drawGrid() {
+      gridG.innerHTML = '';
+      var numSteps = isCustom ? getSignalData(signalNames[0]).length : 8;
+      var stepW = 700 / numSteps;
+      
+      for (var i = 0; i <= numSteps; i++) {
+        var x = 80 + i * stepW;
+        var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x);
+        line.setAttribute('y1', 15);
+        line.setAttribute('x2', x);
+        line.setAttribute('y2', 225);
+        line.setAttribute('class', 'td-grid-line' + (i > 0 && i < numSteps ? ' td-grid-line--dashed' : ''));
+        gridG.appendChild(line);
+        
+        var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', x);
+        text.setAttribute('y', 12);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('class', 'td-grid-text');
+        text.textContent = 't' + i;
+        gridG.appendChild(text);
+      }
+      
+      var numTracks = signalNames.length;
+      var trackH = 210 / numTracks;
+      
+      signalNames.forEach(function(name, tIdx) {
+        if (!isCustom && getGateType() === 'NOT' && name === 'B') return;
+        
+        var centerY = 15 + tIdx * trackH + trackH / 2;
+        var yHigh = centerY - 20;
+        var yLow = centerY + 20;
+        
+        var label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        label.setAttribute('x', 25);
+        label.setAttribute('y', centerY + 5);
+        label.setAttribute('class', 'td-track-label');
+        label.textContent = name;
+        gridG.appendChild(label);
+        
+        var blLow = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        blLow.setAttribute('x1', 80);
+        blLow.setAttribute('y1', yLow);
+        blLow.setAttribute('x2', 780);
+        blLow.setAttribute('y2', yLow);
+        blLow.setAttribute('stroke', '#1e293b');
+        blLow.setAttribute('stroke-width', '1');
+        blLow.setAttribute('stroke-dasharray', '2 4');
+        gridG.appendChild(blLow);
+        
+        var blHigh = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        blHigh.setAttribute('x1', 80);
+        blHigh.setAttribute('y1', yHigh);
+        blHigh.setAttribute('x2', 780);
+        blHigh.setAttribute('y2', yHigh);
+        blHigh.setAttribute('stroke', '#1e293b');
+        blHigh.setAttribute('stroke-width', '0.5');
+        blHigh.setAttribute('stroke-dasharray', '2 4');
+        gridG.appendChild(blHigh);
+      });
+    }
+    
+    function drawWaveforms() {
+      tracksG.innerHTML = '';
+      var numTracks = signalNames.length;
+      var trackH = 210 / numTracks;
+      
+      signalNames.forEach(function(name, tIdx) {
+        if (!isCustom && getGateType() === 'NOT' && name === 'B') return;
+        
+        var W = getSignalData(name);
+        if (W.length === 0) return;
+        
+        var stepW = 700 / W.length;
+        var centerY = 15 + tIdx * trackH + trackH / 2;
+        var yHigh = centerY - 20;
+        var yLow = centerY + 20;
+        
+        var pathD = '';
+        for (var i = 0; i < W.length; i++) {
+          var xStart = 80 + i * stepW;
+          var xEnd = 80 + (i + 1) * stepW;
+          var yVal = W[i] === 1 ? yHigh : yLow;
+          
+          if (i === 0) {
+            pathD += 'M ' + xStart + ' ' + yVal;
+          } else {
+            var yPrev = W[i-1] === 1 ? yHigh : yLow;
+            if (yVal !== yPrev) {
+              pathD += ' L ' + xStart + ' ' + yVal;
+            }
+          }
+          pathD += ' L ' + xEnd + ' ' + yVal;
+        }
+        
+        var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', pathD);
+        
+        var isOut = (name === 'Y' || name === 'Q' || name === 'Q0' || name === 'Q1' || name === 'Q2' || name === 'Q3' || name === 'Out');
+        var pathClass = 'td-wave-path';
+        if (isOut) {
+          pathClass += ' td-wave-path--out-high';
+        } else {
+          pathClass += ' td-wave-path--high';
+        }
+        path.setAttribute('class', pathClass);
+        tracksG.appendChild(path);
+      });
+    }
+    
+    function updateReadouts() {
+      var numSteps = isCustom ? getSignalData(signalNames[0]).length : 8;
+      var stepIdx = Math.min(numSteps - 1, Math.floor(progress));
+      
+      signalNames.forEach(function(name) {
+        var W = getSignalData(name);
+        var val = W[stepIdx] !== undefined ? W[stepIdx] : 0;
+        
+        var readoutEl = demo.querySelector('.td-readout--' + name.toLowerCase());
+        if (!readoutEl) return;
+        
+        var valSpan = readoutEl.querySelector('.val');
+        if (valSpan) {
+          valSpan.textContent = val;
+          valSpan.dataset.state = val;
+        }
+      });
+    }
+    
+    function setPlayhead(p) {
+      progress = p;
+      var numSteps = isCustom ? getSignalData(signalNames[0]).length : 8;
+      if (progress > numSteps) progress = 0;
+      if (progress < 0) progress = numSteps;
+      
+      var stepW = 700 / numSteps;
+      var x = 80 + progress * stepW;
+      playhead.setAttribute('x1', x);
+      playhead.setAttribute('x2', x);
+      
+      updateReadouts();
+    }
+    
+    function getCurrentInterval() {
+      var idx = parseInt(speedIn.value, 10) - 1;
+      var mult = speedMap[idx] || 1;
+      return 1000 / mult;
+    }
+    
+    function updateSpeedText() {
+      var idx = parseInt(speedIn.value, 10) - 1;
+      var mult = speedMap[idx] || 1;
+      speedVal.textContent = mult + '×';
+    }
+    
+    function tick(timestamp) {
+      if (!timer) return;
+      if (!lastTime) lastTime = timestamp;
+      var elapsed = timestamp - lastTime;
+      
+      var numSteps = isCustom ? getSignalData(signalNames[0]).length : 8;
+      var stepDuration = getCurrentInterval(); 
+      var stepProgress = (elapsed / stepDuration);
+      
+      var nextProgress = progress + stepProgress;
+      if (nextProgress >= numSteps) {
+        nextProgress = 0;
+      }
+      setPlayhead(nextProgress);
+      
+      lastTime = timestamp;
+      timer = requestAnimationFrame(tick);
+    }
+    
+    function start() {
+      if (timer) return;
+      lastTime = null;
+      timer = requestAnimationFrame(tick);
+      playBtn.textContent = '⏸ หยุด';
+      playBtn.classList.add('is-playing');
+    }
+    
+    function stop() {
+      if (timer) {
+        cancelAnimationFrame(timer);
+        timer = null;
+      }
+      playBtn.textContent = '▶ เริ่ม';
+      playBtn.classList.remove('is-playing');
+    }
+    
+    playBtn.addEventListener('click', function() {
+      if (timer) stop();
+      else start();
+    });
+    
+    stepBtn.addEventListener('click', function() {
+      stop();
+      var numSteps = isCustom ? getSignalData(signalNames[0]).length : 8;
+      var next = Math.floor(progress) + 1;
+      if (next >= numSteps) next = 0;
+      setPlayhead(next);
+    });
+    
+    resetBtn.addEventListener('click', function() {
+      stop();
+      setPlayhead(0);
+    });
+    
+    speedIn.addEventListener('input', function() {
+      updateSpeedText();
+    });
+    
+    if (gateSelect) {
+      gateSelect.addEventListener('change', function() {
+        calculateY();
+        drawGrid();
+        drawWaveforms();
+        updateReadouts();
+      });
+    }
+    
+    // Initialization
+    calculateY();
+    buildReadouts();
+    drawGrid();
+    drawWaveforms();
+    updateSpeedText();
+    setPlayhead(0);
+    
+  });
+
+  /* ============================================================
+     Flip-Flop Widget JS
+     ============================================================ */
+  document.querySelectorAll('.ff-demo').forEach(function(demo) {
+    var activeType = 'D'; // D, JK, T, SR
+    var stateQ = 0;
+    
+    // Inputs state
+    var inputs = {
+      D: 0,
+      J: 0, K: 0,
+      T: 0,
+      S: 0, R: 0
+    };
+    
+    var tabs = demo.querySelectorAll('.ff-tab');
+    var inputsContainer = demo.querySelector('#ff-inputs-container');
+    var clkTrigger = demo.querySelector('#ff-clk-trigger');
+    var clkIndicator = demo.querySelector('#ff-clk-indicator');
+    
+    var icTitle = demo.querySelector('#ff-ic-title');
+    var portLbl1 = demo.querySelector('#ff-port-lbl-1');
+    var portLbl2 = demo.querySelector('#ff-port-lbl-2');
+    
+    var lampQ = demo.querySelector('#ff-lamp-q');
+    var lampQbar = demo.querySelector('#ff-lamp-qbar');
+    
+    var tableBody = demo.querySelector('#ff-table-body');
+    
+    // State transition definitions
+    var tables = {
+      D: {
+        headers: ['D', 'Q', 'Q⁺', 'Q̄⁺', 'โหมดการทำงาน'],
+        rows: [
+          { inputs: { D: 0 }, q: 0, nextQ: 0, qbar: 1, mode: 'Reset (เคลียร์ค่า)' },
+          { inputs: { D: 0 }, q: 1, nextQ: 0, qbar: 1, mode: 'Reset (เคลียร์ค่า)' },
+          { inputs: { D: 1 }, q: 0, nextQ: 1, qbar: 0, mode: 'Set (ตั้งค่า)' },
+          { inputs: { D: 1 }, q: 1, nextQ: 1, qbar: 0, mode: 'Set (ตั้งค่า)' }
+        ]
+      },
+      JK: {
+        headers: ['J', 'K', 'Q', 'Q⁺', 'Q̄⁺', 'โหมดการทำงาน'],
+        rows: [
+          { inputs: { J: 0, K: 0 }, q: 0, nextQ: 0, qbar: 1, mode: 'Hold (คงค่าเดิม)' },
+          { inputs: { J: 0, K: 0 }, q: 1, nextQ: 1, qbar: 0, mode: 'Hold (คงค่าเดิม)' },
+          { inputs: { J: 0, K: 1 }, q: 0, nextQ: 0, qbar: 1, mode: 'Reset (เคลียร์ค่า)' },
+          { inputs: { J: 0, K: 1 }, q: 1, nextQ: 0, qbar: 1, mode: 'Reset (เคลียร์ค่า)' },
+          { inputs: { J: 1, K: 0 }, q: 0, nextQ: 1, qbar: 0, mode: 'Set (ตั้งค่า)' },
+          { inputs: { J: 1, K: 0 }, q: 1, nextQ: 1, qbar: 0, mode: 'Set (ตั้งค่า)' },
+          { inputs: { J: 1, K: 1 }, q: 0, nextQ: 1, qbar: 0, mode: 'Toggle (สลับค่า)' },
+          { inputs: { J: 1, K: 1 }, q: 1, nextQ: 0, qbar: 1, mode: 'Toggle (สลับค่า)' }
+        ]
+      },
+      T: {
+        headers: ['T', 'Q', 'Q⁺', 'Q̄⁺', 'โหมดการทำงาน'],
+        rows: [
+          { inputs: { T: 0 }, q: 0, nextQ: 0, qbar: 1, mode: 'Hold (คงค่าเดิม)' },
+          { inputs: { T: 0 }, q: 1, nextQ: 1, qbar: 0, mode: 'Hold (คงค่าเดิม)' },
+          { inputs: { T: 1 }, q: 0, nextQ: 1, qbar: 0, mode: 'Toggle (สลับค่า)' },
+          { inputs: { T: 1 }, q: 1, nextQ: 0, qbar: 1, mode: 'Toggle (สลับค่า)' }
+        ]
+      },
+      SR: {
+        headers: ['S', 'R', 'Q', 'Q⁺', 'Q̄⁺', 'โหมดการทำงาน'],
+        rows: [
+          { inputs: { S: 0, R: 0 }, q: 0, nextQ: 0, qbar: 1, mode: 'Hold (คงค่าเดิม)' },
+          { inputs: { S: 0, R: 0 }, q: 1, nextQ: 1, qbar: 0, mode: 'Hold (คงค่าเดิม)' },
+          { inputs: { S: 0, R: 1 }, q: 0, nextQ: 0, qbar: 1, mode: 'Reset (เคลียร์ค่า)' },
+          { inputs: { S: 0, R: 1 }, q: 1, nextQ: 0, qbar: 1, mode: 'Reset (เคลียร์ค่า)' },
+          { inputs: { S: 1, R: 0 }, q: 0, nextQ: 1, qbar: 0, mode: 'Set (ตั้งค่า)' },
+          { inputs: { S: 1, R: 0 }, q: 1, nextQ: 1, qbar: 0, mode: 'Set (ตั้งค่า)' },
+          { inputs: { S: 1, R: 1 }, q: 0, nextQ: '?', qbar: '?', mode: '🚨 Invalid (ห้ามใช้)' },
+          { inputs: { S: 1, R: 1 }, q: 1, nextQ: '?', qbar: '?', mode: '🚨 Invalid (ห้ามใช้)' }
+        ]
+      }
+    };
+    
+    function updateLayout() {
+      icTitle.textContent = activeType + '-FF';
+      if (activeType === 'D') {
+        portLbl1.textContent = 'D';
+        portLbl1.style.visibility = 'visible';
+        portLbl2.style.visibility = 'hidden';
+      } else if (activeType === 'T') {
+        portLbl1.textContent = 'T';
+        portLbl1.style.visibility = 'visible';
+        portLbl2.style.visibility = 'hidden';
+      } else if (activeType === 'JK') {
+        portLbl1.textContent = 'J';
+        portLbl1.style.visibility = 'visible';
+        portLbl2.textContent = 'K';
+        portLbl2.style.visibility = 'visible';
+      } else if (activeType === 'SR') {
+        portLbl1.textContent = 'S';
+        portLbl1.style.visibility = 'visible';
+        portLbl2.textContent = 'R';
+        portLbl2.style.visibility = 'visible';
+      }
+      
+      inputsContainer.innerHTML = '';
+      var inputKeys = activeType === 'D' ? ['D'] : (activeType === 'T' ? ['T'] : (activeType === 'JK' ? ['J', 'K'] : ['S', 'R']));
+      
+      inputKeys.forEach(function(key) {
+        var val = inputs[key];
+        var btn = document.createElement('button');
+        btn.className = 'ff-btn' + (val === 1 ? ' is-active' : '');
+        btn.textContent = key + ' = ' + val;
+        btn.addEventListener('click', function() {
+          inputs[key] = inputs[key] === 1 ? 0 : 1;
+          btn.textContent = key + ' = ' + inputs[key];
+          btn.classList.toggle('is-active', inputs[key] === 1);
+          highlightActiveRow();
+        });
+        inputsContainer.appendChild(btn);
+      });
+      
+      renderTable();
+    }
+    
+    function renderTable() {
+      var data = tables[activeType];
+      var html = '<thead><tr>';
+      
+      data.headers.forEach(function(h) {
+        html += '<th>' + h + '</th>';
+      });
+      html += '</tr></thead><tbody>';
+      
+      data.rows.forEach(function(row, idx) {
+        html += '<tr data-row-idx="' + idx + '">';
+        
+        var keys = Object.keys(row.inputs);
+        keys.forEach(function(k) {
+          html += '<td>' + row.inputs[k] + '</td>';
+        });
+        
+        html += '<td>' + row.q + '</td>';
+        
+        var qStyle = (row.nextQ === '?') ? 'style="color: #ef4444; font-weight: bold;"' : '';
+        html += '<td ' + qStyle + '>' + row.nextQ + '</td>';
+        html += '<td ' + qStyle + '>' + row.qbar + '</td>';
+        
+        html += '<td>' + row.mode + '</td>';
+        html += '</tr>';
+      });
+      html += '</tbody>';
+      tableBody.innerHTML = html;
+      
+      highlightActiveRow();
+    }
+    
+    function highlightActiveRow() {
+      var data = tables[activeType];
+      var rows = tableBody.querySelectorAll('tbody tr');
+      
+      rows.forEach(function(rowEl, idx) {
+        var rowData = data.rows[idx];
+        var match = true;
+        
+        var keys = Object.keys(rowData.inputs);
+        keys.forEach(function(k) {
+          if (rowData.inputs[k] !== inputs[k]) {
+            match = false;
+          }
+        });
+        
+        if (rowData.q !== stateQ) {
+          match = false;
+        }
+        
+        if (match) {
+          rowEl.className = 'ff-row-active';
+        } else {
+          rowEl.className = '';
+        }
+      });
+    }
+    
+    function updateLamps() {
+      lampQ.textContent = 'Q = ' + stateQ;
+      lampQ.dataset.state = stateQ;
+      
+      var qbarVal = stateQ === '?' ? '?' : (stateQ === 1 ? 0 : 1);
+      lampQbar.textContent = 'Q̄ = ' + qbarVal;
+      lampQbar.dataset.state = qbarVal;
+    }
+    
+    function triggerClk() {
+      clkIndicator.classList.add('is-active');
+      setTimeout(function() {
+        clkIndicator.classList.remove('is-active');
+      }, 150);
+      
+      var nextQ = stateQ;
+      if (activeType === 'D') {
+        nextQ = inputs.D;
+      } else if (activeType === 'T') {
+        if (inputs.T === 1) {
+          nextQ = stateQ === 1 ? 0 : 1;
+        }
+      } else if (activeType === 'JK') {
+        var j = inputs.J;
+        var k = inputs.K;
+        if (j === 0 && k === 1) nextQ = 0;
+        else if (j === 1 && k === 0) nextQ = 1;
+        else if (j === 1 && k === 1) nextQ = stateQ === 1 ? 0 : 1;
+      } else if (activeType === 'SR') {
+        var s = inputs.S;
+        var r = inputs.R;
+        if (s === 0 && r === 1) nextQ = 0;
+        else if (s === 1 && r === 0) nextQ = 1;
+        else if (s === 1 && r === 1) nextQ = '?';
+      }
+      
+      stateQ = nextQ;
+      updateLamps();
+      highlightActiveRow();
+    }
+    
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        tabs.forEach(function(t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        activeType = tab.dataset.type;
+        
+        if (stateQ === '?') stateQ = 0;
+        
+        updateLayout();
+        updateLamps();
+      });
+    });
+    
+    clkTrigger.addEventListener('click', triggerClk);
+    
+    updateLayout();
+    updateLamps();
+  });
+
+  /* ============================================================
+     Shift Register Widget JS
+     ============================================================ */
+  document.querySelectorAll('.sr-demo').forEach(function(demo) {
+    var mode = 'SISO'; // SISO, SIPO, PISO, PIPO
+    var reg = [0, 0, 0, 0]; // [Q3, Q2, Q1, Q0]
+    var sin = 0;
+    var pin = [0, 0, 0, 0]; // [I3, I2, I1, I0]
+    var pisoMode = 'shift'; // shift, load
+    
+    var timer = null;
+    var baseInterval = 1000;
+    var speedMap = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4];
+    
+    // DOM Elements
+    var tabs = demo.querySelectorAll('.sr-tab');
+    var btnSin = demo.querySelector('#sr-btn-sin');
+    var btnPins = demo.querySelectorAll('.sr-btn--pin');
+    var btnPisoMode = demo.querySelector('#sr-btn-piso-mode');
+    
+    var btnPulse = demo.querySelector('#sr-btn-pulse');
+    var btnPlay = demo.querySelector('#sr-btn-play');
+    var btnReset = demo.querySelector('#sr-btn-reset');
+    var speedRange = demo.querySelector('#sr-speed-range');
+    var speedText = demo.querySelector('#sr-speed-text');
+    
+    var groupSerialIn = demo.querySelector('#sr-group-serial-in');
+    var groupParallelIn = demo.querySelector('#sr-group-parallel-in');
+    var groupPisoControl = demo.querySelector('#sr-group-piso-control');
+    
+    var lineSin = demo.querySelector('#sr-line-sin');
+    var lineSout = demo.querySelector('#sr-line-sout');
+    var dotSin = demo.querySelector('#sr-dot-sin');
+    var dotSout = demo.querySelector('#sr-dot-sout');
+    
+    var regBoxes = [
+      demo.querySelector('#sr-box-0'),
+      demo.querySelector('#sr-box-1'),
+      demo.querySelector('#sr-box-2'),
+      demo.querySelector('#sr-box-3')
+    ];
+    var arrows = demo.querySelectorAll('.sr-arrow');
+    var poutVisual = demo.querySelector('#sr-pout-visual');
+    
+    function getInterval() {
+      var val = parseInt(speedRange.value, 10) - 1;
+      var mult = speedMap[val] || 1;
+      return Math.round(baseInterval / mult);
+    }
+    
+    function updateLayout() {
+      // Toggle inputs visibility
+      if (mode === 'SISO') {
+        groupSerialIn.style.display = 'block';
+        groupParallelIn.style.display = 'none';
+        groupPisoControl.style.display = 'none';
+        
+        lineSin.style.visibility = 'visible';
+        lineSout.style.visibility = 'visible';
+        poutVisual.style.display = 'none';
+        
+        regBoxes.forEach(function(box) {
+          box.querySelector('.sr-reg-pin-indicator').style.display = 'none';
+        });
+      } 
+      else if (mode === 'SIPO') {
+        groupSerialIn.style.display = 'block';
+        groupParallelIn.style.display = 'none';
+        groupPisoControl.style.display = 'none';
+        
+        lineSin.style.visibility = 'visible';
+        lineSout.style.visibility = 'hidden';
+        poutVisual.style.display = 'flex';
+        
+        regBoxes.forEach(function(box) {
+          box.querySelector('.sr-reg-pin-indicator').style.display = 'none';
+        });
+      } 
+      else if (mode === 'PISO') {
+        groupSerialIn.style.display = 'block';
+        groupParallelIn.style.display = 'block';
+        groupPisoControl.style.display = 'block';
+        
+        lineSin.style.visibility = 'visible';
+        lineSout.style.visibility = 'visible';
+        poutVisual.style.display = 'none';
+        
+        regBoxes.forEach(function(box, idx) {
+          box.querySelector('.sr-reg-pin-indicator').style.display = 'block';
+        });
+      } 
+      else if (mode === 'PIPO') {
+        groupSerialIn.style.display = 'none';
+        groupParallelIn.style.display = 'block';
+        groupPisoControl.style.display = 'none';
+        
+        lineSin.style.visibility = 'hidden';
+        lineSout.style.visibility = 'hidden';
+        poutVisual.style.display = 'flex';
+        
+        regBoxes.forEach(function(box) {
+          box.querySelector('.sr-reg-pin-indicator').style.display = 'block';
+        });
+      }
+      
+      updateDisplay();
+    }
+    
+    function updateDisplay() {
+      // Registers
+      for (var i = 0; i < 4; i++) {
+        var valEl = regBoxes[i].querySelector('.sr-reg-val');
+        valEl.textContent = reg[i];
+        valEl.dataset.state = reg[i];
+        
+        // Parallel outputs
+        var lamp = demo.querySelector('#sr-lamp-' + i);
+        if (lamp) {
+          lamp.textContent = 'Q' + i + ' = ' + reg[i];
+          lamp.dataset.state = reg[i];
+        }
+      }
+    }
+    
+    function triggerClk() {
+      // Animate arrows and boxes
+      arrows.forEach(function(arr) {
+        arr.classList.add('is-active');
+        setTimeout(function() { arr.classList.remove('is-active'); }, 250);
+      });
+      
+      regBoxes.forEach(function(box) {
+        box.classList.add('is-shifting');
+        setTimeout(function() { box.classList.remove('is-shifting'); }, 200);
+      });
+      
+      // Pulse dots for serial shifting
+      if (mode === 'SISO' || mode === 'SIPO' || (mode === 'PISO' && pisoMode === 'shift')) {
+        if (dotSin) {
+          dotSin.classList.add('is-pulsing');
+          setTimeout(function() { dotSin.classList.remove('is-pulsing'); }, 300);
+        }
+        if (dotSout && reg[0] === 1 && (mode === 'SISO' || mode === 'PISO')) {
+          setTimeout(function() {
+            dotSout.classList.add('is-pulsing');
+            setTimeout(function() { dotSout.classList.remove('is-pulsing'); }, 300);
+          }, 150);
+        }
+      }
+      
+      // Calculate next state
+      if (mode === 'PIPO') {
+        // Load directly
+        reg = [...pin];
+      } 
+      else if (mode === 'PISO' && pisoMode === 'load') {
+        // Load parallel inputs
+        reg = [...pin];
+        // Automatically switch back to shift after loading to make it easy for students
+        pisoMode = 'shift';
+        btnPisoMode.textContent = 'SHIFT (เลื่อนข้อมูล)';
+        btnPisoMode.classList.remove('active');
+      } 
+      else {
+        // Shifting right: Q0<=Q1, Q1<=Q2, Q2<=Q3, Q3<=SIN
+        reg[0] = reg[1];
+        reg[1] = reg[2];
+        reg[2] = reg[3];
+        reg[3] = sin;
+      }
+      
+      updateDisplay();
+    }
+    
+    function start() {
+      if (timer) clearInterval(timer);
+      timer = setInterval(triggerClk, getInterval());
+      btnPlay.textContent = '⏸ หยุดเล่น';
+      btnPlay.classList.add('is-playing');
+    }
+    
+    function stop() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+      btnPlay.textContent = '▶ เล่นอัตโนมัติ';
+      btnPlay.classList.remove('is-playing');
+    }
+    
+    // Event listeners
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        tabs.forEach(function(t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        mode = tab.dataset.mode;
+        stop();
+        updateLayout();
+      });
+    });
+    
+    btnSin.addEventListener('click', function() {
+      sin = sin === 1 ? 0 : 1;
+      btnSin.textContent = 'SIN = ' + sin;
+      btnSin.setAttribute('aria-pressed', String(sin === 1));
+    });
+    
+    btnPins.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var idx = parseInt(btn.dataset.bitIdx, 10);
+        pin[idx] = pin[idx] === 1 ? 0 : 1;
+        btn.textContent = 'I' + idx + ' = ' + pin[idx];
+        btn.classList.toggle('is-active', pin[idx] === 1);
+      });
+    });
+    
+    if (btnPisoMode) {
+      btnPisoMode.addEventListener('click', function() {
+        if (pisoMode === 'shift') {
+          pisoMode = 'load';
+          btnPisoMode.textContent = 'LOAD (เขียนข้อมูลขนาน)';
+          btnPisoMode.classList.add('active');
+        } else {
+          pisoMode = 'shift';
+          btnPisoMode.textContent = 'SHIFT (เลื่อนข้อมูล)';
+          btnPisoMode.classList.remove('active');
+        }
+      });
+    }
+    
+    btnPulse.addEventListener('click', function() {
+      stop();
+      triggerClk();
+    });
+    
+    btnPlay.addEventListener('click', function() {
+      if (timer) stop();
+      else start();
+    });
+    
+    btnReset.addEventListener('click', function() {
+      stop();
+      reg = [0, 0, 0, 0];
+      updateDisplay();
+    });
+    
+    speedRange.addEventListener('input', function() {
+      var val = parseInt(speedRange.value, 10) - 1;
+      var mult = speedMap[val] || 1;
+      speedText.textContent = mult + '×';
+      if (timer) {
+        start();
+      }
+    });
+    
+    // Init
+    updateLayout();
+  });
+
+  /* ============================================================
+     Ripple Carry Adder Widget JS
+     ============================================================ */
+  document.querySelectorAll('.adder-demo').forEach(function(demo) {
+    var A = [0, 0, 0, 0]; // [A3, A2, A1, A0]
+    var B = [0, 0, 0, 0]; // [B3, B2, B1, B0]
+    var C0 = 0;
+    
+    var animStep = -1;
+    var carryVal = 0;
+    var animInterval = null;
+    var sums = [0, 0, 0, 0];
+    var carries = [0, 0, 0, 0, 0]; // [C0, C1, C2, C3, C4]
+    
+    var btnCalc = demo.querySelector('#adder-btn-calc');
+    var btnStep = demo.querySelector('#adder-btn-step');
+    var btnReset = demo.querySelector('#adder-btn-reset');
+    var btnC0 = demo.querySelector('#adder-btn-c0');
+    
+    var decA = demo.querySelector('#adder-dec-a');
+    var decB = demo.querySelector('#adder-dec-b');
+    var decOut = demo.querySelector('#adder-out-dec');
+    
+    var outC4 = demo.querySelector('#adder-out-c4');
+    
+    function updateDecimalReadouts() {
+      var valA = parseInt(A.join(''), 2);
+      var valB = parseInt(B.join(''), 2);
+      decA.textContent = '(ฐานสิบ: ' + valA + ')';
+      decB.textContent = '(ฐานสิบ: ' + valB + ')';
+    }
+    
+    function initButtons() {
+      demo.querySelectorAll('.adder-btn-bit[data-input]').forEach(function(btn) {
+        var input = btn.dataset.input;
+        var idx = parseInt(btn.dataset.idx, 10);
+        
+        btn.addEventListener('click', function() {
+          if (animStep !== -1) resetSimulation();
+          
+          if (input === 'A') {
+            A[3 - idx] = A[3 - idx] === 1 ? 0 : 1;
+            btn.textContent = 'A' + idx + ' = ' + A[3 - idx];
+            btn.dataset.state = A[3 - idx];
+            btn.classList.toggle('is-active', A[3 - idx] === 1);
+            var wire = demo.querySelector('#adder-w-a' + idx);
+            if (wire) {
+              wire.textContent = 'A' + idx + ' = ' + A[3 - idx];
+              wire.classList.toggle('is-active', A[3 - idx] === 1);
+            }
+          } else {
+            B[3 - idx] = B[3 - idx] === 1 ? 0 : 1;
+            btn.textContent = 'B' + idx + ' = ' + B[3 - idx];
+            btn.dataset.state = B[3 - idx];
+            btn.classList.toggle('is-active', B[3 - idx] === 1);
+            var wire = demo.querySelector('#adder-w-b' + idx);
+            if (wire) {
+              wire.textContent = 'B' + idx + ' = ' + B[3 - idx];
+              wire.classList.toggle('is-active', B[3 - idx] === 1);
+            }
+          }
+          updateDecimalReadouts();
+        });
+      });
+      
+      btnC0.addEventListener('click', function() {
+        if (animStep !== -1) resetSimulation();
+        C0 = C0 === 1 ? 0 : 1;
+        btnC0.textContent = 'C₀ = ' + C0;
+        btnC0.classList.toggle('is-active', C0 === 1);
+        
+        var c0Wire = demo.querySelector('#adder-c-wire-0');
+        if (c0Wire) c0Wire.classList.toggle('is-active', C0 === 1);
+        updateDecimalReadouts();
+      });
+    }
+    
+    function resetSimulation() {
+      if (animInterval) {
+        clearInterval(animInterval);
+        animInterval = null;
+      }
+      animStep = -1;
+      carryVal = 0;
+      
+      for (var i = 0; i < 4; i++) {
+        var faBox = demo.querySelector('#adder-fa-' + i);
+        if (faBox) {
+          faBox.classList.remove('is-active', 'is-done');
+          var cin = faBox.querySelector('.cin');
+          var cout = faBox.querySelector('.cout');
+          if (cin) {
+            cin.classList.remove('is-active');
+            cin.textContent = 'Cin = 0';
+          }
+          if (cout) {
+            cout.classList.remove('is-active');
+            cout.textContent = 'Cout = 0';
+          }
+        }
+        
+        var wireS = demo.querySelector('#adder-w-s' + i);
+        if (wireS) {
+          wireS.textContent = 'S' + i + ' = 0';
+          wireS.classList.remove('is-active');
+        }
+        
+        var outS = demo.querySelector('#adder-out-s' + i);
+        if (outS) {
+          outS.textContent = 'S' + i + ' = 0';
+          outS.classList.remove('is-active');
+        }
+        
+        if (i > 0) {
+          var wireC = demo.querySelector('#adder-c-wire-' + i);
+          if (wireC) wireC.classList.remove('is-active');
+          var dotC = demo.querySelector('#adder-c-dot-' + i);
+          if (dotC) dotC.classList.remove('is-flowing');
+        }
+      }
+      
+      var dotC0 = demo.querySelector('#adder-c-dot-0');
+      if (dotC0) dotC0.classList.remove('is-flowing');
+      var wireC0 = demo.querySelector('#adder-c-wire-0');
+      if (wireC0) wireC0.classList.toggle('is-active', C0 === 1);
+      
+      if (outC4) {
+        outC4.textContent = 'C₄ = 0';
+        outC4.classList.remove('is-active');
+      }
+      
+      decOut.textContent = 'ฐานสิบ: ' + parseInt(A.join(''), 2) + ' + ' + parseInt(B.join(''), 2) + ' = ?';
+      btnCalc.textContent = '➕ เริ่มบวก (Animate Carry)';
+    }
+    
+    function runSimulationStep() {
+      if (animStep === -1) {
+        animStep = 0;
+        carryVal = C0;
+        carries[0] = C0;
+        
+        var dotC0 = demo.querySelector('#adder-c-dot-0');
+        if (C0 === 1 && dotC0) {
+          dotC0.classList.add('is-flowing');
+        }
+      }
+      
+      if (animStep < 4) {
+        var i = animStep;
+        
+        for (var j = 0; j < 4; j++) {
+          var fb = demo.querySelector('#adder-fa-' + j);
+          if (fb) fb.classList.toggle('is-active', j === i);
+        }
+        
+        var faBox = demo.querySelector('#adder-fa-' + i);
+        if (faBox) {
+          var cinEl = faBox.querySelector('.cin');
+          var coutEl = faBox.querySelector('.cout');
+          
+          if (cinEl) {
+            cinEl.textContent = 'Cin = ' + carryVal;
+            cinEl.classList.toggle('is-active', carryVal === 1);
+          }
+          
+          var a = A[3 - i];
+          var b = B[3 - i];
+          
+          var sum = a ^ b ^ carryVal;
+          var cout = (a & b) | (carryVal & (a ^ b));
+          
+          sums[i] = sum;
+          carries[i+1] = cout;
+          
+          var wireS = demo.querySelector('#adder-w-s' + i);
+          if (wireS) {
+            wireS.textContent = 'S' + i + ' = ' + sum;
+            wireS.classList.toggle('is-active', sum === 1);
+          }
+          
+          if (coutEl) {
+            coutEl.textContent = 'Cout = ' + cout;
+            coutEl.classList.toggle('is-active', cout === 1);
+          }
+          
+          faBox.classList.add('is-done');
+          
+          var outS = demo.querySelector('#adder-out-s' + i);
+          if (outS) {
+            outS.textContent = 'S' + i + ' = ' + sum;
+            outS.classList.toggle('is-active', sum === 1);
+          }
+          
+          if (i < 3) {
+            var wireC = demo.querySelector('#adder-c-wire-' + (i+1));
+            var dotC = demo.querySelector('#adder-c-dot-' + (i+1));
+            
+            if (cout === 1) {
+              if (wireC) wireC.classList.add('is-active');
+              if (dotC) {
+                dotC.classList.add('is-flowing');
+              }
+            }
+            
+            carryVal = cout;
+            animStep++;
+          } else {
+            if (outC4) {
+              outC4.textContent = 'C₄ = ' + cout;
+              outC4.classList.toggle('is-active', cout === 1);
+            }
+            
+            var finalVal = (cout << 4) | (sums[3] << 3) | (sums[2] << 2) | (sums[1] << 1) | sums[0];
+            var valA = parseInt(A.join(''), 2);
+            var valB = parseInt(B.join(''), 2);
+            decOut.textContent = 'ฐานสิบ: ' + valA + ' + ' + valB + ' = ' + finalVal + ' (ฐานสอง: ' + cout + sums[3] + sums[2] + sums[1] + sums[0] + ')';
+            
+            animStep = 4;
+            btnCalc.textContent = '➕ เริ่มใหม่';
+            if (animInterval) {
+              clearInterval(animInterval);
+              animInterval = null;
+            }
+          }
+        }
+      } else {
+        resetSimulation();
+      }
+    }
+    
+    function startAutoSimulation() {
+      resetSimulation();
+      btnCalc.textContent = '⏸ หยุด';
+      animInterval = setInterval(function() {
+        if (animStep < 4) {
+          runSimulationStep();
+        } else {
+          clearInterval(animInterval);
+          animInterval = null;
+        }
+      }, 1000);
+    }
+    
+    btnCalc.addEventListener('click', function() {
+      if (animInterval) {
+        clearInterval(animInterval);
+        animInterval = null;
+        btnCalc.textContent = '▶ เล่นต่อ';
+      } else if (animStep === 4) {
+        resetSimulation();
+      } else if (animStep !== -1) {
+        btnCalc.textContent = '⏸ หยุด';
+        animInterval = setInterval(function() {
+          if (animStep < 4) {
+            runSimulationStep();
+          } else {
+            clearInterval(animInterval);
+            animInterval = null;
+          }
+        }, 1000);
+      } else {
+        startAutoSimulation();
+      }
+    });
+    
+    btnStep.addEventListener('click', function() {
+      if (animInterval) {
+        clearInterval(animInterval);
+        animInterval = null;
+        btnCalc.textContent = '▶ เล่นต่อ';
+      }
+      if (animStep === 4) resetSimulation();
+      runSimulationStep();
+    });
+    
+    btnReset.addEventListener('click', resetSimulation);
+    
+    initButtons();
+    updateDecimalReadouts();
+  });
+
+  /* ============================================================
+     FSM State Diagram Widget JS
+     ============================================================ */
+  document.querySelectorAll('.fsm-demo').forEach(function(demo) {
+    var fsmType = 'moore'; // moore, mealy
+    var currentState = 0; // 0, 1, 2, 3
+    var stepCount = 0;
+    
+    var tabs = demo.querySelectorAll('.fsm-tab');
+    var btnX0 = demo.querySelector('#fsm-btn-x0');
+    var btnX1 = demo.querySelector('#fsm-btn-x1');
+    var btnReset = demo.querySelector('#fsm-btn-reset');
+    
+    var stateDisplay = demo.querySelector('#fsm-current-state');
+    var outputIndicator = demo.querySelector('#fsm-output-indicator');
+    var historyLog = demo.querySelector('#fsm-history-log');
+    
+    var canvasMoore = demo.querySelector('#fsm-canvas-moore');
+    var canvasMealy = demo.querySelector('#fsm-canvas-mealy');
+    
+    var mooreTransitions = {
+      0: { 0: { next: 0, out: 0, edge: 'moore-t-s0-s0' }, 1: { next: 1, out: 0, edge: 'moore-t-s0-s1' } },
+      1: { 0: { next: 2, out: 0, edge: 'moore-t-s1-s2' }, 1: { next: 1, out: 0, edge: 'moore-t-s1-s1' } },
+      2: { 0: { next: 0, out: 0, edge: 'moore-t-s2-s0' }, 1: { next: 3, out: 0, edge: 'moore-t-s2-s3' } },
+      3: { 0: { next: 2, out: 0, edge: 'moore-t-s3-s2' }, 1: { next: 1, out: 0, edge: 'moore-t-s3-s1' } }
+    };
+    
+    var mealyTransitions = {
+      0: { 0: { next: 0, out: 0, edge: 'mealy-t-s0-s0' }, 1: { next: 1, out: 0, edge: 'mealy-t-s0-s1' } },
+      1: { 0: { next: 2, out: 0, edge: 'mealy-t-s1-s2' }, 1: { next: 1, out: 0, edge: 'mealy-t-s1-s1' } },
+      2: { 0: { next: 0, out: 0, edge: 'mealy-t-s2-s0' }, 1: { next: 1, out: 1, edge: 'mealy-t-s2-s1' } }
+    };
+    
+    function resetFsm() {
+      currentState = 0;
+      stepCount = 0;
+      historyLog.innerHTML = '<div class="fsm-history-empty">กดปุ่มอินพุต X ด้านบนเพื่อเริ่มเดินสถานะ...</div>';
+      updateVisuals();
+    }
+    
+    function updateVisuals() {
+      var outVal = 0;
+      if (fsmType === 'moore') {
+        outVal = (currentState === 3) ? 1 : 0;
+      }
+      
+      stateDisplay.textContent = 'S' + currentState;
+      outputIndicator.textContent = 'Y = ' + outVal;
+      outputIndicator.dataset.state = outVal;
+      
+      var nodes = demo.querySelectorAll('.fsm-node');
+      nodes.forEach(function(node) {
+        var id = node.id;
+        var expectedId = fsmType + '-node-s' + currentState;
+        node.classList.toggle('is-active', id === expectedId);
+      });
+    }
+    
+    function handleTransition(input) {
+      stepCount++;
+      var trans = (fsmType === 'moore') ? mooreTransitions[currentState][input] : mealyTransitions[currentState][input];
+      
+      var oldState = currentState;
+      var nextState = trans.next;
+      var outVal = trans.out;
+      
+      if (fsmType === 'moore') {
+        outVal = (nextState === 3) ? 1 : 0;
+      }
+      
+      var edgeEl = demo.querySelector('#' + trans.edge);
+      if (edgeEl) {
+        edgeEl.classList.add('is-active');
+        var labelEl = edgeEl.nextElementSibling;
+        if (labelEl && labelEl.classList.contains('fsm-edge-lbl')) {
+          labelEl.classList.add('fsm-edge-lbl--active');
+        }
+        
+        setTimeout(function() {
+          edgeEl.classList.remove('is-active');
+          if (labelEl) labelEl.classList.remove('fsm-edge-lbl--active');
+        }, 600);
+      }
+      
+      var logEmpty = historyLog.querySelector('.fsm-history-empty');
+      if (logEmpty) logEmpty.remove();
+      
+      var logItem = document.createElement('div');
+      logItem.className = 'fsm-history-item';
+      logItem.innerHTML = 't = ' + stepCount + ': ป้อน <span class="in">X = ' + input + '</span> ➔ สถานะจาก <span class="state">S' + oldState + ' ➔ S' + nextState + '</span> ➔ ผลลัพธ์ <span class="out">Y = ' + outVal + '</span>';
+      historyLog.appendChild(logItem);
+      historyLog.scrollTop = historyLog.scrollHeight;
+      
+      currentState = nextState;
+      updateVisuals();
+    }
+    
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        tabs.forEach(function(t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        fsmType = tab.dataset.fsm;
+        
+        if (fsmType === 'moore') {
+          canvasMoore.style.display = 'block';
+          canvasMealy.style.display = 'none';
+        } else {
+          canvasMoore.style.display = 'none';
+          canvasMealy.style.display = 'block';
+        }
+        
+        resetFsm();
+      });
+    });
+    
+    btnX0.addEventListener('click', function() { handleTransition(0); });
+    btnX1.addEventListener('click', function() { handleTransition(1); });
+    btnReset.addEventListener('click', resetFsm);
+    
+    resetFsm();
+  });
 });
 </script>
+
+

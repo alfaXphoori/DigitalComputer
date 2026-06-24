@@ -158,6 +158,10 @@ $$C_{out} = AB + AC_{in} + BC_{in} = AB + C_{in}(A \oplus B)$$
 
 **IC: 7483** (4-bit Binary Full Adder with Fast Carry)
 
+**🔬 ทดลองบวกเลขและดูการส่งตัวทด (Interactive Ripple-Carry Simulator):**
+
+{% include adder-demo.html %}
+
 > ⚠️ **ข้อเสีย Ripple Carry:** Carry ต้อง "ripple" จากหลักต่ำไปหลักสูง → delay สะสม เช่น 8-bit = delay × 8
 > 💡 **ทางแก้:** Carry Look-Ahead Adder (CLA) — คำนวณ carry ล่วงหน้าพร้อมกัน
 
