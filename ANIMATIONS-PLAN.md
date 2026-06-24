@@ -13,7 +13,7 @@
 - **CSS** รวมที่ไฟล์เดียว: `assets/css/style.css` — เพิ่มท้ายไฟล์ ใต้คอมเมนต์ระบุ widget
 - **JS** รวมใน `<script>` เดียวท้าย `_includes/footer.html` (อยู่ร่วมกับ scroll-reveal observer เดิม) — โหลดครั้งเดียวทั้งเว็บ
 - **Partial** ใน `_includes/*.html` มี **เฉพาะ markup** ห้ามมี `<script>`/`<style>`
-- เรียกใช้ใน Markdown ด้วย `{% include ชื่อ.html ... %}` ฝังในบทพร้อม label ไทย `**🔬 ... (Interactive):**`
+- เรียกใช้ใน Markdown ด้วย {% raw %}`{% include ชื่อ.html ... %}`{% endraw %} ฝังในบทพร้อม label ไทย `**🔬 ... (Interactive):**`
 - Vanilla JS ล้วน ไม่มี external library / ไม่มี build step เพิ่ม
 
 ### Design tokens (ใช้ตัวแปร ห้าม hardcode hex)
