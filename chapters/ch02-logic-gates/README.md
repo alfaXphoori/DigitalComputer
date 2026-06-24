@@ -79,6 +79,10 @@ $$Y = A \cdot B$$
 
 ![AND Gate](images/AND.svg)
 
+**🔬 ลองกดเล่น (Interactive):**
+
+{% include logic-gate.html type="AND" %}
+
 **IC: 7408** (Quad 2-input AND gate — มี 4 เกตในชิปเดียว)
 
 #### Timing Diagram
@@ -118,6 +122,10 @@ $$Y = A + B$$
 
 ![OR Gate](images/OR.svg)
 
+**🔬 ลองกดเล่น (Interactive):**
+
+{% include logic-gate.html type="OR" %}
+
 **IC: 7432** (Quad 2-input OR gate)
 
 #### Timing Diagram
@@ -154,6 +162,10 @@ $$Y = \overline{A}$$
 | 1 | 0 |
 
 ![NOT Gate](images/NOT.svg)
+
+**🔬 ลองกดเล่น (Interactive):**
+
+{% include logic-gate.html type="NOT" %}
 
 **IC: 7404** (Hex Inverter — มี 6 เกตในชิปเดียว)
 
@@ -276,6 +288,10 @@ $$Y = A \oplus B = A\overline{B} + \overline{A}B$$
 | 1 | 1 | 0 |
 
 ![XOR Gate](images/XOR.svg)
+
+**🔬 ลองกดเล่น (Interactive):**
+
+{% include logic-gate.html type="XOR" %}
 
 **IC: 7486** (Quad 2-input XOR gate)
 

@@ -40,5 +40,169 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
   elements.forEach(el => observer.observe(el));
+
+  /* ============================================================
+     DELIVERABLE 2 — Logic Gate Widget JS
+     ============================================================ */
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function computeGate(type, a, b) {
+    switch (type) {
+      case 'AND':    return a && b;
+      case 'OR':     return a || b;
+      case 'NOT':    return !a;
+      case 'NAND':   return !(a && b);
+      case 'NOR':    return !(a || b);
+      case 'XOR':    return a !== b;
+      case 'XNOR':   return a === b;
+      case 'BUFFER': return a;
+      default:       return false;
+    }
+  }
+
+  document.querySelectorAll('.lg-demo').forEach(function(demo) {
+    var gateType = demo.dataset.gate;
+    var inputs = demo.querySelectorAll('.lg-in');
+    var outEl = demo.querySelector('.lg-out');
+    var wireA = demo.querySelector('.lg-wire--a');
+    var wireB = demo.querySelector('.lg-wire--b');
+    var wireOut = demo.querySelector('.lg-wire--out');
+
+    function getVal(port) {
+      var btn = demo.querySelector('[data-port="' + port + '"]');
+      return btn ? btn.getAttribute('aria-pressed') === 'true' : false;
+    }
+
+    function updateOutput() {
+      var a = getVal('A');
+      var b = getVal('B');
+      var y = computeGate(gateType, a, b);
+      var yInt = y ? 1 : 0;
+
+      outEl.dataset.state = yInt;
+      outEl.textContent = 'Y=' + yInt;
+
+      if (wireA) wireA.classList.toggle('is-on', a);
+      if (wireB) wireB.classList.toggle('is-on', b);
+      if (wireOut) wireOut.classList.toggle('is-on', y);
+    }
+
+    inputs.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var pressed = btn.getAttribute('aria-pressed') === 'true';
+        var newVal = !pressed;
+        btn.setAttribute('aria-pressed', String(newVal));
+        btn.classList.toggle('is-on', newVal);
+        var port = btn.dataset.port;
+        btn.textContent = port + '=' + (newVal ? '1' : '0');
+        updateOutput();
+      });
+    });
+
+    // Initialize with A=0, B=0
+    updateOutput();
+  });
+
+  /* ============================================================
+     DELIVERABLE 3 — 4-bit Binary Counter Widget JS
+     ============================================================ */
+  // Speed mapping: slider value 1–8 → multiplier 0.5×–4×
+  var speedMap = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4];
+
+  document.querySelectorAll('.clk-counter').forEach(function(counter) {
+    var count = 0;
+    var timer = null;
+    var baseInterval = 1000; // ms at 1x speed
+
+    var led     = counter.querySelector('.clk-led');
+    var bitEls  = counter.querySelectorAll('.clk-bit');
+    var decEl   = counter.querySelector('.clk-dec');
+    var playBtn = counter.querySelector('.clk-btn--play');
+    var stepBtn = counter.querySelector('.clk-btn--step');
+    var resetBtn= counter.querySelector('.clk-btn--reset');
+    var speedIn = counter.querySelector('.clk-speed');
+    var speedVal= counter.querySelector('.clk-speed-val');
+
+    function getCurrentInterval() {
+      var idx = parseInt(speedIn.value, 10) - 1;
+      var mult = speedMap[idx] || 1;
+      return Math.round(baseInterval / mult);
+    }
+
+    function updateDisplay() {
+      // Update 4 bit lamps: index 3=Q3(MSB) … 0=Q0(LSB)
+      bitEls.forEach(function(el) {
+        var idx = parseInt(el.dataset.index, 10);
+        var bit = (count >> idx) & 1;
+        el.dataset.bit = bit;
+        el.textContent = bit;
+      });
+      decEl.textContent = count;
+    }
+
+    function tick() {
+      count = (count + 1) & 0xF; // wrap 15 → 0
+      updateDisplay();
+      // Pulse the LED: briefly add/remove a class tied to CLK edge
+      led.style.background = 'var(--cyan)';
+      setTimeout(function() {
+        if (!timer) return; // paused, keep it dim
+        led.style.background = '';
+      }, Math.min(getCurrentInterval() / 2, 200));
+    }
+
+    function startTimer() {
+      if (timer) clearInterval(timer);
+      timer = setInterval(tick, getCurrentInterval());
+      led.classList.add('is-ticking');
+      playBtn.textContent = '⏸ หยุด';
+      playBtn.classList.add('is-playing');
+    }
+
+    function stopTimer() {
+      if (timer) { clearInterval(timer); timer = null; }
+      led.classList.remove('is-ticking');
+      led.style.background = '';
+      playBtn.textContent = '▶ เริ่ม';
+      playBtn.classList.remove('is-playing');
+    }
+
+    playBtn.addEventListener('click', function() {
+      if (timer) {
+        stopTimer();
+      } else {
+        startTimer();
+      }
+    });
+
+    stepBtn.addEventListener('click', function() {
+      stopTimer();
+      tick();
+    });
+
+    resetBtn.addEventListener('click', function() {
+      stopTimer();
+      count = 0;
+      updateDisplay();
+    });
+
+    speedIn.addEventListener('input', function() {
+      var idx = parseInt(speedIn.value, 10) - 1;
+      var mult = speedMap[idx] || 1;
+      speedVal.textContent = mult + '×';
+      // Restart timer at new speed if running
+      if (timer) {
+        startTimer();
+      }
+    });
+
+    // Initialize display
+    updateDisplay();
+
+    // Auto-start ONLY if user has no motion preference
+    if (!prefersReducedMotion) {
+      startTimer();
+    }
+  });
 });
 </script>
