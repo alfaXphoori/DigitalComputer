@@ -15,3 +15,30 @@
     </div>
   </div>
 </footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const selectors = [
+    ".prose h2", ".prose h3", ".prose table", ".prose pre", ".prose blockquote", ".prose img",
+    ".section__head", ".clo", ".table-wrap", ".link-list__item", ".assess", "#calendar-view"
+  ];
+  const elements = document.querySelectorAll(selectors.join(", "));
+  
+  // Add reveal class to trigger transitions only when JS is enabled
+  elements.forEach(el => el.classList.add("reveal"));
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("revealed");
+        observer.unobserve(entry.target); // Animate only once
+      }
+    });
+  }, {
+    threshold: 0.05,
+    rootMargin: "0px 0px -40px 0px"
+  });
+
+  elements.forEach(el => observer.observe(el));
+});
+</script>
