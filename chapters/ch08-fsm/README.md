@@ -123,30 +123,69 @@ $$D = Q^+$$
 6. **K-Map Minimization:** ลดรูปสมการสำหรับ Next-State Logic และ Output Logic
 7. **Implementation:** วาดวงจรลอจิกหรือ Block Diagram สุดท้าย
 ลำดับงานโดยรวม:
-```text
-โจทย์
-  │
-  ▼
-กำหนด Input / Output / State
-  │
-  ▼
-State Diagram
-  │
-  ▼
-State Table
-  │
-  ▼
-State Assignment
-  │
-  ▼
-Excitation Table
-  │
-  ▼
-K-Map และสมการลอจิก
-  │
-  ▼
-วงจรจริง
-```
+<div class="kmap-flow">
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 1</div>
+    <div class="kmap-flow__title">โจทย์ (Problem)</div>
+    <div class="kmap-flow__desc">เริ่มจากการทำความเข้าใจโจทย์ เงื่อนไข และพฤติกรรมที่ต้องการของระบบ</div>
+  </div>
+
+  <div class="kmap-flow__arrow">↓</div>
+
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 2</div>
+    <div class="kmap-flow__title">กำหนด Input / Output / State</div>
+    <div class="kmap-flow__desc">ระบุสัญญาณอินพุต เอาต์พุต และสถานะ (State) ที่ระบบจำเป็นต้องจดจำ</div>
+  </div>
+
+  <div class="kmap-flow__arrow">↓</div>
+
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 3</div>
+    <div class="kmap-flow__title">State Diagram</div>
+    <div class="kmap-flow__desc">วาดแผนผังสถานะ แสดงการเปลี่ยนสถานะ (Transition) ตามเงื่อนไขอินพุต</div>
+  </div>
+
+  <div class="kmap-flow__arrow">↓</div>
+
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 4</div>
+    <div class="kmap-flow__title">State Table</div>
+    <div class="kmap-flow__desc">แปลงแผนผังเป็นตาราง แสดง Present State → Next State และ Output</div>
+  </div>
+
+  <div class="kmap-flow__arrow">↓</div>
+
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 5</div>
+    <div class="kmap-flow__title">State Assignment</div>
+    <div class="kmap-flow__desc">เข้ารหัสแต่ละสถานะเป็นเลขฐานสอง เพื่อเก็บใน Flip-Flop</div>
+  </div>
+
+  <div class="kmap-flow__arrow">↓</div>
+
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 6</div>
+    <div class="kmap-flow__title">Excitation Table</div>
+    <div class="kmap-flow__desc">เลือกชนิด Flip-Flop และหาค่าอินพุตที่ต้องป้อน (D / J,K / T)</div>
+  </div>
+
+  <div class="kmap-flow__arrow">↓</div>
+
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 7</div>
+    <div class="kmap-flow__title">K-Map และสมการลอจิก</div>
+    <div class="kmap-flow__desc">ลดรูปด้วย K-Map เพื่อหาสมการ Next-State Logic และ Output Logic</div>
+  </div>
+
+  <div class="kmap-flow__arrow">↓</div>
+
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 8</div>
+    <div class="kmap-flow__title">วงจรจริง</div>
+    <div class="kmap-flow__desc">นำสมการมาต่อ Flip-Flop เข้ากับ Combinational Logic เป็นวงจรสมบูรณ์</div>
+  </div>
+</div>
 ### ตัวอย่างที่ 1: Mealy Sequence Detector ตรวจจับลำดับ `101`
 **โจทย์:** ออกแบบวงจรที่รับอินพุตทีละบิต `X` และให้เอาต์พุต `Y=1` เมื่อพบลำดับ `101` โดยอนุญาตให้ลำดับซ้อนทับกันได้ (overlap)
 ตัวอย่างอินพุต:
