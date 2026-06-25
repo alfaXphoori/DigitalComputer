@@ -10,13 +10,8 @@
 
 $$\text{Output} = f(\text{Current Inputs})$$
 
-```
-                ┌──────────────────┐
- Inputs ───────→│  Combinational   │───────→ Outputs
-                │     Logic        │
-                │                  │
-                └──────────────────┘     
-```
+{% include comb-logic-demo.html %}
+
 
 ### ลักษณะสำคัญ:
 - ไม่มี feedback path จากเอาต์พุตกลับเข้าอินพุต

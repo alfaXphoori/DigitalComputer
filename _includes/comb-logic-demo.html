@@ -1,0 +1,64 @@
+<div class="cl-widget" id="comb-logic-widget">
+  <div class="cl-widget__header">
+    <div class="cl-widget__title-group">
+      <span class="cl-badge">🔬 สื่อโต้ตอบ</span>
+      <h4>แผนบล็อกไดอะแกรม Combinational Logic Block Diagram</h4>
+    </div>
+  </div>
+  
+  <div class="cl-layout">
+    <!-- Left side: Inputs -->
+    <div class="cl-side cl-side--inputs">
+      <span class="cl-side-label">Inputs (อินพุต)</span>
+      <div class="cl-input-list">
+        <div class="cl-input-row" data-port="A">
+          <button class="cl-input-btn" id="cl-btn-a" aria-pressed="false">A = 0</button>
+          <div class="cl-wire cl-wire-in cl-wire--a" id="cl-wire-a"></div>
+        </div>
+        <div class="cl-input-row" data-port="B">
+          <button class="cl-input-btn" id="cl-btn-b" aria-pressed="false">B = 0</button>
+          <div class="cl-wire cl-wire-in cl-wire--b" id="cl-wire-b"></div>
+        </div>
+        <div class="cl-input-row" data-port="C">
+          <button class="cl-input-btn" id="cl-btn-c" aria-pressed="false">C = 0</button>
+          <div class="cl-wire cl-wire-in cl-wire--c" id="cl-wire-c"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center: Combinational Logic Box -->
+    <div class="cl-center-block">
+      <div class="cl-box">
+        <span class="cl-box-title">Combinational Logic</span>
+        
+        <div class="cl-selector-wrap">
+          <select id="cl-function-select">
+            <option value="and">AND Gate (A · B · C)</option>
+            <option value="or">OR Gate (A + B + C)</option>
+            <option value="xor">XOR / Odd Parity (A ⊕ B ⊕ C)</option>
+            <option value="majority" selected>Majority Voter (AB + BC + AC)</option>
+          </select>
+        </div>
+        
+        <div class="cl-expr-wrap">
+          <span class="cl-expr-lbl">สมการลอจิก:</span>
+          <code class="cl-expr-code" id="cl-expr-display">Y = AB + BC + AC</code>
+        </div>
+      </div>
+      <!-- Output Wire from Box to Output -->
+      <div class="cl-wire cl-wire-out" id="cl-wire-y"></div>
+    </div>
+
+    <!-- Right side: Outputs -->
+    <div class="cl-side cl-side--outputs">
+      <span class="cl-side-label">Outputs (เอาต์พุต)</span>
+      <div class="cl-output-wrap">
+        <div class="cl-lamp" id="cl-lamp-y" data-state="0">
+          <span class="cl-lamp-val">Y = 0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="cl-cap">💡 <strong>วิธีทดลอง:</strong> คลิกที่ปุ่มอินพุต A, B, C ด้านซ้าย เพื่อสลับค่าระหว่าง 0 และ 1 (สายสัญญาณจะเป็นสีส้มเมื่อเป็น 1) และเลือกฟังก์ชันวงจรเชิงผสมในบล็อกเพื่อดูเอาต์พุต Y คำนวณตามจริงทันที</p>
+</div>

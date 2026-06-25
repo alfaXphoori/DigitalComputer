@@ -1440,6 +1440,94 @@ document.addEventListener("DOMContentLoaded", function() {
     resetFsm();
   });
 
+  /* ============================================================
+     Combinational Logic Widget JS
+     ============================================================ */
+  const clWidget = document.getElementById('comb-logic-widget');
+  if (clWidget) {
+    const btnA = clWidget.querySelector('#cl-btn-a');
+    const btnB = clWidget.querySelector('#cl-btn-b');
+    const btnC = clWidget.querySelector('#cl-btn-c');
+    
+    const wireA = clWidget.querySelector('#cl-wire-a');
+    const wireB = clWidget.querySelector('#cl-wire-b');
+    const wireC = clWidget.querySelector('#cl-wire-c');
+    const wireY = clWidget.querySelector('#cl-wire-y');
+    
+    const funcSelect = clWidget.querySelector('#cl-function-select');
+    const exprDisplay = clWidget.querySelector('#cl-expr-display');
+    const lampY = clWidget.querySelector('#cl-lamp-y');
+
+    let stateA = 0;
+    let stateB = 0;
+    let stateC = 0;
+
+    function toggleInput(btn, wire, valName) {
+      let isPressed = btn.getAttribute('aria-pressed') === 'true';
+      let newVal = isPressed ? 0 : 1;
+      
+      btn.setAttribute('aria-pressed', !isPressed);
+      btn.textContent = `${valName} = ${newVal}`;
+      
+      if (newVal === 1) {
+        wire.classList.add('active');
+      } else {
+        wire.classList.remove('active');
+      }
+      
+      if (valName === 'A') stateA = newVal;
+      else if (valName === 'B') stateB = newVal;
+      else if (valName === 'C') stateC = newVal;
+      
+      evaluateLogic();
+    }
+
+    btnA.addEventListener('click', () => toggleInput(btnA, wireA, 'A'));
+    btnB.addEventListener('click', () => toggleInput(btnB, wireB, 'B'));
+    btnC.addEventListener('click', () => toggleInput(btnC, wireC, 'C'));
+
+    funcSelect.addEventListener('change', () => {
+      const func = funcSelect.value;
+      if (func === 'and') {
+        exprDisplay.textContent = 'Y = A · B · C';
+      } else if (func === 'or') {
+        exprDisplay.textContent = 'Y = A + B + C';
+      } else if (func === 'xor') {
+        exprDisplay.textContent = 'Y = A ⊕ B ⊕ C';
+      } else if (func === 'majority') {
+        exprDisplay.textContent = 'Y = AB + BC + AC';
+      }
+      evaluateLogic();
+    });
+
+    function evaluateLogic() {
+      const func = funcSelect.value;
+      let outY = 0;
+      
+      if (func === 'and') {
+        outY = stateA && stateB && stateC ? 1 : 0;
+      } else if (func === 'or') {
+        outY = stateA || stateB || stateC ? 1 : 0;
+      } else if (func === 'xor') {
+        outY = (stateA ^ stateB ^ stateC) ? 1 : 0;
+      } else if (func === 'majority') {
+        outY = ((stateA && stateB) || (stateB && stateC) || (stateA && stateC)) ? 1 : 0;
+      }
+      
+      lampY.dataset.state = outY;
+      lampY.querySelector('.cl-lamp-val').textContent = `Y = ${outY}`;
+      
+      if (outY === 1) {
+        wireY.classList.add('active');
+      } else {
+        wireY.classList.remove('active');
+      }
+    }
+
+    // Init
+    evaluateLogic();
+  }
+
 });
 </script>
 
