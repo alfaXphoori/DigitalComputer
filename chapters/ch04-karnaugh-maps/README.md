@@ -467,25 +467,51 @@ $$\boxed{F = (B + C)(\overline{A} + \overline{B})}$$
 
 ## 4.10 ขั้นตอนสรุปการใช้ K-Map
 
+```mermaid
+flowchart TD
+    %% Style Definitions
+    classDef mainNode fill:#e0e7ff,stroke:#4f46e5,stroke-width:2.5px,color:#1e1b4b,font-weight:bold;
+    classDef subNode fill:#f8fafc,stroke:#cbd5e1,stroke-width:1px,color:#334155;
+    
+    S1["1. สร้างตาราง K-Map<br>(ตามลำดับ Gray Code)"]:::mainNode
+    S2["2. ใส่ค่า 1, 0, X ลงในเซลล์<br>(ตามข้อกำหนดของฟังก์ชัน)"]:::mainNode
+    
+    S3["3. จัดกลุ่ม 1 (SOP) หรือ 0 (POS)"]:::mainNode
+    
+    subgraph S3_Rules ["กฎการจัดกลุ่ม (Grouping Rules)"]
+        R3_1["จัดกลุ่มที่ใหญ่ที่สุดก่อนเสมอ (เริ่มจากกลุ่มใหญ่ก่อน)"]:::subNode
+        R3_2["จำนวนกลุ่มต้องน้อยที่สุด"]:::subNode
+        R3_3["ขนาดกลุ่มต้องเป็นรูปสี่เหลี่ยมขนาด 2ⁿ"]:::subNode
+        R3_4["เชื่อมขอบชนขอบได้ (Wrap-Around)"]:::subNode
+        R3_5["ซ้อนทับกลุ่มเดิมได้ แต่ทุกช่อง 1 ต้องอยู่ในกลุ่ม"]:::subNode
+        R3_6["นำ Don't Care (X) มาร่วมกลุ่มเพื่อขยายขนาด"]:::subNode
+    end
+    
+    S4["4. อ่านตัวแปรจากแต่ละกลุ่ม"]:::mainNode
+    
+    subgraph S4_Rules ["หลักการอ่านค่าตัวแปร"]
+        R4_1["ตัวแปรที่เปลี่ยนค่า ➔ ตัดออก"]:::subNode
+        R4_2["ตัวแปรที่คงที่ ➔ เก็บไว้"]:::subNode
+        R4_3["คงที่ 1 ➔ ปกติ (เช่น A)<br>คงที่ 0 ➔ Complement (เช่น Ā)"]:::subNode
+    end
+    
+    S5["5. เขียนสมการผลลัพธ์สุดท้าย"]:::mainNode
+    
+    subgraph S5_Out ["สมการผลลัพธ์"]
+        R5_1["SOP: OR ทุกกลุ่ม (บวกเข้าด้วยกัน)"]:::subNode
+        R5_2["POS: AND ทุกกลุ่ม (คูณเข้าด้วยกัน)"]:::subNode
+    end
+
+    %% Flow Connections
+    S1 --> S2
+    S2 --> S3
+    S3 --> S3_Rules
+    S3_Rules --> S4
+    S4 --> S4_Rules
+    S4_Rules --> S5
+    S5 --> S5_Out
 ```
-1. สร้างตาราง K-Map ตามจำนวนตัวแปร (ลำดับ Gray Code)
-          ↓
-2. ใส่ค่า 1, 0, X ลงในเซลล์ตามฟังก์ชัน
-          ↓
-3. จัดกลุ่ม 1 (SOP) หรือ 0 (POS)
-   ┌─ กลุ่มใหญ่สุด (เริ่มจากกลุ่มใหญ่ก่อน)
-   ├─ จำนวนกลุ่มน้อยสุด
-   ├─ รูปสี่เหลี่ยม, ขนาด 2ⁿ
-   ├─ ขอบเชื่อมกัน (wrap-around)
-   ├─ ซ้อนทับได้ แต่ทุกช่อง 1 ต้องอยู่ในกลุ่ม
-   └─ Don't care ช่วยขยายกลุ่ม
-          ↓
-4. อ่านตัวแปรจากแต่ละกลุ่ม
-   ├─ ตัวแปรที่เปลี่ยนค่า → ตัดออก
-   └─ ตัวแปรที่คงที่ → เก็บไว้ (=1 ปกติ, =0 complement)
-          ↓
-5. เขียนสมการ SOP (OR ทุกกลุ่ม) หรือ POS (AND ทุกกลุ่ม)
-```
+
 
 ---
 
