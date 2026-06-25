@@ -14,21 +14,11 @@
 
 $$\text{Sequential Output} = f(\text{Inputs}, \text{Present State})$$
 
-**วงจรเชิงลำดับ (Sequential Circuit)** มีองค์ประกอบ 2 ส่วน:
+**วงจรเชิงลำดับ (Sequential Circuit)** มีองค์ประกอบหลัก 2 ส่วนคือ:
+1. **วงจรเชิงผสม (Combinational Logic):** ทำหน้าที่คำนวณเอาต์พุต (Outputs) และสถานะถัดไป (Next State) จากการรวมกันของอินพุตภายนอก (Inputs) และสถานะปัจจุบัน (Present State)
+2. **องค์ประกอบความจำ (Memory Elements):** เช่น ฟลิปฟลอป (Flip-Flops) ทำหน้าที่เก็บรักษาสถานะปัจจุบัน (Present State) และอัปเดตเป็นสถานะถัดไปเมื่อได้รับสัญญาณควบคุมจากสัญญาณนาฬิกา (Clock)
 
-```
-                ┌──────────────────┐
- Inputs ───────→│  Combinational   │───────→ Outputs
-                │     Logic        │
-         ┌─────→│                  │──────┐
-         │      └──────────────────┘      │
-         │      ┌──────────────────┐      │
-         └──────│  Memory          │←─────┘
-                │  (Flip-Flops)    │
-                └───────┬──────────┘
-                        ↑
-                      Clock
-```
+{% include seq-logic-demo.html %}
 
 ---
 

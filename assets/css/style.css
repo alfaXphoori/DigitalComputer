@@ -2736,6 +2736,32 @@ table.schedule tbody tr:hover { background: #f8fafc; }
   line-height: 1.5;
 }
 
+/* ---------- Sequential Circuit SVG Wires ---------- */
+.seq-svg path {
+  transition: stroke 0.25s ease, stroke-width 0.25s ease;
+}
+.seq-wire-active-orange {
+  stroke: var(--amber) !important;
+  stroke-dasharray: 8 6;
+  animation: seq-dash-flow 0.8s infinite linear;
+}
+.seq-wire-active-cyan {
+  stroke: var(--cyan) !important;
+  stroke-dasharray: 8 6;
+  animation: seq-dash-flow 0.8s infinite linear;
+}
+.seq-wire-active-purple {
+  stroke: #818cf8 !important;
+  stroke-dasharray: 8 6;
+  animation: seq-dash-flow 0.8s infinite linear;
+}
+@keyframes seq-dash-flow {
+  to {
+    stroke-dashoffset: -14;
+  }
+}
+
+
 
 
 

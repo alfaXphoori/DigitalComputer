@@ -1534,6 +1534,151 @@ document.addEventListener("DOMContentLoaded", function() {
     evaluateLogic();
   }
 
+  /* ============================================================
+     Sequential Logic Widget JS
+     ============================================================ */
+  const seqWidget = document.getElementById('seq-logic-widget');
+  if (seqWidget) {
+    const btnA = seqWidget.querySelector('#seq-btn-a');
+    const ledA = seqWidget.querySelector('#seq-led-a');
+    const wireA = seqWidget.querySelector('#seq-wire-a');
+    
+    const wireY = seqWidget.querySelector('#seq-wire-y');
+    const wireD = seqWidget.querySelector('#seq-wire-d');
+    const wireQ = seqWidget.querySelector('#seq-wire-q');
+    const wireClk = seqWidget.querySelector('#seq-wire-clk');
+    
+    const exprDisplay = seqWidget.querySelector('#seq-expr-display');
+    const mathY = seqWidget.querySelector('#seq-math-y');
+    const valD = seqWidget.querySelector('#seq-val-d');
+    const valQ = seqWidget.querySelector('#seq-val-q');
+    const btnClk = seqWidget.querySelector('#seq-btn-clk');
+    const ledClk = seqWidget.querySelector('#seq-led-clk');
+    const chkAuto = seqWidget.querySelector('#seq-chk-auto');
+    const lampY = seqWidget.querySelector('#seq-lamp-y');
+    const explanation = seqWidget.querySelector('#seq-explanation');
+    
+    let stateA = 0;
+    let stateQ = 0; // Current state Q
+    let stateD = 0; // Next state D
+    let stateY = 0; // Output Y
+    let autoInterval = null;
+    
+    function updateLayout() {
+      // D = A XOR Q
+      stateD = stateA ^ stateQ;
+      stateY = stateQ; // Y = Q
+      
+      // Update displays
+      valD.textContent = stateD;
+      valQ.textContent = stateQ;
+      
+      exprDisplay.textContent = `D = ${stateA} ⊕ ${stateQ} = ${stateD}`;
+      mathY.textContent = `Y = Q = ${stateY}`;
+      
+      lampY.dataset.state = stateY;
+      lampY.querySelector('.cl-lamp-val').textContent = stateY;
+      
+      // Wire glowing states
+      // Wire A (Input A)
+      if (stateA === 1) {
+        wireA.classList.add('seq-wire-active-orange');
+      } else {
+        wireA.classList.remove('seq-wire-active-orange');
+      }
+      
+      // Wire D (Next state)
+      if (stateD === 1) {
+        wireD.classList.add('seq-wire-active-orange');
+      } else {
+        wireD.classList.remove('seq-wire-active-orange');
+      }
+      
+      // Wire Q (Current State feedback)
+      if (stateQ === 1) {
+        wireQ.classList.add('seq-wire-active-orange');
+      } else {
+        wireQ.classList.remove('seq-wire-active-orange');
+      }
+      
+      // Wire Y (Output Y)
+      if (stateY === 1) {
+        wireY.classList.add('seq-wire-active-cyan');
+      } else {
+        wireY.classList.remove('seq-wire-active-cyan');
+      }
+      
+      // Explanations
+      if (stateA === 0) {
+        if (stateQ === 0) {
+          explanation.innerHTML = `อินพุต <strong>A = 0</strong> และ สถานะปัจจุบัน <strong>Q = 0</strong> ทำให้ได้สถานะถัดไป <strong>D = 0</strong> (Hold) เมื่อกดนาฬิกา สถานะจะไม่เปลี่ยน`;
+        } else {
+          explanation.innerHTML = `อินพุต <strong>A = 0</strong> และ สถานะปัจจุบัน <strong>Q = 1</strong> ทำให้ได้สถานะถัดไป <strong>D = 1</strong> (Hold) เมื่อกดนาฬิกา สถานะจะไม่เปลี่ยน`;
+        }
+      } else {
+        if (stateQ === 0) {
+          explanation.innerHTML = `อินพุต <strong>A = 1</strong> และ สถานะปัจจุบัน <strong>Q = 0</strong> ทำให้ได้สถานะถัดไป <strong>D = 1</strong> (Toggle) <strong>เมื่อกด Pulse CLK ขอบขาขึ้น จะทำให้ Q สลับจาก 0 เป็น 1</strong>`;
+        } else {
+          explanation.innerHTML = `อินพุต <strong>A = 1</strong> และ สถานะปัจจุบัน <strong>Q = 1</strong> ทำให้ได้สถานะถัดไป <strong>D = 0</strong> (Toggle) <strong>เมื่อกด Pulse CLK ขอบขาขึ้น จะทำให้ Q สลับจาก 1 เป็น 0</strong>`;
+        }
+      }
+    }
+    
+    // Toggle input A
+    btnA.addEventListener('click', () => {
+      let isPressed = btnA.getAttribute('aria-pressed') === 'true';
+      let newVal = isPressed ? 0 : 1;
+      btnA.setAttribute('aria-pressed', !isPressed);
+      btnA.querySelector('.cl-btn-val').textContent = newVal;
+      
+      if (newVal === 1) {
+        ledA.classList.add('active');
+      } else {
+        ledA.classList.remove('active');
+      }
+      stateA = newVal;
+      updateLayout();
+    });
+    
+    // Pulse Clock (Rising Edge)
+    function pulseClock() {
+      // Flash CLK LED and Wire
+      ledClk.classList.add('active');
+      wireClk.classList.add('seq-wire-active-purple');
+      
+      // On rising edge, State Q updates to State D
+      stateQ = stateD;
+      
+      setTimeout(() => {
+        ledClk.classList.remove('active');
+        wireClk.classList.remove('seq-wire-active-purple');
+      }, 200);
+      
+      updateLayout();
+    }
+    
+    btnClk.addEventListener('click', () => {
+      pulseClock();
+    });
+    
+    // Auto Tick
+    chkAuto.addEventListener('change', () => {
+      if (chkAuto.checked) {
+        autoInterval = setInterval(() => {
+          pulseClock();
+        }, 1200);
+      } else {
+        if (autoInterval) {
+          clearInterval(autoInterval);
+          autoInterval = null;
+        }
+      }
+    });
+    
+    // Init
+    updateLayout();
+  }
+
 });
 </script>
 
