@@ -333,13 +333,14 @@ document.addEventListener("DOMContentLoaded", function() {
       
       var numTracks = signalNames.length;
       var trackH = 210 / numTracks;
-      
+      var amp = Math.min(20, trackH * 0.3);
+
       signalNames.forEach(function(name, tIdx) {
         if (!isCustom && getGateType() === 'NOT' && name === 'B') return;
-        
+
         var centerY = 15 + tIdx * trackH + trackH / 2;
-        var yHigh = centerY - 20;
-        var yLow = centerY + 20;
+        var yHigh = centerY - amp;
+        var yLow = centerY + amp;
         
         var label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         label.setAttribute('x', 25);
@@ -374,17 +375,18 @@ document.addEventListener("DOMContentLoaded", function() {
       tracksG.innerHTML = '';
       var numTracks = signalNames.length;
       var trackH = 210 / numTracks;
-      
+      var amp = Math.min(20, trackH * 0.3);
+
       signalNames.forEach(function(name, tIdx) {
         if (!isCustom && getGateType() === 'NOT' && name === 'B') return;
-        
+
         var W = getSignalData(name);
         if (W.length === 0) return;
-        
+
         var stepW = 700 / W.length;
         var centerY = 15 + tIdx * trackH + trackH / 2;
-        var yHigh = centerY - 20;
-        var yLow = centerY + 20;
+        var yHigh = centerY - amp;
+        var yLow = centerY + amp;
         
         var pathD = '';
         for (var i = 0; i < W.length; i++) {
