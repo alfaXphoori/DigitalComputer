@@ -26,21 +26,7 @@ $$\text{Sequential Output} = f(\text{Inputs}, \text{Present State})$$
 
 Clock คือสัญญาณ Square Wave ที่ทำหน้าที่ **ซิงโครไนซ์** วงจรทั้งหมด
 
-```
-         t0   t1   t2   t3   t4   t5   t6   t7
-CLK:   _____|‾‾‾‾|____|‾‾‾‾|____|‾‾‾‾|____|‾‾‾‾
-            ↑    ↓    ↑    ↓    ↑    ↓    ↑
-            |    |    |    |    |    |    |
-         Rise Fall Rise Fall Rise Fall Rise
-         Edge Edge Edge Edge Edge Edge Edge
-            |‾‾‾‾|____|
-            tHIGH tLOW
-            |<-- T -->|
-            ↑
-       Positive (Rising) Edge
-
-  Duty Cycle = tHIGH / T × 100%
-```
+{% include clock-demo.html %}
 
 | คำศัพท์ | ความหมาย |
 |:---|:---|
