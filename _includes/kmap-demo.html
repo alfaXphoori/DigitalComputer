@@ -1,0 +1,148 @@
+<div class="kmap-widget" id="kmap-demo-widget">
+  <div class="kmap-widget__header">
+    <div class="kmap-widget__title-group">
+      <span class="kmap-badge">🔬 สื่อโต้ตอบ</span>
+      <h4>เครื่องมือจัดกลุ่ม Karnaugh Map (4 ตัวแปร)</h4>
+    </div>
+    <div class="kmap-preset-selector">
+      <label for="kmap-presets">เลือกกรณีตัวอย่าง:</label>
+      <select id="kmap-presets">
+        <option value="custom">-- ออกแบบเอง (คลิกที่เซลล์ในตาราง) --</option>
+        <option value="single-8">กลุ่มขนาด 8 (ลดรูปได้ตัวแปรเดียว: Ā)</option>
+        <option value="corners">ขอบสี่มุมเชื่อมกัน (Wrap-around: B̄D̄)</option>
+        <option value="left-right">เชื่อมขอบซ้าย-ขวา (B̄)</option>
+        <option value="dontcare">สาธิต Don't Care (ใช้ X ขยายกลุ่ม: ĀD + BD)</option>
+        <option value="sop-example" selected>ตัวอย่างการลดรูป SOP ทั่วไป</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="kmap-layout">
+    <div class="kmap-grid-side">
+      <!-- 5x5 Grid representing K-Map -->
+      <div class="kmap-grid-wrapper">
+        <div class="kmap-grid">
+          <!-- Row 0: Headers -->
+          <div class="kmap-grid-label kmap-corner-label">
+            <span class="lbl-row">AB</span>
+            <span class="lbl-divider"></span>
+            <span class="lbl-col">CD</span>
+          </div>
+          <div class="kmap-grid-label col-header" data-col="0">00</div>
+          <div class="kmap-grid-label col-header" data-col="1">01</div>
+          <div class="kmap-grid-label col-header" data-col="2">11</div>
+          <div class="kmap-grid-label col-header" data-col="3">10</div>
+
+          <!-- Row 1: AB=00 -->
+          <div class="kmap-grid-label row-header" data-row="0">00</div>
+          <div class="kmap-cell" data-idx="0" data-row="0" data-col="0" role="button" tabindex="0">
+            <span class="cell-val">0</span>
+            <span class="cell-m">m0</span>
+          </div>
+          <div class="kmap-cell" data-idx="1" data-row="0" data-col="1" role="button" tabindex="0">
+            <span class="cell-val">0</span>
+            <span class="cell-m">m1</span>
+          </div>
+          <div class="kmap-cell" data-idx="3" data-row="0" data-col="2" role="button" tabindex="0">
+            <span class="cell-val">0</span>
+            <span class="cell-m">m3</span>
+          </div>
+          <div class="kmap-cell" data-idx="2" data-row="0" data-col="3" role="button" tabindex="0">
+            <span class="cell-val">0</span>
+            <span class="cell-m">m2</span>
+          </div>
+
+          <!-- Row 2: AB=01 -->
+          <div class="kmap-grid-label row-header" data-row="1">01</div>
+          <div class="kmap-cell" data-idx="4" data-row="1" data-col="0" role="button" tabindex="0">
+            <span class="cell-val">0</span>
+            <span class="cell-m">m4</span>
+          </div>
+          <div class="kmap-cell" data-idx="5" data-row="1" data-col="1" role="button" tabindex="0">
+            <span class="cell-val">0</span>
+            <span class="cell-m">m5</span>
+          </div>
+          <div class="kmap-cell" data-idx="7" data-row="1" data-col="2" role="button" tabindex="0">
+            <span class="cell-val">0</span>
+            <span class="cell-m">m7</span>
+          </div>
+          <div class="kmap-cell" data-idx="6" data-row="1" data-col="3" role="button" tabindex="0">
+            <span class="cell-val">0</span>
+            <span class="cell-m">m6</span>
+          </div>
+
+          <!-- Row 3: AB=11 -->
+          <div class="kmap-grid-label row-header" data-row="2">11</div>
+          <div class="kmap-cell" data-idx="12" data-row="2" data-col="0" role="button" tabindex="0">
+            <span class="cell-val">0</span>
+            <span class="cell-m">m12</span>
+          </div>
+          <div class="kmap-cell" data-idx="13" data-row="2" data-col="1" role="button" tabindex="0">
+            <span class="cell-val">0</span>
+            <span class="cell-m">m13</span>
+          </div>
+          <div class="kmap-cell" data-idx="15" data-row="2" data-col="2" role="button" tabindex="0">
+            <span class="cell-val">0</span>
+            <span class="cell-m">m15</span>
+          </div>
+          <div class="kmap-cell" data-idx="14" data-row="2" data-col="3" role="button" tabindex="0">
+            <span class="cell-val">0</span>
+            <span class="cell-m">m14</span>
+          </div>
+
+          <!-- Row 4: AB=10 -->
+          <div class="kmap-grid-label row-header" data-row="3">10</div>
+          <div class="kmap-cell" data-idx="8" data-row="3" data-col="0" role="button" tabindex="0">
+            <span class="cell-val">0</span>
+            <span class="cell-m">m8</span>
+          </div>
+          <div class="kmap-cell" data-idx="9" data-row="3" data-col="1" role="button" tabindex="0">
+            <span class="cell-val">0</span>
+            <span class="cell-m">m9</span>
+          </div>
+          <div class="kmap-cell" data-idx="11" data-row="3" data-col="2" role="button" tabindex="0">
+            <span class="cell-val">0</span>
+            <span class="cell-m">m11</span>
+          </div>
+          <div class="kmap-cell" data-idx="10" data-row="3" data-col="3" role="button" tabindex="0">
+            <span class="cell-val">0</span>
+            <span class="cell-m">m10</span>
+          </div>
+        </div>
+
+        <!-- Overlay container for drawing loops -->
+        <div class="kmap-overlays" id="kmap-loops-container"></div>
+      </div>
+
+      <div class="kmap-grid-actions">
+        <button class="kmap-btn kmap-btn--primary" id="kmap-btn-solve">⚡ หาการจัดกลุ่ม</button>
+        <button class="kmap-btn kmap-btn--secondary" id="kmap-btn-clear">ล้างค่าทั้งหมด</button>
+      </div>
+      <p class="kmap-hint">💡 คลิกที่เซลล์ในตารางเพื่อเปลี่ยนค่า: 0 ➔ 1 ➔ X (Don't Care) ➔ 0</p>
+    </div>
+
+    <div class="kmap-info-side">
+      <div class="kmap-section">
+        <h5>สมการที่ลดรูปได้ (SOP Expression)</h5>
+        <div class="kmap-expression-box">
+          <span class="kmap-expr-f">F(A,B,C,D) = </span>
+          <span class="kmap-expr-val" id="kmap-result-expr">0</span>
+        </div>
+      </div>
+
+      <div class="kmap-section">
+        <h5>กลุ่มที่พบ (Loops Identified)</h5>
+        <div class="kmap-groups-list" id="kmap-result-groups">
+          <div class="kmap-empty-state">กดปุ่ม "หาการจัดกลุ่ม" เพื่อคำนวณ...</div>
+        </div>
+      </div>
+
+      <div class="kmap-section">
+        <h5>คำอธิบายขั้นตอนลดรูป (Step-by-Step Reasoning)</h5>
+        <div class="kmap-steps-log" id="kmap-result-steps">
+          <p class="step-log-item info">คุณสามารถเลือกตัวอย่างหรือคลิกสร้างลวดลาย 1 และ X เองในตาราง จากนั้นกด "หาการจัดกลุ่ม" เพื่อจำลองการลดรูปเชิงตรรกะได้ทันที</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

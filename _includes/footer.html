@@ -42,6 +42,139 @@ document.addEventListener("DOMContentLoaded", function() {
   elements.forEach(el => observer.observe(el));
 
   /* ============================================================
+     Slide Presentation Mode (🖥️ Slides Mode)
+     ============================================================ */
+  const prose = document.querySelector(".prose");
+  if (prose) {
+    const titleEl = prose.querySelector("h1");
+    // Only display presentation button on actual chapter / lab documents
+    if (titleEl && !prose.classList.contains("no-presentation")) {
+      const btn = document.createElement("button");
+      btn.className = "pres-btn-trigger";
+      btn.innerHTML = "🖥️ นำเสนอสไลด์ (Presentation Mode)";
+      btn.onclick = startPresentation;
+      titleEl.parentNode.insertBefore(btn, titleEl.nextSibling);
+    }
+  }
+
+  function startPresentation() {
+    const proseContent = document.querySelector(".prose");
+    if (!proseContent) return;
+
+    const children = Array.from(proseContent.children);
+    const slidesContent = [];
+    let currentSlide = [];
+
+    function saveCurrentSlide() {
+      if (currentSlide.length > 0) {
+        const html = currentSlide.map(el => el.outerHTML).join("");
+        const textOnly = currentSlide.map(el => el.textContent.trim()).join("");
+        if (textOnly.length > 0 || html.includes("<img")) {
+          slidesContent.push(html);
+        }
+        currentSlide = [];
+      }
+    }
+
+    children.forEach(child => {
+      if (child.tagName === "H1" || child.tagName === "H2" || child.tagName === "HR") {
+        saveCurrentSlide();
+        if (child.tagName !== "HR") {
+          currentSlide.push(child);
+        }
+      } else {
+        if (!child.classList.contains("pres-btn-trigger") && !child.classList.contains("back-link") && child.tagName !== "STYLE" && child.tagName !== "SCRIPT") {
+          currentSlide.push(child);
+        }
+      }
+    });
+    saveCurrentSlide();
+
+    if (slidesContent.length === 0) return;
+
+    let overlay = document.querySelector(".pres-overlay");
+    if (!overlay) {
+      overlay = document.createElement("div");
+      overlay.className = "pres-overlay";
+      overlay.innerHTML = `
+        <button class="pres-btn pres-close-btn" onclick="exitPresentation()">✕ ออก</button>
+        <div class="pres-container"></div>
+        <div class="pres-controls">
+          <button class="pres-btn" id="pres-prev-btn" onclick="prevSlide()">◀ ย้อนกลับ</button>
+          <span class="pres-counter" id="pres-counter-view">1 / 1</span>
+          <button class="pres-btn" id="pres-next-btn" onclick="nextSlide()">ถัดไป ▶</button>
+        </div>
+        <div class="pres-progress-bar" id="pres-progress"></div>
+      `;
+      document.body.appendChild(overlay);
+    }
+
+    const container = overlay.querySelector(".pres-container");
+    container.innerHTML = slidesContent.map((html, idx) => `
+      <div class="pres-slide ${idx === 0 ? 'active' : ''}" data-index="${idx}">
+        ${html}
+      </div>
+    `).join("");
+
+    let currentIdx = 0;
+    const totalSlides = slidesContent.length;
+
+    window.exitPresentation = function() {
+      overlay.classList.remove("active");
+      document.body.classList.remove("presentation-mode");
+      document.removeEventListener("keydown", handleKeydown);
+    };
+
+    window.updateSlideView = function() {
+      const slides = container.querySelectorAll(".pres-slide");
+      slides.forEach((slide, idx) => {
+        slide.classList.remove("active", "prev");
+        if (idx === currentIdx) {
+          slide.classList.add("active");
+        } else if (idx < currentIdx) {
+          slide.classList.add("prev");
+        }
+      });
+
+      document.getElementById("pres-counter-view").innerText = `${currentIdx + 1} / ${totalSlides}`;
+      document.getElementById("pres-progress").style.width = `${((currentIdx + 1) / totalSlides) * 100}%`;
+      document.getElementById("pres-prev-btn").disabled = currentIdx === 0;
+      document.getElementById("pres-next-btn").disabled = currentIdx === totalSlides - 1;
+    };
+
+    window.nextSlide = function() {
+      if (currentIdx < totalSlides - 1) {
+        currentIdx++;
+        updateSlideView();
+      }
+    };
+
+    window.prevSlide = function() {
+      if (currentIdx > 0) {
+        currentIdx--;
+        updateSlideView();
+      }
+    };
+
+    function handleKeydown(e) {
+      if (e.key === "ArrowRight" || e.key === "Space" || e.key === " ") {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === "ArrowLeft" || e.key === "Backspace") {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === "Escape") {
+        exitPresentation();
+      }
+    }
+
+    overlay.classList.add("active");
+    document.body.classList.add("presentation-mode");
+    document.addEventListener("keydown", handleKeydown);
+    updateSlideView();
+  }
+
+  /* ============================================================
      DELIVERABLE 2 — Logic Gate Widget JS
      ============================================================ */
   var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1437,6 +1570,446 @@ document.addEventListener("DOMContentLoaded", function() {
     
     resetFsm();
   });
+
+  /* ============================================================
+     Karnaugh Map (K-Map) Widget JS
+     ============================================================ */
+  const kmapWidget = document.getElementById('kmap-demo-widget');
+  if (kmapWidget) {
+    const cells = kmapWidget.querySelectorAll('.kmap-cell');
+    const presetSelect = kmapWidget.getElementById('kmap-presets');
+    const btnSolve = kmapWidget.getElementById('kmap-btn-solve');
+    const btnClear = kmapWidget.getElementById('kmap-btn-clear');
+    const loopsContainer = kmapWidget.getElementById('kmap-loops-container');
+    const resultExpr = kmapWidget.getElementById('kmap-result-expr');
+    const resultGroups = kmapWidget.getElementById('kmap-result-groups');
+    const resultSteps = kmapWidget.getElementById('kmap-result-steps');
+
+    const GROUP_COLORS = [
+      { name: 'amber', hex: '#f59e0b', rgba: '245, 158, 11, 0.15', th: 'ส้ม' },
+      { name: 'cyan', hex: '#06b6d4', rgba: '6, 182, 212, 0.15', th: 'ฟ้า' },
+      { name: 'indigo', hex: '#6366f1', rgba: '99, 102, 241, 0.15', th: 'น้ำเงิน' },
+      { name: 'pink', hex: '#ec4899', rgba: '236, 72, 153, 0.15', th: 'ชมพู' },
+      { name: 'emerald', hex: '#10b981', rgba: '16, 185, 129, 0.15', th: 'เขียว' }
+    ];
+
+    const ROW_VALS = [
+      { A: 0, B: 0 },
+      { A: 0, B: 1 },
+      { A: 1, B: 1 },
+      { A: 1, B: 0 }
+    ];
+
+    const COL_VALS = [
+      { C: 0, D: 0 },
+      { C: 0, D: 1 },
+      { C: 1, D: 1 },
+      { C: 1, D: 0 }
+    ];
+
+    function getMintermIndex(r, c) {
+      const ab = ROW_VALS[r];
+      const cd = COL_VALS[c];
+      return (ab.A << 3) | (ab.B << 2) | (cd.C << 1) | cd.D;
+    }
+
+    function getTerm(r, c, H, W) {
+      let term = "";
+      if (H === 1) {
+        if (r === 0) term += "A'B'";
+        else if (r === 1) term += "A'B";
+        else if (r === 2) term += "AB";
+        else if (r === 3) term += "AB'";
+      } else if (H === 2) {
+        if (r === 0) term += "A'";
+        else if (r === 1) term += "B";
+        else if (r === 2) term += "A";
+        else if (r === 3) term += "B'";
+      }
+
+      if (W === 1) {
+        if (c === 0) term += "C'D'";
+        else if (c === 1) term += "C'D";
+        else if (c === 2) term += "CD";
+        else if (c === 3) term += "CD'";
+      } else if (W === 2) {
+        if (c === 0) term += "C'";
+        else if (c === 1) term += "D";
+        else if (c === 2) term += "C";
+        else if (c === 3) term += "D'";
+      }
+      return term === "" ? "1" : term;
+    }
+
+    function formatTerm(term) {
+      return term.replace(/([A-Z])'/g, '<span class="overline">$1</span>');
+    }
+
+    function clearOutputs() {
+      loopsContainer.innerHTML = '';
+      resultExpr.innerHTML = '0';
+      resultGroups.innerHTML = '<div class="kmap-empty-state">กดปุ่ม "หาการจัดกลุ่ม" เพื่อคำนวณ...</div>';
+      resultSteps.innerHTML = '<p class="step-log-item info">คุณสามารถเลือกตัวอย่างหรือคลิกสร้างลวดลาย 1 และ X เองในตาราง จากนั้นกด "หาการจัดกลุ่ม" เพื่อจำลองการลดรูปเชิงตรรกะได้ทันที</p>';
+    }
+
+    function loadPreset(name) {
+      const values = Array(16).fill('0');
+      if (name === 'single-8') {
+        [0, 1, 2, 3, 4, 5, 6, 7].forEach(idx => values[idx] = '1');
+      } else if (name === 'corners') {
+        [0, 2, 8, 10].forEach(idx => values[idx] = '1');
+      } else if (name === 'left-right') {
+        [0, 1, 2, 3, 8, 9, 10, 11].forEach(idx => values[idx] = '1');
+      } else if (name === 'dontcare') {
+        [0, 1, 5, 13, 15].forEach(idx => values[idx] = '1');
+        [3, 7].forEach(idx => values[idx] = 'X');
+      } else if (name === 'sop-example') {
+        [0, 2, 5, 7, 8, 10, 13, 15].forEach(idx => values[idx] = '1');
+      }
+
+      cells.forEach(cell => {
+        const idx = parseInt(cell.dataset.idx);
+        const val = values[idx];
+        cell.dataset.value = val;
+        cell.querySelector('.cell-val').textContent = val;
+      });
+
+      clearOutputs();
+      if (name !== 'custom') {
+        solveKMap();
+      }
+    }
+
+    function initKMap() {
+      cells.forEach(cell => {
+        cell.addEventListener('click', () => {
+          let currVal = cell.dataset.value || '0';
+          let newVal = '0';
+          if (currVal === '0') newVal = '1';
+          else if (currVal === '1') newVal = 'X';
+          else newVal = '0';
+
+          cell.dataset.value = newVal;
+          cell.querySelector('.cell-val').textContent = newVal;
+          
+          presetSelect.value = 'custom';
+          clearOutputs();
+        });
+      });
+
+      presetSelect.addEventListener('change', (e) => {
+        loadPreset(e.target.value);
+      });
+
+      btnSolve.addEventListener('click', () => {
+        solveKMap();
+      });
+
+      btnClear.addEventListener('click', () => {
+        cells.forEach(cell => {
+          cell.dataset.value = '0';
+          cell.querySelector('.cell-val').textContent = '0';
+        });
+        presetSelect.value = 'custom';
+        clearOutputs();
+      });
+
+      // Load default selected preset
+      loadPreset(presetSelect.value);
+    }
+
+    function appendStepLog(text, className) {
+      const p = document.createElement('p');
+      p.className = `step-log-item ${className}`;
+      p.innerHTML = text;
+      resultSteps.appendChild(p);
+      resultSteps.scrollTop = resultSteps.scrollHeight;
+    }
+
+    function solveKMap() {
+      loopsContainer.innerHTML = '';
+      resultSteps.innerHTML = '';
+      
+      const values = Array(16).fill('0');
+      cells.forEach(cell => {
+        const idx = parseInt(cell.dataset.idx);
+        values[idx] = cell.dataset.value || '0';
+      });
+
+      const count1 = values.filter(v => v === '1').length;
+      const countX = values.filter(v => v === 'X').length;
+
+      appendStepLog(`วิเคราะห์คาร์โนห์: พบคลิก 1 ทั้งหมด ${count1} ช่อง, สภาวะไม่แคร์ (X) ทั้งหมด ${countX} ช่อง`, 'info');
+
+      if (count1 === 0) {
+        resultExpr.innerHTML = '0';
+        resultGroups.innerHTML = '<div class="kmap-empty-state">ไม่พบมินเทอมที่ต้องการจัดกลุ่ม (สมการมีค่าคงที่ 0)</div>';
+        appendStepLog('ผลลัพธ์สุดท้าย: F = 0 (ไม่มีมินเทอมที่เป็น 1)', 'success');
+        return;
+      }
+
+      function isRectangleValid(r, c, H, W) {
+        for (let i = 0; i < H; i++) {
+          for (let j = 0; j < W; j++) {
+            const curr_r = (r + i) % 4;
+            const curr_c = (c + j) % 4;
+            const m = getMintermIndex(curr_r, curr_c);
+            if (values[m] === '0') return false;
+          }
+        }
+        return true;
+      }
+
+      const rectSizes = [
+        { H: 4, W: 4 },
+        { H: 2, W: 4 }, { H: 4, W: 2 },
+        { H: 2, W: 2 }, { H: 1, W: 4 }, { H: 4, W: 1 },
+        { H: 1, W: 2 }, { H: 2, W: 1 },
+        { H: 1, W: 1 }
+      ];
+
+      const allGroups = [];
+      const seenGroupKeys = new Set();
+
+      for (const { H, W } of rectSizes) {
+        for (let r = 0; r < 4; r++) {
+          for (let c = 0; c < 4; c++) {
+            if (isRectangleValid(r, c, H, W)) {
+              const rectCells = [];
+              for (let i = 0; i < H; i++) {
+                for (let j = 0; j < W; j++) {
+                  rectCells.push(getMintermIndex((r + i) % 4, (c + j) % 4));
+                }
+              }
+              rectCells.sort((a, b) => a - b);
+              const key = rectCells.join(',');
+              if (!seenGroupKeys.has(key)) {
+                seenGroupKeys.add(key);
+                allGroups.push({ r, c, H, W, cells: rectCells, size: H * W });
+              }
+            }
+          }
+        }
+      }
+
+      // Filter Prime Implicants (PI)
+      const primeImplicants = [];
+      for (const group of allGroups) {
+        let isSubset = false;
+        for (const other of allGroups) {
+          if (other.size > group.size) {
+            const isAllInOther = group.cells.every(m => other.cells.includes(m));
+            if (isAllInOther) {
+              isSubset = true;
+              break;
+            }
+          }
+        }
+        if (!isSubset) {
+          primeImplicants.push(group);
+        }
+      }
+
+      const mintermsToCover = [];
+      for (let m = 0; m < 16; m++) {
+        if (values[m] === '1') mintermsToCover.push(m);
+      }
+
+      const essentialPrimeImplicants = [];
+      const coveredMinterms = new Set();
+
+      for (const m of mintermsToCover) {
+        const coveringPIs = primeImplicants.filter(pi => pi.cells.includes(m));
+        if (coveringPIs.length === 1) {
+          const epi = coveringPIs[0];
+          if (!essentialPrimeImplicants.includes(epi)) {
+            essentialPrimeImplicants.push(epi);
+            epi.isEssential = true;
+            epi.cells.forEach(c => coveredMinterms.add(c));
+          }
+        }
+      }
+
+      if (essentialPrimeImplicants.length > 0) {
+        appendStepLog(`พบกลุ่มจำเป็น (Essential Prime Implicant - EPI) ทั้งหมด ${essentialPrimeImplicants.length} กลุ่ม`, 'info');
+        essentialPrimeImplicants.forEach((epi, idx) => {
+          const term = getTerm(epi.r, epi.c, epi.H, epi.W);
+          appendStepLog(`➔ EPI #${idx+1}: <b>${term}</b> คลุมช่อง m[${epi.cells.join(',')}]`, 'epi');
+        });
+      } else {
+        appendStepLog('ไม่พบกลุ่มจำเป็น (EPI)', 'info');
+      }
+
+      const remainingMinterms = mintermsToCover.filter(m => !coveredMinterms.has(m));
+      const selectedPIs = [];
+
+      if (remainingMinterms.length > 0) {
+        appendStepLog(`พบมินเทอม 1 ที่ยังไม่ได้คลุม: m[${remainingMinterms.join(',')}] ทำการหา PI เสริมที่ครอบคลุมมากที่สุด`, 'info');
+        let tempUncovered = new Set(remainingMinterms);
+        const nonEssentialPIs = primeImplicants.filter(pi => !pi.isEssential);
+
+        while (tempUncovered.size > 0) {
+          let bestPI = null;
+          let maxCoverCount = 0;
+
+          for (const pi of nonEssentialPIs) {
+            if (selectedPIs.includes(pi)) continue;
+            const coverCount = pi.cells.filter(c => tempUncovered.has(c)).length;
+            if (coverCount > maxCoverCount) {
+              maxCoverCount = coverCount;
+              bestPI = pi;
+            } else if (coverCount === maxCoverCount && bestPI) {
+              if (pi.size > bestPI.size) {
+                bestPI = pi;
+              }
+            }
+          }
+
+          if (!bestPI) break;
+
+          selectedPIs.push(bestPI);
+          const term = getTerm(bestPI.r, bestPI.c, bestPI.H, bestPI.W);
+          appendStepLog(`➔ เลือก PI เสริม: <b>${term}</b> คลุมช่องที่เหลือ m[${bestPI.cells.filter(c => tempUncovered.has(c)).join(',')}]`, 'pi');
+          bestPI.cells.forEach(c => tempUncovered.delete(c));
+        }
+      }
+
+      const minimalCover = [...essentialPrimeImplicants, ...selectedPIs];
+
+      // Print groups layout
+      resultGroups.innerHTML = '';
+      minimalCover.forEach((group, idx) => {
+        const color = GROUP_COLORS[idx % GROUP_COLORS.length];
+        const term = getTerm(group.r, group.c, group.H, group.W);
+        const item = document.createElement('div');
+        item.className = 'kmap-group-item';
+        item.innerHTML = `
+          <div class="kmap-group-left">
+            <span class="kmap-color-dot" style="background-color: ${color.hex}"></span>
+            <span class="kmap-group-term">${formatTerm(term)}</span>
+            <span class="kmap-group-type">${group.isEssential ? 'จำเป็น (EPI)' : 'เลือกเสริม (PI)'}</span>
+          </div>
+          <span class="kmap-group-cells">คลุมช่อง m[${group.cells.join(',')}]</span>
+        `;
+        resultGroups.appendChild(item);
+      });
+
+      // Animate rendering of loops
+      minimalCover.forEach((group, groupIdx) => {
+        const colorInfo = GROUP_COLORS[groupIdx % GROUP_COLORS.length];
+        
+        const rowSegments = group.H === 1 ? [[group.r, group.r]] : (group.H === 4 ? [[0, 3]] : (group.r === 3 ? [[3, 3], [0, 0]] : [[group.r, group.r+1]]));
+        const colSegments = group.W === 1 ? [[group.c, group.c]] : (group.W === 4 ? [[0, 3]] : (group.c === 3 ? [[group.c, group.c], [0, 0]] : [[group.c, group.c+1]]));
+
+        rowSegments.forEach((rSeg, rSegIdx) => {
+          colSegments.forEach((cSeg, cSegIdx) => {
+            const rStart = rSeg[0];
+            const rEnd = rSeg[1];
+            const cStart = cSeg[0];
+            const cEnd = cSeg[1];
+
+            let rectTop = rStart * 60;
+            let rectLeft = cStart * 60;
+            let rectWidth = (cEnd - cStart + 1) * 60;
+            let rectHeight = (rEnd - rStart + 1) * 60;
+
+            const pad = 6;
+            let padTop = pad;
+            let padBottom = pad;
+            let padLeft = pad;
+            let padRight = pad;
+
+            if (colSegments.length > 1) {
+              if (cSegIdx === 0) padRight = 0;
+              else padLeft = 0;
+            }
+            if (rowSegments.length > 1) {
+              if (rSegIdx === 0) padBottom = 0;
+              else padTop = 0;
+            }
+
+            rectTop += padTop;
+            rectLeft += padLeft;
+            rectWidth -= (padLeft + padRight);
+            rectHeight -= (padTop + padBottom);
+
+            const loopDiv = document.createElement('div');
+            loopDiv.className = 'kmap-loop';
+            loopDiv.style.top = rectTop + 'px';
+            loopDiv.style.left = rectLeft + 'px';
+            loopDiv.style.width = rectWidth + 'px';
+            loopDiv.style.height = rectHeight + 'px';
+            loopDiv.style.backgroundColor = `rgba(${colorInfo.rgba})`;
+
+            let borderTop = `2px solid ${colorInfo.hex}`;
+            let borderBottom = `2px solid ${colorInfo.hex}`;
+            let borderLeft = `2px solid ${colorInfo.hex}`;
+            let borderRight = `2px solid ${colorInfo.hex}`;
+
+            let trr = '12px', tlr = '12px', brr = '12px', blr = '12px';
+
+            if (colSegments.length > 1) {
+              if (cSegIdx === 0) {
+                borderRight = '2px dashed rgba(255,255,255,0.3)';
+                trr = '0';
+                brr = '0';
+              } else {
+                borderLeft = '2px dashed rgba(255,255,255,0.3)';
+                tlr = '0';
+                blr = '0';
+              }
+            }
+            if (rowSegments.length > 1) {
+              if (rSegIdx === 0) {
+                borderBottom = '2px dashed rgba(255,255,255,0.3)';
+                brr = '0';
+                blr = '0';
+              } else {
+                borderTop = '2px dashed rgba(255,255,255,0.3)';
+                trr = '0';
+                tlr = '0';
+              }
+            }
+
+            loopDiv.style.borderTop = borderTop;
+            loopDiv.style.borderBottom = borderBottom;
+            loopDiv.style.borderLeft = borderLeft;
+            loopDiv.style.borderRight = borderRight;
+
+            loopDiv.style.borderTopLeftRadius = tlr;
+            loopDiv.style.borderTopRightRadius = trr;
+            loopDiv.style.borderBottomLeftRadius = blr;
+            loopDiv.style.borderBottomRightRadius = brr;
+
+            loopsContainer.appendChild(loopDiv);
+
+            // Animate entrance of the loop
+            setTimeout(() => {
+              loopDiv.classList.add('is-visible');
+            }, groupIdx * 300);
+          });
+        });
+      });
+
+      // Display expression
+      let exprHtml = '';
+      if (minimalCover.length === 0) {
+        exprHtml = '0';
+      } else {
+        exprHtml = minimalCover.map((group, idx) => {
+          const colorInfo = GROUP_COLORS[idx % GROUP_COLORS.length];
+          const formattedTerm = formatTerm(getTerm(group.r, group.c, group.H, group.W));
+          return `<span class="kmap-expr-term" style="background: rgba(${colorInfo.rgba}); border-color: ${colorInfo.hex}">${formattedTerm}</span>`;
+        }).join(' + ');
+      }
+      resultExpr.innerHTML = exprHtml;
+
+      const resultString = minimalCover.map(g => getTerm(g.r, g.c, g.H, g.W)).join(' + ') || '0';
+      appendStepLog(`ลดรูปสำเร็จ: <b>F = ${resultString}</b>`, 'success');
+    }
+
+    initKMap();
+  }
 });
 </script>
 
