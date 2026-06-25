@@ -1454,6 +1454,10 @@ document.addEventListener("DOMContentLoaded", function() {
     const wireC = clWidget.querySelector('#cl-wire-c');
     const wireY = clWidget.querySelector('#cl-wire-y');
     
+    const ledA = clWidget.querySelector('#cl-led-a');
+    const ledB = clWidget.querySelector('#cl-led-b');
+    const ledC = clWidget.querySelector('#cl-led-c');
+    
     const funcSelect = clWidget.querySelector('#cl-function-select');
     const exprDisplay = clWidget.querySelector('#cl-expr-display');
     const lampY = clWidget.querySelector('#cl-lamp-y');
@@ -1462,17 +1466,19 @@ document.addEventListener("DOMContentLoaded", function() {
     let stateB = 0;
     let stateC = 0;
 
-    function toggleInput(btn, wire, valName) {
+    function toggleInput(btn, wire, led, valName) {
       let isPressed = btn.getAttribute('aria-pressed') === 'true';
       let newVal = isPressed ? 0 : 1;
       
       btn.setAttribute('aria-pressed', !isPressed);
-      btn.textContent = `${valName} = ${newVal}`;
+      btn.querySelector('.cl-btn-val').textContent = newVal;
       
       if (newVal === 1) {
         wire.classList.add('active');
+        led.classList.add('active');
       } else {
         wire.classList.remove('active');
+        led.classList.remove('active');
       }
       
       if (valName === 'A') stateA = newVal;
@@ -1482,9 +1488,9 @@ document.addEventListener("DOMContentLoaded", function() {
       evaluateLogic();
     }
 
-    btnA.addEventListener('click', () => toggleInput(btnA, wireA, 'A'));
-    btnB.addEventListener('click', () => toggleInput(btnB, wireB, 'B'));
-    btnC.addEventListener('click', () => toggleInput(btnC, wireC, 'C'));
+    btnA.addEventListener('click', () => toggleInput(btnA, wireA, ledA, 'A'));
+    btnB.addEventListener('click', () => toggleInput(btnB, wireB, ledB, 'B'));
+    btnC.addEventListener('click', () => toggleInput(btnC, wireC, ledC, 'C'));
 
     funcSelect.addEventListener('change', () => {
       const func = funcSelect.value;
@@ -1515,7 +1521,7 @@ document.addEventListener("DOMContentLoaded", function() {
       }
       
       lampY.dataset.state = outY;
-      lampY.querySelector('.cl-lamp-val').textContent = `Y = ${outY}`;
+      lampY.querySelector('.cl-lamp-val').textContent = outY;
       
       if (outY === 1) {
         wireY.classList.add('active');
