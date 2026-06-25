@@ -10,21 +10,50 @@
 
 จากบทที่ 6 เราทราบว่า Flip-Flop ทำหน้าที่เป็นหน่วยความจำ 1 บิต และจากบทที่ 7 เราเห็นว่า Counter คือวงจรที่เปลี่ยนสถานะตามลำดับที่กำหนด FSM คือแนวคิดที่ขยายจาก Counter ให้กว้างขึ้น กล่าวคือ สถานะถัดไปไม่จำเป็นต้องเป็นเลขถัดไปเสมอ แต่ขึ้นกับอินพุตและกฎของระบบ
 
-```text
-                  ┌─────────────────────┐
-  Input X ───────►│   Next-State Logic  │──────► D / J,K / T
-                  └──────────▲──────────┘
-                             │ Present State
-                      ┌──────┴──────┐
-  Clock ─────────────►│ Flip-Flops  │──────► Q
-                      │ State Reg.  │
-                      └──────┬──────┘
-                             │
-                             ▼
-                  ┌─────────────────────┐
-                  │    Output Logic     │──────► Output Y
-                  └─────────────────────┘
-```
+<svg viewBox="0 0 760 420" role="img" aria-label="โครงสร้าง FSM: Next-State Logic, Flip-Flops (State Register), Output Logic พร้อมเส้นป้อนกลับ Present State" style="width:100%; max-width:720px; height:auto; display:block; margin:1.25rem auto; font-family:'Segoe UI',system-ui,sans-serif;">
+  <defs>
+    <marker id="arrow-bd1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <!-- Next-State Logic -->
+  <rect x="260" y="30" width="240" height="70" rx="8" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+  <text x="380" y="70" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0f172a">Next-State Logic</text>
+
+  <!-- Flip-Flops -->
+  <rect x="260" y="180" width="240" height="70" rx="8" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+  <text x="380" y="208" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0f172a">Flip-Flops</text>
+  <text x="380" y="226" text-anchor="middle" font-size="12" fill="#1e293b">(State Register)</text>
+
+  <!-- Output Logic -->
+  <rect x="260" y="330" width="240" height="70" rx="8" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+  <text x="380" y="370" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0f172a">Output Logic</text>
+
+  <!-- Input X -> Next-State Logic -->
+  <text x="60" y="60" font-size="12.5" fill="#0f172a">Input X</text>
+  <path d="M100,65 L260,65" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd1)"/>
+
+  <!-- Next-State Logic -> Flip-Flops -->
+  <path d="M380,100 L380,180" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd1)"/>
+  <text x="450" y="148" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">D / J,K / T</text>
+
+  <!-- Clock -> Flip-Flops -->
+  <text x="60" y="220" font-size="12.5" fill="#0f172a">Clock</text>
+  <path d="M100,225 L260,225" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd1)"/>
+
+  <!-- Flip-Flops -> Output Logic -->
+  <path d="M380,250 L380,330" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd1)"/>
+  <text x="410" y="298" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q</text>
+
+  <!-- Output Logic -> Output Y -->
+  <path d="M500,365 L700,365" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd1)"/>
+  <text x="650" y="350" text-anchor="middle" font-size="12.5" fill="#0f172a">Output Y</text>
+
+  <!-- Feedback: Flip-Flops -> Next-State Logic (Present State) -->
+  <path d="M260,215 C150,215 150,65 260,65" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd1)"/>
+  <text x="150" y="140" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">Present State</text>
+</svg>
 
 FSM เป็นหัวใจหลักในการออกแบบ:
 
@@ -62,46 +91,159 @@ FSM เป็นหัวใจหลักในการออกแบบ:
 
 **เอาต์พุตขึ้นอยู่กับ "สถานะปัจจุบัน" เท่านั้น** หากอินพุตเปลี่ยนแต่สถานะยังไม่เปลี่ยน เอาต์พุตจะคงเดิมเสมอ
 
-```text
-        ┌───────────────┐        ┌──────────────┐        ┌───────────────┐
-Input ──┤  Next State   ├───────►│    State      ├───┬───►│    Output     ├──► Output
-        │     Logic     │        │   Register    │   │    │     Logic     │
-        └───────▲───────┘        └───────┬───────┘   │    └───────────────┘
-                │            Clock ──────┘            │
-                └──────────────────────────────────────┘
-```
+<svg viewBox="0 0 840 280" role="img" aria-label="Moore block diagram: Next-State Logic, State Register, Output Logic ที่รับเฉพาะ Q จาก State Register" style="width:100%; max-width:760px; height:auto; display:block; margin:1.25rem auto; font-family:'Segoe UI',system-ui,sans-serif;">
+  <defs>
+    <marker id="arrow-bd2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <!-- Next-State Logic -->
+  <rect x="60" y="70" width="160" height="70" rx="8" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+  <text x="140" y="100" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">Next-State</text>
+  <text x="140" y="118" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">Logic</text>
+
+  <!-- State Register -->
+  <rect x="320" y="70" width="160" height="70" rx="8" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+  <text x="400" y="100" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">State</text>
+  <text x="400" y="118" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">Register</text>
+
+  <!-- Output Logic -->
+  <rect x="580" y="70" width="160" height="70" rx="8" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+  <text x="660" y="100" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">Output</text>
+  <text x="660" y="118" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">Logic</text>
+
+  <!-- Input -> Next-State Logic -->
+  <text x="15" y="100" font-size="12.5" fill="#0f172a">Input</text>
+  <path d="M15,108 L60,108" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd2)"/>
+
+  <!-- Next-State Logic -> State Register -->
+  <path d="M220,105 L320,105" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd2)"/>
+
+  <!-- State Register -> Output Logic (Q) -->
+  <path d="M480,105 L580,105" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd2)"/>
+  <text x="530" y="93" text-anchor="middle" font-size="12.5" fill="#0f172a">Q</text>
+
+  <!-- Output Logic -> Output -->
+  <path d="M740,105 L820,105" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd2)"/>
+  <text x="780" y="93" text-anchor="middle" font-size="12.5" fill="#0f172a">Output</text>
+
+  <!-- Clock -> State Register -->
+  <text x="400" y="215" text-anchor="middle" font-size="12.5" fill="#0f172a">Clock</text>
+  <path d="M400,200 L400,140" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd2)"/>
+
+  <!-- Feedback: State Register -> Next-State Logic -->
+  <path d="M400,70 L400,40 L140,40 L140,70" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd2)"/>
+  <text x="270" y="28" text-anchor="middle" font-size="12.5" fill="#0f172a">feedback (Q)</text>
+</svg>
 
 ใน State Diagram ของ Moore จะเขียนเอาต์พุตไว้ในวงกลมสถานะ เช่น `S2 / Y=1` เพราะเอาต์พุตเป็นคุณสมบัติของสถานะนั้นโดยตรง
 
-```text
-       X=0                    X=1
-   ┌─────────┐            ┌─────────┐
-   │ S0/Y=0  ├───────────►│ S1/Y=1  │
-   └─────────┘            └─────────┘
-```
+<svg viewBox="0 0 420 180" role="img" aria-label="Moore ตัวอย่าง: S0/Y=0 วน X=0 และไป S1/Y=1 เมื่อ X=1" style="width:100%; max-width:420px; height:auto; display:block; margin:1.25rem auto; font-family:'Segoe UI',system-ui,sans-serif;">
+  <defs>
+    <marker id="arrow-sd1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <!-- self-loop on S0 -->
+  <path d="M85,66 C60,20 150,20 125,66" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd1)"/>
+  <text x="105" y="22" text-anchor="middle" font-size="12.5" fill="#0f172a">X=0</text>
+
+  <!-- S0 -->
+  <circle cx="105" cy="100" r="34" fill="#eef2ff" stroke="#6366f1" stroke-width="2.5"/>
+  <text x="105" y="95" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#1e293b">S0</text>
+  <text x="105" y="111" text-anchor="middle" dominant-baseline="central" font-size="12" font-weight="600" fill="#1e293b">Y=0</text>
+
+  <!-- edge S0 -> S1 -->
+  <path d="M139,100 L281,100" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd1)"/>
+  <text x="210" y="88" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">X=1</text>
+
+  <!-- S1 -->
+  <circle cx="315" cy="100" r="34" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+  <text x="315" y="95" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#1e293b">S1</text>
+  <text x="315" y="111" text-anchor="middle" dominant-baseline="central" font-size="12" font-weight="600" fill="#1e293b">Y=1</text>
+</svg>
 
 ### 2. Mealy Machine
 
 **เอาต์พุตขึ้นอยู่กับ "สถานะปัจจุบัน" และ "อินพุต" พร้อมกัน** เอาต์พุตสามารถเปลี่ยนแปลงได้ทันทีเมื่ออินพุตเปลี่ยน แม้จะยังไม่ถึงขอบสัญญาณนาฬิกา
 
-```text
-        ┌───────────────┐        ┌──────────────┐
-Input ──┬──► Next State ├───────►│    State      ├───┬─────┐
-        │ │    Logic    │        │   Register    │   │     │  ┌───────────────┐
-        │ └──────▲──────┘        └───────┬───────┘   │     └─►│    Output     ├──► Output
-        │        │           Clock ──────┘            │     ┌─►│     Logic     │
-        └────────┼────────────────────────────────────┼─────┘  └───────────────┘
-                 └────────────────────────────────────┘
-```
+<svg viewBox="0 0 860 320" role="img" aria-label="Mealy block diagram: Next-State Logic, State Register, Output Logic ที่รับทั้ง Q จาก State Register และ Input โดยตรง" style="width:100%; max-width:760px; height:auto; display:block; margin:1.25rem auto; font-family:'Segoe UI',system-ui,sans-serif;">
+  <defs>
+    <marker id="arrow-bd3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <!-- Next-State Logic -->
+  <rect x="80" y="90" width="160" height="70" rx="8" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+  <text x="160" y="120" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">Next-State</text>
+  <text x="160" y="138" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">Logic</text>
+
+  <!-- State Register -->
+  <rect x="340" y="90" width="160" height="70" rx="8" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+  <text x="420" y="120" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">State</text>
+  <text x="420" y="138" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">Register</text>
+
+  <!-- Output Logic -->
+  <rect x="600" y="90" width="160" height="70" rx="8" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+  <text x="680" y="120" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">Output</text>
+  <text x="680" y="138" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">Logic</text>
+
+  <!-- Input -> Next-State Logic -->
+  <text x="15" y="120" font-size="12.5" fill="#0f172a">Input</text>
+  <path d="M15,128 L80,128" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd3)"/>
+
+  <!-- Next-State Logic -> State Register -->
+  <path d="M240,125 L340,125" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd3)"/>
+
+  <!-- State Register -> Output Logic (Q) -->
+  <path d="M500,125 L600,125" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd3)"/>
+  <text x="550" y="113" text-anchor="middle" font-size="12.5" fill="#0f172a">Q</text>
+
+  <!-- Output Logic -> Output -->
+  <path d="M760,125 L840,125" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd3)"/>
+  <text x="800" y="113" text-anchor="middle" font-size="12.5" fill="#0f172a">Output</text>
+
+  <!-- Clock -> State Register -->
+  <text x="420" y="235" text-anchor="middle" font-size="12.5" fill="#0f172a">Clock</text>
+  <path d="M420,220 L420,160" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd3)"/>
+
+  <!-- Feedback: State Register -> Next-State Logic -->
+  <path d="M420,90 L420,60 L160,60 L160,90" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd3)"/>
+  <text x="290" y="48" text-anchor="middle" font-size="12.5" fill="#0f172a">feedback (Q)</text>
+
+  <!-- Key Mealy difference: Input -> Output Logic directly -->
+  <path d="M30,128 L30,280 L680,280 L680,160" fill="none" stroke="#dc2626" stroke-width="2.25" stroke-dasharray="6,4" marker-end="url(#arrow-bd3)"/>
+  <text x="355" y="297" text-anchor="middle" font-size="12.5" font-weight="600" fill="#dc2626">Input ส่งตรงเข้า Output Logic (จุดต่างจาก Moore)</text>
+</svg>
 
 ใน State Diagram ของ Mealy จะเขียนเอาต์พุตไว้บนลูกศร เช่น `1/0` หมายถึง เมื่ออินพุตเป็น 1 ให้เปลี่ยนตามลูกศรนั้นและเอาต์พุตเป็น 0
 
-```text
-        1/0                    0/1
-   ┌─────────┐            ┌─────────┐
-   │   S0    ├───────────►│   S1    │
-   └─────────┘            └─────────┘
-```
+<svg viewBox="0 0 420 200" role="img" aria-label="Mealy ตัวอย่าง: S0 ไป S1 ด้วย label 1/0 และ S1 กลับไป S0 ด้วย label 0/1" style="width:100%; max-width:420px; height:auto; display:block; margin:1.25rem auto; font-family:'Segoe UI',system-ui,sans-serif;">
+  <defs>
+    <marker id="arrow-sd2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <!-- S0 -->
+  <circle cx="105" cy="100" r="34" fill="#eef2ff" stroke="#6366f1" stroke-width="2.5"/>
+  <text x="105" y="100" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#1e293b">S0</text>
+
+  <!-- S1 -->
+  <circle cx="315" cy="100" r="34" fill="#eef2ff" stroke="#6366f1" stroke-width="2.5"/>
+  <text x="315" y="100" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#1e293b">S1</text>
+
+  <!-- S0 -> S1 -->
+  <path d="M139,88 L281,88" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd2)"/>
+  <text x="210" y="74" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">1/0</text>
+
+  <!-- S1 -> S0 -->
+  <path d="M281,112 L139,112" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd2)"/>
+  <text x="210" y="134" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">0/1</text>
+</svg>
 
 ### ตารางเปรียบเทียบ Moore vs Mealy
 
@@ -269,21 +411,49 @@ Y: 0 0 1 0 1
 
 #### (b) วาด State Diagram
 
-```text
-                                  1/0
-                          ┌──────────────────┐
-                          ▼                  │
-                ┌──────┐ 1/0    ┌──────┐ 0/0   ┌──────┐
-        ┌──────►│  S0  ├───────►│  S1  ├──────►│  S2  │
-        │       └──┬───┘        └──┬───┘       └──┬───┘
-        │          │ 0/0           │              │
-        └──────────┘                              │
-        ▲                                          │
-        │              0/0                         │
-        └──────────────────────────────────────────┘
-                                                     │
-                          S1  ◄────── 1/1 ───────────┘
-```
+<svg viewBox="0 0 760 320" role="img" aria-label="Mealy state diagram สำหรับตรวจจับลำดับ 101: S0, S1, S2 พร้อม self-loop และ back-edge" style="width:100%; max-width:720px; height:auto; display:block; margin:1.25rem auto; font-family:'Segoe UI',system-ui,sans-serif;">
+  <defs>
+    <marker id="arrow-sd3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <!-- self-loop S0 -->
+  <path d="M85,76 C60,30 150,30 125,76" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd3)"/>
+  <text x="105" y="32" text-anchor="middle" font-size="12.5" fill="#0f172a">0/0</text>
+
+  <!-- self-loop S1 -->
+  <path d="M385,76 C360,30 450,30 425,76" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd3)"/>
+  <text x="405" y="32" text-anchor="middle" font-size="12.5" fill="#0f172a">1/0</text>
+
+  <!-- S0 -->
+  <circle cx="105" cy="110" r="34" fill="#eef2ff" stroke="#6366f1" stroke-width="2.5"/>
+  <text x="105" y="110" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#1e293b">S0</text>
+
+  <!-- S1 -->
+  <circle cx="405" cy="110" r="34" fill="#eef2ff" stroke="#6366f1" stroke-width="2.5"/>
+  <text x="405" y="110" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#1e293b">S1</text>
+
+  <!-- S2 -->
+  <circle cx="660" cy="110" r="34" fill="#eef2ff" stroke="#6366f1" stroke-width="2.5"/>
+  <text x="660" y="110" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#1e293b">S2</text>
+
+  <!-- S0 -> S1 -->
+  <path d="M139,105 L371,105" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd3)"/>
+  <text x="255" y="92" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">1/0</text>
+
+  <!-- S1 -> S2 -->
+  <path d="M439,105 L626,105" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd3)"/>
+  <text x="530" y="92" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">0/0</text>
+
+  <!-- S2 -> S0 (back, arc below) -->
+  <path d="M635,140 C500,260 200,260 105,144" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd3)"/>
+  <text x="370" y="262" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">0/0</text>
+
+  <!-- S2 -> S1 (back, arc below) -->
+  <path d="M645,142 C570,220 470,220 412,142" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd3)"/>
+  <text x="540" y="200" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">1/1</text>
+</svg>
 
 อ่านแผนผัง:
 
@@ -403,31 +573,90 @@ $$Y = Q_1X$$
 
 #### (g) วาดวงจรสุดท้าย
 
-```text
-                       ┌───────────────┐
-        Q0 ───────────┤               │
-                       │  AND + NOT    ├───► D1 = Q0 X'
-         X ────┬─ NOT─┤               │
-               │      └───────────────┘
-               │
-               ├──────────────────────────► D0 = X
-               │
-               │      ┌───────────────┐
-        Q1 ────┴─────►│     AND       ├───► Y = Q1 X
-         X ───────────┤               │
-                      └───────────────┘
+<svg viewBox="0 0 820 500" role="img" aria-label="วงจรสุดท้ายของ Mealy 101 detector: NOT, AND สำหรับ D1, Y และวงจร D Flip-Flop สองตัวสำหรับ Q1, Q0" style="width:100%; max-width:800px; height:auto; display:block; margin:1.25rem auto; font-family:'Segoe UI',system-ui,sans-serif;">
+  <defs>
+    <marker id="arrow-bd4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
 
-               ┌─────────────┐        ┌─────────────┐
-   D1 ────────►│ DFF for Q1  │   Q1   │             │
-   CLK ───────►│             ├───────►│ Output/NS   │
-   RST ───────►│ reset to 0  │        │   Logic     │
-               └─────────────┘        │             │
-               ┌─────────────┐   Q0   │             │
-   D0 ────────►│ DFF for Q0  ├───────►│             │
-   CLK ───────►│             │        └─────────────┘
-   RST ───────►│ reset to 0  │
-               └─────────────┘
-```
+  <!-- NOT gate for X -->
+  <rect x="150" y="20" width="70" height="40" rx="8" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+  <text x="185" y="40" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#0f172a">NOT</text>
+
+  <!-- AND gate for D1 -->
+  <rect x="280" y="50" width="70" height="40" rx="8" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+  <text x="315" y="70" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#0f172a">AND</text>
+
+  <!-- AND gate for Y -->
+  <rect x="280" y="150" width="70" height="40" rx="8" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+  <text x="315" y="170" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#0f172a">AND</text>
+
+  <!-- Input labels -->
+  <text x="20" y="40" font-size="12.5" fill="#0f172a">X</text>
+  <text x="20" y="115" font-size="12.5" fill="#0f172a">Q0</text>
+  <text x="20" y="170" font-size="12.5" fill="#0f172a">Q1</text>
+
+  <!-- X -> NOT -->
+  <path d="M35,40 L150,40" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd4)"/>
+  <!-- X branch down to D0 -->
+  <path d="M40,40 L40,225 L260,225" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd4)"/>
+  <!-- X branch to AND(Y) -->
+  <path d="M45,40 L45,170 L280,170" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd4)"/>
+
+  <!-- NOT -> AND(D1) -->
+  <path d="M220,40 L255,40 L255,62 L280,62" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd4)"/>
+  <!-- Q0 -> AND(D1) -->
+  <path d="M35,108 L255,108 L255,78 L280,78" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd4)"/>
+  <!-- Q1 -> AND(Y) -->
+  <path d="M35,165 L280,165" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd4)"/>
+
+  <!-- AND(D1) -> D1 -->
+  <path d="M350,70 L420,70" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd4)"/>
+  <text x="455" y="65" text-anchor="middle" font-size="12.5" fill="#0f172a">D1 = Q0·X̄</text>
+
+  <!-- D0 label at the wire -->
+  <path d="M260,225 L420,225" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd4)"/>
+  <text x="455" y="220" text-anchor="middle" font-size="12.5" fill="#0f172a">D0 = X</text>
+
+  <!-- AND(Y) -> Y -->
+  <path d="M350,170 L420,170" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd4)"/>
+  <text x="455" y="165" text-anchor="middle" font-size="12.5" fill="#0f172a">Y = Q1·X</text>
+
+  <!-- DFF Q1 (top, independent) -->
+  <rect x="280" y="290" width="240" height="70" rx="8" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+  <text x="400" y="318" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">DFF (Q1)</text>
+  <text x="400" y="336" text-anchor="middle" font-size="11" fill="#1e293b">D1, CLK, RST</text>
+
+  <!-- D1, CLK, RST input arrows for Q1 -->
+  <text x="195" y="300" text-anchor="middle" font-size="11.5" fill="#0f172a">D1</text>
+  <path d="M215,305 L280,305" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd4)"/>
+  <text x="195" y="330" text-anchor="middle" font-size="11.5" fill="#0f172a">CLK</text>
+  <path d="M215,325 L280,325" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd4)"/>
+  <text x="195" y="350" text-anchor="middle" font-size="11.5" fill="#0f172a">RST</text>
+  <path d="M215,345 L280,345" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd4)"/>
+
+  <!-- Q1 output (own wire, no link to DFF Q0) -->
+  <path d="M520,325 L600,325" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd4)"/>
+  <text x="635" y="320" text-anchor="middle" font-size="12.5" fill="#0f172a">Q1</text>
+
+  <!-- DFF Q0 (bottom, independent) -->
+  <rect x="280" y="400" width="240" height="70" rx="8" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+  <text x="400" y="428" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">DFF (Q0)</text>
+  <text x="400" y="446" text-anchor="middle" font-size="11" fill="#1e293b">D0, CLK, RST</text>
+
+  <!-- D0, CLK, RST input arrows for Q0 -->
+  <text x="195" y="410" text-anchor="middle" font-size="11.5" fill="#0f172a">D0</text>
+  <path d="M215,415 L280,415" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd4)"/>
+  <text x="195" y="440" text-anchor="middle" font-size="11.5" fill="#0f172a">CLK</text>
+  <path d="M215,435 L280,435" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd4)"/>
+  <text x="195" y="460" text-anchor="middle" font-size="11.5" fill="#0f172a">RST</text>
+  <path d="M215,455 L280,455" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd4)"/>
+
+  <!-- Q0 output (own wire, no link to DFF Q1) -->
+  <path d="M520,435 L600,435" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd4)"/>
+  <text x="635" y="430" text-anchor="middle" font-size="12.5" fill="#0f172a">Q0</text>
+</svg>
 
 ### ตัวอย่างที่ 2: Moore FSM นับขึ้น `0-3` พร้อม Enable
 
@@ -446,19 +675,57 @@ $$Y = Q_1X$$
 
 #### (b) วาด State Diagram
 
-```text
-                  EN=1                    EN=1
-           ┌───────────────┐       ┌───────────────┐
-           ▼               │       ▼               │
-       ┌────────┐      ┌────────┐      ┌────────┐      ┌────────┐
-       │ S0/Z=0 ├─────►│ S1/Z=0 ├─────►│ S2/Z=0 ├─────►│ S3/Z=1 │
-       └───┬────┘      └───┬────┘      └───┬────┘      └───┬────┘
-           │ EN=0          │ EN=0          │ EN=0          │ EN=0
-           ▼               ▼               ▼               ▼
-         hold            hold            hold            hold
-           ▲                                                │
-           └────────────────────── EN=1 ◄───────────────────┘
-```
+<svg viewBox="0 0 820 320" role="img" aria-label="Moore state diagram ของ counter 0 ถึง 3 พร้อม Enable: S0, S1, S2, S3 พร้อม self-loop EN=0 และ back-edge S3 ไป S0" style="width:100%; max-width:780px; height:auto; display:block; margin:1.25rem auto; font-family:'Segoe UI',system-ui,sans-serif;">
+  <defs>
+    <marker id="arrow-sd4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <!-- self-loops EN=0 above each node -->
+  <path d="M85,76 C60,30 150,30 125,76" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd4)"/>
+  <text x="105" y="32" text-anchor="middle" font-size="12" fill="#0f172a">EN=0</text>
+
+  <path d="M285,76 C260,30 350,30 325,76" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd4)"/>
+  <text x="305" y="32" text-anchor="middle" font-size="12" fill="#0f172a">EN=0</text>
+
+  <path d="M485,76 C460,30 550,30 525,76" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd4)"/>
+  <text x="505" y="32" text-anchor="middle" font-size="12" fill="#0f172a">EN=0</text>
+
+  <path d="M685,76 C660,30 750,30 725,76" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd4)"/>
+  <text x="705" y="32" text-anchor="middle" font-size="12" fill="#0f172a">EN=0</text>
+
+  <!-- States -->
+  <circle cx="105" cy="110" r="34" fill="#eef2ff" stroke="#6366f1" stroke-width="2.5"/>
+  <text x="105" y="104" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="600" fill="#1e293b">S0</text>
+  <text x="105" y="120" text-anchor="middle" dominant-baseline="central" font-size="11.5" font-weight="600" fill="#1e293b">Z=0</text>
+
+  <circle cx="305" cy="110" r="34" fill="#eef2ff" stroke="#6366f1" stroke-width="2.5"/>
+  <text x="305" y="104" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="600" fill="#1e293b">S1</text>
+  <text x="305" y="120" text-anchor="middle" dominant-baseline="central" font-size="11.5" font-weight="600" fill="#1e293b">Z=0</text>
+
+  <circle cx="505" cy="110" r="34" fill="#eef2ff" stroke="#6366f1" stroke-width="2.5"/>
+  <text x="505" y="104" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="600" fill="#1e293b">S2</text>
+  <text x="505" y="120" text-anchor="middle" dominant-baseline="central" font-size="11.5" font-weight="600" fill="#1e293b">Z=0</text>
+
+  <circle cx="705" cy="110" r="34" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+  <text x="705" y="104" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="600" fill="#1e293b">S3</text>
+  <text x="705" y="120" text-anchor="middle" dominant-baseline="central" font-size="11.5" font-weight="600" fill="#1e293b">Z=1</text>
+
+  <!-- forward edges EN=1 -->
+  <path d="M139,105 L271,105" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd4)"/>
+  <text x="205" y="92" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">EN=1</text>
+
+  <path d="M339,105 L471,105" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd4)"/>
+  <text x="405" y="92" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">EN=1</text>
+
+  <path d="M539,105 L671,105" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd4)"/>
+  <text x="605" y="92" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">EN=1</text>
+
+  <!-- back edge S3 -> S0, long arc below -->
+  <path d="M685,140 C600,260 210,260 115,144" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd4)"/>
+  <text x="400" y="262" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">EN=1</text>
+</svg>
 
 #### (c) สร้าง State Table / State Transition Table
 
@@ -565,35 +832,84 @@ $$Z = Q_1Q_0$$
 
 #### (g) วาดวงจรสุดท้าย
 
-```text
-                            ┌──────────────┐
-               Q0 ─────────►│     XOR      ├───► D0
-               EN ─────────►│              │
-                            └──────────────┘
+<svg viewBox="0 0 820 500" role="img" aria-label="วงจรสุดท้ายของ Moore counter 0 ถึง 3: XOR, AND สำหรับ D0, D1, Z และวงจร D Flip-Flop สองตัวสำหรับ Q1, Q0" style="width:100%; max-width:800px; height:auto; display:block; margin:1.25rem auto; font-family:'Segoe UI',system-ui,sans-serif;">
+  <defs>
+    <marker id="arrow-bd5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
 
-               Q0 ──┐
-                    ├──────► AND ─────┐
-               EN ──┘                 │
-                                       ▼
-                            ┌──────────────┐
-               Q1 ──────────►│    XOR      ├───► D1
-                            └──────────────┘
+  <!-- XOR gate for D0 -->
+  <rect x="260" y="20" width="70" height="40" rx="8" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+  <text x="295" y="40" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#0f172a">XOR</text>
+  <text x="20" y="30" font-size="12.5" fill="#0f172a">Q0</text>
+  <text x="20" y="50" font-size="12.5" fill="#0f172a">EN</text>
+  <path d="M40,30 L260,30" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd5)"/>
+  <path d="M40,50 L260,50" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd5)"/>
+  <path d="M330,40 L400,40" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd5)"/>
+  <text x="430" y="35" text-anchor="middle" font-size="12.5" fill="#0f172a">D0</text>
 
-               Q1 ──┐
-                    ├──────► AND ─────────────► Z
-               Q0 ──┘
+  <!-- AND gate (Q0,EN) -->
+  <rect x="150" y="110" width="70" height="40" rx="8" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+  <text x="185" y="130" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#0f172a">AND</text>
+  <text x="20" y="115" font-size="12.5" fill="#0f172a">Q0</text>
+  <text x="20" y="145" font-size="12.5" fill="#0f172a">EN</text>
+  <path d="M40,115 L150,115" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd5)"/>
+  <path d="M40,145 L150,145" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd5)"/>
 
-               ┌─────────────┐
-   D1 ────────►│ DFF for Q1  ├───────► Q1
-   CLK ───────►│             │
-   RST ───────►│ reset to 0  │
-               └─────────────┘
-               ┌─────────────┐
-   D0 ────────►│ DFF for Q0  ├───────► Q0
-   CLK ───────►│             │
-   RST ───────►│ reset to 0  │
-               └─────────────┘
-```
+  <!-- XOR gate for D1 -->
+  <rect x="320" y="110" width="70" height="40" rx="8" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+  <text x="355" y="130" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#0f172a">XOR</text>
+  <path d="M220,130 L320,130" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd5)"/>
+  <text x="60" y="100" font-size="12.5" fill="#0f172a">Q1</text>
+  <path d="M70,100 L300,100 L300,118 L320,118" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd5)"/>
+  <path d="M390,130 L460,130" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd5)"/>
+  <text x="490" y="125" text-anchor="middle" font-size="12.5" fill="#0f172a">D1</text>
+
+  <!-- AND gate for Z -->
+  <rect x="260" y="200" width="70" height="40" rx="8" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+  <text x="295" y="220" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="600" fill="#0f172a">AND</text>
+  <text x="20" y="205" font-size="12.5" fill="#0f172a">Q1</text>
+  <text x="20" y="225" font-size="12.5" fill="#0f172a">Q0</text>
+  <path d="M40,205 L260,205" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd5)"/>
+  <path d="M40,225 L260,225" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd5)"/>
+  <path d="M330,220 L400,220" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd5)"/>
+  <text x="430" y="215" text-anchor="middle" font-size="12.5" fill="#0f172a">Z</text>
+
+  <!-- DFF Q1 (top, independent) -->
+  <rect x="280" y="290" width="240" height="70" rx="8" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+  <text x="400" y="318" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">DFF (Q1)</text>
+  <text x="400" y="336" text-anchor="middle" font-size="11" fill="#1e293b">D1, CLK, RST</text>
+
+  <!-- D1, CLK, RST input arrows for Q1 -->
+  <text x="195" y="300" text-anchor="middle" font-size="11.5" fill="#0f172a">D1</text>
+  <path d="M215,305 L280,305" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd5)"/>
+  <text x="195" y="330" text-anchor="middle" font-size="11.5" fill="#0f172a">CLK</text>
+  <path d="M215,325 L280,325" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd5)"/>
+  <text x="195" y="350" text-anchor="middle" font-size="11.5" fill="#0f172a">RST</text>
+  <path d="M215,345 L280,345" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd5)"/>
+
+  <!-- Q1 output (own wire, no link to DFF Q0) -->
+  <path d="M520,325 L600,325" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd5)"/>
+  <text x="635" y="320" text-anchor="middle" font-size="12.5" fill="#0f172a">Q1</text>
+
+  <!-- DFF Q0 (bottom, independent) -->
+  <rect x="280" y="400" width="240" height="70" rx="8" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+  <text x="400" y="428" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">DFF (Q0)</text>
+  <text x="400" y="446" text-anchor="middle" font-size="11" fill="#1e293b">D0, CLK, RST</text>
+
+  <!-- D0, CLK, RST input arrows for Q0 -->
+  <text x="195" y="410" text-anchor="middle" font-size="11.5" fill="#0f172a">D0</text>
+  <path d="M215,415 L280,415" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd5)"/>
+  <text x="195" y="440" text-anchor="middle" font-size="11.5" fill="#0f172a">CLK</text>
+  <path d="M215,435 L280,435" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd5)"/>
+  <text x="195" y="460" text-anchor="middle" font-size="11.5" fill="#0f172a">RST</text>
+  <path d="M215,455 L280,455" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd5)"/>
+
+  <!-- Q0 output (own wire, no link to DFF Q1) -->
+  <path d="M520,435 L600,435" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-bd5)"/>
+  <text x="635" y="430" text-anchor="middle" font-size="12.5" fill="#0f172a">Q0</text>
+</svg>
 
 สังเกตว่าตัวอย่างนี้คือ Counter ที่มีเงื่อนไข `EN` ถ้าเอา `EN` ออกและบังคับให้เป็น 1 ตลอด จะได้ MOD-4 Synchronous Up Counter แบบพื้นฐานจากบทที่ 7
 
@@ -727,15 +1043,62 @@ S2/Y=0 : เจอ 10
 S3/Y=1 : เจอ 101 ครบแล้ว
 ```
 
-```text
-                   1                   0                   1
-              ┌─────────► S1/Y=0 ─────────────► S2/Y=0 ─────────────► S3/Y=1
-              │               ▲                     │                    │
-              │               │                      │                    │
-          S0/Y=0 ◄──── 0 ─────┘                  0 ──┘                1 ──┘
-              ▲                                                          │
-              └──────────────────────── 0 ◄──────────────────────────────┘
-```
+<svg viewBox="0 0 820 360" role="img" aria-label="Moore state diagram สำหรับตรวจจับ 101: S0, S1, S2, S3 พร้อม self-loop และ back-edges หลายเส้น" style="width:100%; max-width:780px; height:auto; display:block; margin:1.25rem auto; font-family:'Segoe UI',system-ui,sans-serif;">
+  <defs>
+    <marker id="arrow-sd5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <!-- self-loop S0 (X=0) -->
+  <path d="M85,76 C60,30 150,30 125,76" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd5)"/>
+  <text x="105" y="32" text-anchor="middle" font-size="12.5" fill="#0f172a">0</text>
+
+  <!-- self-loop S1 (X=1) -->
+  <path d="M285,76 C260,30 350,30 325,76" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd5)"/>
+  <text x="305" y="32" text-anchor="middle" font-size="12.5" fill="#0f172a">1</text>
+
+  <!-- States -->
+  <circle cx="105" cy="110" r="34" fill="#eef2ff" stroke="#6366f1" stroke-width="2.5"/>
+  <text x="105" y="104" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="600" fill="#1e293b">S0</text>
+  <text x="105" y="120" text-anchor="middle" dominant-baseline="central" font-size="11.5" font-weight="600" fill="#1e293b">Y=0</text>
+
+  <circle cx="305" cy="110" r="34" fill="#eef2ff" stroke="#6366f1" stroke-width="2.5"/>
+  <text x="305" y="104" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="600" fill="#1e293b">S1</text>
+  <text x="305" y="120" text-anchor="middle" dominant-baseline="central" font-size="11.5" font-weight="600" fill="#1e293b">Y=0</text>
+
+  <circle cx="505" cy="110" r="34" fill="#eef2ff" stroke="#6366f1" stroke-width="2.5"/>
+  <text x="505" y="104" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="600" fill="#1e293b">S2</text>
+  <text x="505" y="120" text-anchor="middle" dominant-baseline="central" font-size="11.5" font-weight="600" fill="#1e293b">Y=0</text>
+
+  <circle cx="705" cy="110" r="34" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+  <text x="705" y="104" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="600" fill="#1e293b">S3</text>
+  <text x="705" y="120" text-anchor="middle" dominant-baseline="central" font-size="11.5" font-weight="600" fill="#1e293b">Y=1</text>
+
+  <!-- S0 -> S1 (X=1) -->
+  <path d="M139,105 L271,105" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd5)"/>
+  <text x="205" y="92" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">1</text>
+
+  <!-- S1 -> S2 (X=0) -->
+  <path d="M339,105 L471,105" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd5)"/>
+  <text x="405" y="92" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">0</text>
+
+  <!-- S2 -> S3 (X=1) -->
+  <path d="M539,105 L671,105" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd5)"/>
+  <text x="605" y="92" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">1</text>
+
+  <!-- S2 -> S0 (X=0), arc below -->
+  <path d="M490,142 C420,230 180,230 118,144" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd5)"/>
+  <text x="305" y="232" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">0</text>
+
+  <!-- S3 -> S1 (X=1), arc below, long -->
+  <path d="M685,140 C600,280 380,280 318,144" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd5)"/>
+  <text x="500" y="285" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">1</text>
+
+  <!-- S3 -> S2 (X=0), arc below, shorter -->
+  <path d="M695,142 C640,190 570,190 518,142" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd5)"/>
+  <text x="610" y="192" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">0</text>
+</svg>
 
 Moore จะได้ `Y=1` หลังจากเข้า `S3` แล้ว ดังนั้นเอาต์พุตมักช้ากว่า Mealy 1 clock แต่เอาต์พุตนิ่งกว่า
 
@@ -785,19 +1148,49 @@ FSM เป็นหัวใจของการออกแบบระบบ�
 - `S1 (YELLOW)` ให้ไฟเหลือง
 - `S2 (RED)` ให้ไฟแดง
 
-```text
-              CAR=1 และ T_EX=0
-            ┌─────────────────┐
-            ▼                 │
-       ┌──────────┐  CAR=0 หรือ T_EX=1   ┌──────────┐
-       │ GREEN/G  ├──────────────────────►│ YELLOW/Y │
-       └────▲─────┘                       └────┬─────┘
-            │                                  │ T_EX=1
-            │                                  ▼
-            │                             ┌──────────┐
-            └───────────── T_EX=1 ◄────────┤  RED/R   │
-                                           └──────────┘
-```
+<svg viewBox="0 0 680 540" role="img" aria-label="Moore state diagram ของไฟจราจร: GREEN, YELLOW, RED จัดเป็นรูปสามเหลี่ยม พร้อม self-loop และ transition ตามเงื่อนไข CAR และ T_EX" style="width:100%; max-width:640px; height:auto; display:block; margin:1.25rem auto; font-family:'Segoe UI',system-ui,sans-serif;">
+  <defs>
+    <marker id="arrow-sd6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <!-- self-loop GREEN -->
+  <path d="M150,76 C125,30 215,30 190,76" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd6)"/>
+  <text x="170" y="30" text-anchor="middle" font-size="11.5" fill="#0f172a">CAR=1 ∧ T_EX=0</text>
+
+  <!-- self-loop YELLOW -->
+  <path d="M555,76 C530,30 620,30 595,76" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd6)"/>
+  <text x="575" y="30" text-anchor="middle" font-size="11.5" fill="#0f172a">T_EX=0</text>
+
+  <!-- self-loop RED -->
+  <path d="M340,444 C315,494 405,494 380,444" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd6)"/>
+  <text x="360" y="508" text-anchor="middle" font-size="11.5" fill="#0f172a">T_EX=0</text>
+
+  <!-- GREEN -->
+  <circle cx="170" cy="110" r="38" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+  <text x="170" y="110" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="600" fill="#1e293b">GREEN</text>
+
+  <!-- YELLOW -->
+  <circle cx="575" cy="110" r="38" fill="#fef9c3" stroke="#ca8a04" stroke-width="2.5"/>
+  <text x="575" y="110" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="600" fill="#1e293b">YELLOW</text>
+
+  <!-- RED -->
+  <circle cx="360" cy="410" r="38" fill="#fee2e2" stroke="#dc2626" stroke-width="2.5"/>
+  <text x="360" y="410" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="600" fill="#1e293b">RED</text>
+
+  <!-- GREEN -> YELLOW -->
+  <path d="M208,103 L537,103" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd6)"/>
+  <text x="372" y="90" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">CAR=0 ∨ T_EX=1</text>
+
+  <!-- YELLOW -> RED -->
+  <path d="M558,144 L391,381" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd6)"/>
+  <text x="510" y="260" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">T_EX=1</text>
+
+  <!-- RED -> GREEN (back) -->
+  <path d="M329,381 L191,141" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-sd6)"/>
+  <text x="220" y="260" text-anchor="middle" font-size="12.5" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="3">T_EX=1</text>
+</svg>
 
 | Current State | Input Conditions | Next State | Lights (G,Y,R) |
 |:---:|:---|:---:|:---:|
