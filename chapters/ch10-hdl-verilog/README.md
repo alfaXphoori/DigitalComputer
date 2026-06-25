@@ -32,12 +32,36 @@
 
 ในทางปฏิบัติเราเขียน HDL ที่ระดับ **RTL (Register-Transfer Level)** คือบรรยายว่าข้อมูลถูกเก็บใน **รีจิสเตอร์ (register)** อะไรบ้าง และในแต่ละจังหวะสัญญาณนาฬิกา ข้อมูลถูก "ย้าย/แปลง" ระหว่างรีจิสเตอร์อย่างไรผ่านวงจรคอมบิเนชัน เครื่องมือสังเคราะห์จะเปลี่ยน RTL เป็นเกตและฟลิปฟลอปจริงให้เอง
 
-```text
-แนวคิด RTL
-   register ──► [ วงจรคอมบิเนชัน (logic) ] ──► register
-       ▲                                            │
-       └──────────────── clock ◄────────────────────┘
-```
+<svg viewBox="0 0 720 260" role="img" aria-label="แนวคิด RTL: register ส่งข้อมูลผ่านวงจรคอมบิเนชันไปยัง register ตัวถัดไป พร้อมเส้นป้อนกลับของสัญญาณ clock" style="width:100%; max-width:680px; height:auto; display:block; margin:1.25rem auto; font-family:'Segoe UI',system-ui,sans-serif;">
+  <defs>
+    <marker id="arrow-rtl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <!-- Register 1 -->
+  <rect x="40" y="70" width="150" height="70" rx="8" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+  <text x="115" y="110" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#0f172a">Register</text>
+
+  <!-- Combinational Logic -->
+  <rect x="285" y="70" width="180" height="70" rx="8" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+  <text x="375" y="100" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0f172a">Combinational</text>
+  <text x="375" y="118" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0f172a">Logic</text>
+
+  <!-- Register 2 -->
+  <rect x="560" y="70" width="150" height="70" rx="8" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+  <text x="635" y="110" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#0f172a">Register</text>
+
+  <!-- Register 1 -> Combinational Logic -->
+  <path d="M190,105 L285,105" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-rtl)"/>
+
+  <!-- Combinational Logic -> Register 2 -->
+  <path d="M465,105 L560,105" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-rtl)"/>
+
+  <!-- Clock feedback loop -->
+  <path d="M115,140 L115,210 L635,210 L635,140" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow-rtl)"/>
+  <text x="375" y="232" text-anchor="middle" font-size="13" fill="#0f172a">clock</text>
+</svg>
 
 ---
 
@@ -59,7 +83,7 @@ endmodule
 
 ### wire กับ reg ต่างกันอย่างไร
 
-นี่คือจุดที่ผู้เริ่มต้นสับสนมากที่สุด:
+นี่คือจุดที่ผู้เริ่มต้นสับสนมากที่สุด
 
 | ชนิด | ใช้เมื่อ | เปรียบเหมือน |
 |---|---|---|
@@ -78,6 +102,8 @@ endmodule
 | `8'hFF` | 8 บิต ฐานสิบหก = 255 |
 | `4'd9` | 4 บิต ฐานสิบ = 9 |
 | `1'b0` | 1 บิตค่า 0 |
+
+> 💡 **เคล็ดลับ:** ถ้าไม่ระบุฐานและจำนวนบิต Verilog จะถือว่าเป็นเลขฐานสิบและขยายความกว้างให้พอดีอัตโนมัติ แต่การเขียนแบบเต็มรูป (เช่น `4'b1010`) ช่วยให้อ่านโค้ดเข้าใจง่ายกว่ามากและลดข้อผิดพลาดเรื่องความกว้างบิต
 
 ---
 
@@ -121,7 +147,7 @@ module logic_bh (input wire a, b, c, output reg y);
 endmodule
 ```
 
-> สำหรับวงจรคอมบิเนชัน เอาต์พุตที่กำหนดใน `always` ต้องประกาศเป็น `reg` และใช้ `always @(*)`
+> 📌 **ข้อสำคัญ:** สำหรับวงจรคอมบิเนชัน เอาต์พุตที่กำหนดใน `always` ต้องประกาศเป็น `reg` และใช้ `always @(*)` ทั้งสามสไตล์นี้สังเคราะห์ออกมาเป็นวงจรเดียวกัน — เลือกสไตล์ตามความซับซ้อนของวงจร ไม่ใช่ตามความชอบส่วนตัว
 
 ---
 
@@ -162,6 +188,8 @@ endmodule
 
 `[3:0]` คือการประกาศสัญญาณแบบ **บัสหลายบิต (vector)** — ในที่นี้คือ 4 เส้น d[3] ถึง d[0]
 
+> 💡 **เคล็ดลับ:** ใน `case` ของวงจรคอมบิเนชัน ควรครบทุกกรณีของ `sel` (เช่น ครบ 4 กรณีของ 2 บิต) ถ้าขาดกรณีใดไปและไม่มี `default` เครื่องมือสังเคราะห์อาจสร้าง latch ที่ไม่ตั้งใจขึ้นมาแทน mux
+
 ---
 
 ## 10.5 การเขียนวงจรเชิงลำดับ
@@ -200,13 +228,15 @@ endmodule
 
 วงจรนี้คือตัวนับ mod-16 ที่บทที่ 7 ออกแบบด้วย excitation table — แต่ใน Verilog เขียนเพียงบรรทัดเดียว `count <= count + 1`
 
+> ⚠️ **ข้อควรระวัง:** สัญญาณ `rst_n` ในตัวอย่างนี้เป็น active-low (รีเซ็ตเมื่อเป็น `0`) สังเกตว่า sensitivity list ใช้ `negedge rst_n` คู่กับ `posedge clk` — ถ้าใช้ผิดขอบ วงจรจะไม่รีเซ็ตเมื่อควร
+
 ---
 
 ## 10.6 Testbench: การทดสอบวงจรอัตโนมัติ
 
 **Testbench** คือโมดูล Verilog อีกตัวที่ "ป้อนสัญญาณทดสอบ" ให้วงจรที่เราออกแบบ (เรียกว่า DUT — Device Under Test) แล้วพิมพ์ผลออกมา testbench ไม่ต้องสังเคราะห์เป็นฮาร์ดแวร์ จึงใช้คำสั่งจำลองได้เต็มที่
 
-คำสั่งจำลองที่ใช้บ่อย:
+คำสั่งจำลองที่ใช้บ่อย
 
 | คำสั่ง | หน้าที่ |
 |---|---|
@@ -238,19 +268,20 @@ module tb_full_adder;
 endmodule
 ```
 
-ผลลัพธ์ที่คาดหวัง (ตรงกับตารางความจริง full adder ในบทที่ 5):
+ผลลัพธ์ที่คาดหวังตรงกับตารางความจริงของ full adder ในบทที่ 5 ดังนี้
 
-```text
- a b cin | sum cout
- 0 0  0  |  0   0
- 0 0  1  |  1   0
- 0 1  0  |  1   0
- 0 1  1  |  0   1
- 1 0  0  |  1   0
- 1 0  1  |  0   1
- 1 1  0  |  0   1
- 1 1  1  |  1   1
-```
+| a | b | cin | sum | cout |
+|:---:|:---:|:---:|:---:|:---:|
+| 0 | 0 | 0 | 0 | 0 |
+| 0 | 0 | 1 | 1 | 0 |
+| 0 | 1 | 0 | 1 | 0 |
+| 0 | 1 | 1 | 0 | 1 |
+| 1 | 0 | 0 | 1 | 0 |
+| 1 | 0 | 1 | 0 | 1 |
+| 1 | 1 | 0 | 0 | 1 |
+| 1 | 1 | 1 | 1 | 1 |
+
+> 💡 **เคล็ดลับ:** เทคนิค `{a, b, cin} = i;` ใช้ตัวดำเนินการ concatenation รวมสามสัญญาณเป็นเวกเตอร์ 3 บิตชั่วคราว แล้วกำหนดค่าจากตัวนับ `i` ทำให้ไล่ครบทั้ง 8 กรณีโดยไม่ต้องเขียน `if` ซ้อนหลายชั้น
 
 ### Testbench ของตัวนับ (มีสัญญาณนาฬิกา)
 
@@ -283,18 +314,26 @@ endmodule
 ### ขั้นตอนการใช้งาน
 
 1. เปิด `https://edaplayground.com` แล้วสมัคร/ล็อกอิน (ใช้บัญชี Google ได้)
+
 2. แถบด้านซ้าย **Languages & Libraries** → เลือก **SystemVerilog/Verilog**
+
 3. **Tools & Simulators** → เลือก **Icarus Verilog 12.0** (ฟรีและเพียงพอสำหรับวิชานี้)
+
 4. ช่อง **design.sv** (ขวา) → วางโค้ดโมดูลที่ออกแบบ เช่น `full_adder`
+
 5. ช่อง **testbench.sv** (ซ้าย) → วาง testbench เช่น `tb_full_adder`
-6. ถ้าต้องการดูรูปคลื่น ติ๊ก **Open EPWave after run** และเพิ่มในโค้ด testbench:
+
+6. ถ้าต้องการดูรูปคลื่น ติ๊ก **Open EPWave after run** และเพิ่มในโค้ด testbench
+
    ```verilog
    initial begin
        $dumpfile("dump.vcd");
        $dumpvars(0, tb_counter4);
    end
    ```
+
 7. กดปุ่ม **Run** ด้านบน
+
 8. อ่านผลข้อความที่หน้าต่าง **Log** ด้านล่าง และดูรูปคลื่นในหน้าต่าง **EPWave** (ถ้าเปิดไว้)
 
 > 💡 **เคล็ดลับ:** ชื่อโมดูล testbench ที่ใส่ใน `$dumpvars(0, ชื่อ)` ต้องตรงกับชื่อโมดูล testbench จริง ไม่เช่นนั้นจะไม่เห็นสัญญาณในรูปคลื่น
@@ -303,11 +342,41 @@ endmodule
 
 EPWave แสดงสัญญาณตามแกนเวลา ช่วยตรวจว่าวงจรเชิงลำดับทำงานถูกจังหวะ clock หรือไม่ เช่น ตัวนับควรเพิ่มค่าทีละ 1 ที่ทุกขอบขาขึ้นของ clock และกลับเป็น 0 หลังครบ 15
 
-```text
-clk    _|‾|_|‾|_|‾|_|‾|_|‾|_
-count   0 | 1 | 2 | 3 | 4 | 5  ...
-              ▲ เพิ่มค่าที่ขอบขาขึ้นแต่ละลูก
-```
+<svg viewBox="0 0 620 170" role="img" aria-label="ไดอะแกรมเวลาของ clk และ count: สัญญาณ clk เป็นคลื่นสี่เหลี่ยม และ count เพิ่มค่า 0,1,2,3,4,5 ที่ขอบขาขึ้นของ clk แต่ละลูก" style="width:100%; max-width:560px; height:auto; display:block; margin:1.25rem auto; font-family:'Segoe UI',system-ui,sans-serif;">
+  <defs>
+    <marker id="arrow-wave" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+
+  <!-- row labels -->
+  <text x="10" y="45" font-size="13" font-weight="600" fill="#0f172a">clk</text>
+  <text x="10" y="105" font-size="13" font-weight="600" fill="#0f172a">count</text>
+
+  <!-- clk square wave: period 80, high 40 / low 40, starting low -->
+  <path d="M60,55 L60,30 L100,30 L100,55 L140,55 L140,30 L180,30 L180,55 L220,55 L220,30 L260,30 L260,55 L300,55 L300,30 L340,30 L340,55 L380,55 L380,30 L420,30 L420,55 L460,55 L460,30 L500,30 L500,55 L540,55"
+        fill="none" stroke="#334155" stroke-width="2.25"/>
+
+  <!-- rising edge tick marks -->
+  <line x1="100" y1="30" x2="100" y2="120" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="180" y1="30" x2="180" y2="120" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="260" y1="30" x2="260" y2="120" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="340" y1="30" x2="340" y2="120" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="420" y1="30" x2="420" y2="120" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="500" y1="30" x2="500" y2="120" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <!-- count value cells -->
+  <text x="80" y="105" text-anchor="middle" font-size="13" fill="#1e293b">0</text>
+  <text x="140" y="105" text-anchor="middle" font-size="13" fill="#1e293b">1</text>
+  <text x="220" y="105" text-anchor="middle" font-size="13" fill="#1e293b">2</text>
+  <text x="300" y="105" text-anchor="middle" font-size="13" fill="#1e293b">3</text>
+  <text x="380" y="105" text-anchor="middle" font-size="13" fill="#1e293b">4</text>
+  <text x="460" y="105" text-anchor="middle" font-size="13" fill="#1e293b">5</text>
+
+  <!-- annotation arrow pointing at a rising edge -->
+  <path d="M260,150 L260,128" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#arrow-wave)"/>
+  <text x="260" y="165" text-anchor="middle" font-size="11.5" fill="#dc2626">เพิ่มค่าที่ขอบขาขึ้น</text>
+</svg>
 
 ---
 
@@ -349,14 +418,18 @@ HDL ไม่ใช่เรื่องใหม่ทั้งหมด แต
 ### 2. โครงสร้างโค้ดตามประเภทวงจร (Standard Coding Patterns)
 
 #### ก. วงจรเชิงผสม (Combinational Logic) - แบบ Dataflow
+
 ใช้ลวด (`wire`) และคำสั่ง `assign` (ทำงานแบบขนานตลอดเวลา)
+
 ```verilog
 wire y;
 assign y = (a & ~b) | (c ^ d);
 ```
 
 #### ข. วงจรเชิงผสม (Combinational Logic) - แบบ Behavioral
+
 ใช้ตัวแปรแบบ `reg` และบล็อก `always @(*)` โดยกำหนดค่าภายในแบบ **Blocking (`=`)**
+
 ```verilog
 reg y;
 always @(*) begin
@@ -368,7 +441,9 @@ end
 ```
 
 #### ค. วงจรเชิงลำดับ (Sequential Logic)
+
 ใช้ตัวแปรแบบ `reg` และบล็อก `always @(posedge clk)` โดยใช้การกำหนดค่าแบบ **Non-blocking (`<=`)**
+
 ```verilog
 reg [3:0] count;
 always @(posedge clk or posedge reset) begin
@@ -382,6 +457,7 @@ end
 ---
 
 ### 3. โครงสร้างแม่แบบ Testbench สำหรับจำลองการทำงาน
+
 ```verilog
 `timescale 1ns/1ps // กำหนดมาตราส่วนเวลา (หน่วย/ความละเอียด)
 
@@ -429,10 +505,16 @@ endmodule
 ## 10.9 ข้อผิดพลาดที่พบบ่อยของผู้เริ่มต้น
 
 - ใช้ `=` (blocking) ในวงจรเชิงลำดับ แทนที่จะใช้ `<=` (nonblocking) ทำให้พฤติกรรมจำลองผิด
+
 - ลืมประกาศเอาต์พุตที่กำหนดใน `always` ให้เป็น `reg`
+
 - เขียน `always @(a or b)` แล้วลืมใส่สัญญาณบางตัวใน sensitivity list ทำให้วงจรคอมบิเนชันทำงานผิด — แก้ด้วย `always @(*)`
+
 - คิดแบบลำดับคำสั่งเหมือนภาษา C ทั้งที่ HDL สร้างฮาร์ดแวร์ที่ทำงานขนานกัน
+
 - ชื่อสัญญาณใน `.port(signal)` ตอนเชื่อมโมดูลสะกดไม่ตรงกับที่ประกาศ
+
+> ⚠️ **ข้อควรระวัง:** ข้อผิดพลาดเหล่านี้ส่วนใหญ่ "จำลองผ่าน" แต่ให้ผลลัพธ์ผิด หรือสังเคราะห์เป็นวงจรที่ไม่ตรงกับที่ตั้งใจ — เครื่องมือจำลองไม่ฟ้อง error เสมอไป จึงต้องตรวจสอบรูปคลื่นและผลลัพธ์อย่างละเอียดทุกครั้ง
 
 ---
 
@@ -440,11 +522,18 @@ endmodule
 
 บทนี้แนะนำการออกแบบวงจรดิจิทัลด้วยภาษา Verilog ตั้งแต่โครงสร้าง module/port, ความต่างของ `wire` กับ `reg`, สามระดับการบรรยาย (gate-level, dataflow, behavioral), การเขียนวงจรคอมบิเนชันและเชิงลำดับ, การเขียน testbench และการจำลองจริงบน EDA Playground เป้าหมายไม่ใช่ให้เขียน Verilog เก่ง แต่ให้เห็นว่าทุกเรื่องที่เรียนมาตลอดเทอมสามารถบรรยายเป็นข้อความและสังเคราะห์เป็นฮาร์ดแวร์ได้ ซึ่งเป็นพื้นฐานสำคัญของการออกแบบระบบดิจิทัลสมัยใหม่
 
+---
+
 ## แบบฝึกหัดท้ายบท
 
 1. เขียนโมดูล Verilog ของเกต XNOR 2 อินพุตด้วยสไตล์ dataflow (`assign`) แล้วทดสอบครบ 4 กรณี
+
 2. เขียนโมดูล `half_adder` แล้วเขียน testbench ไล่อินพุตทั้ง 4 กรณี รันบน EDA Playground และแนบผลลัพธ์
+
 3. ดัดแปลง `counter4` ให้เป็นตัวนับ **ลง (down counter)** และเพิ่มสัญญาณ `enable` ที่หยุดนับเมื่อ `enable=0`
+
 4. เขียน MUX 2:1 ด้วยสามสไตล์ (gate-level, dataflow, behavioral) แล้วยืนยันว่าให้ผลเหมือนกัน
+
 5. ออกแบบ FSM ตรวจจับลำดับ "101" (จากบทที่ 8) เป็น Verilog โดยใช้ `always` สองบล็อก พร้อม testbench ทดสอบสตรีมอินพุต
+
 6. อธิบายความแตกต่างของผลการจำลองเมื่อเปลี่ยน `<=` เป็น `=` ในโมดูล `counter4` พร้อมเหตุผล
