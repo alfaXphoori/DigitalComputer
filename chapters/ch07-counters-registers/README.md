@@ -188,19 +188,53 @@ Q₁ ──┘
 
 ### ขั้นตอนการออกแบบ
 
-```
-  1. กำหนด State Diagram   →   ลำดับการนับ
-          ↓
-  2. สร้าง State Table      →   Q(now) → Q(next)
-          ↓
-  3. เลือกชนิด FF           →   D FF หรือ JK FF
-          ↓
-  4. ใช้ Excitation Table   →   หา J, K (หรือ D) จาก Q→Q+
-          ↓
-  5. K-Map ลดรูป           →   สมการอินพุตของแต่ละ FF
-          ↓
-  6. วาดวงจร
-```
+<div class="kmap-flow">
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 1</div>
+    <div class="kmap-flow__title">กำหนด State Diagram</div>
+    <div class="kmap-flow__desc">กำหนดลำดับการนับ (Counting Sequence) ของวงจรว่าต้องการให้ไล่สถานะอย่างไร</div>
+  </div>
+
+  <div class="kmap-flow__arrow">↓</div>
+
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 2</div>
+    <div class="kmap-flow__title">สร้าง State Table</div>
+    <div class="kmap-flow__desc">แปลง State Diagram เป็นตาราง แสดงความสัมพันธ์ Present State Q(now) → Next State Q(next)</div>
+  </div>
+
+  <div class="kmap-flow__arrow">↓</div>
+
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 3</div>
+    <div class="kmap-flow__title">เลือกชนิด Flip-Flop</div>
+    <div class="kmap-flow__desc">เลือก FF ที่จะใช้สร้างวงจร เช่น <b>D FF</b> หรือ <b>JK FF</b></div>
+  </div>
+
+  <div class="kmap-flow__arrow">↓</div>
+
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 4</div>
+    <div class="kmap-flow__title">ใช้ Excitation Table</div>
+    <div class="kmap-flow__desc">หาค่าอินพุตที่ต้องป้อนให้ FF (J, K หรือ D) จากการเปลี่ยนสถานะ Q→Q⁺ ของแต่ละบิต</div>
+  </div>
+
+  <div class="kmap-flow__arrow">↓</div>
+
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 5</div>
+    <div class="kmap-flow__title">K-Map ลดรูป</div>
+    <div class="kmap-flow__desc">ลดรูปด้วย K-Map เพื่อหาสมการอินพุตของแต่ละ FF ให้สั้นและง่ายที่สุด</div>
+  </div>
+
+  <div class="kmap-flow__arrow">↓</div>
+
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 6</div>
+    <div class="kmap-flow__title">วาดวงจร</div>
+    <div class="kmap-flow__desc">นำสมการที่ได้มาต่อ Combinational Logic เข้ากับอินพุตของ FF แต่ละตัวเป็นวงจรสมบูรณ์</div>
+  </div>
+</div>
 
 ### ตัวอย่าง: 3-bit Synchronous Up Counter (JK FF)
 
