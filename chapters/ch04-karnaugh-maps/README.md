@@ -467,50 +467,60 @@ $$\boxed{F = (B + C)(\overline{A} + \overline{B})}$$
 
 ## 4.10 ขั้นตอนสรุปการใช้ K-Map
 
-```mermaid
-flowchart TD
-    %% Style Definitions
-    classDef mainNode fill:#e0e7ff,stroke:#4f46e5,stroke-width:2.5px,color:#1e1b4b,font-weight:bold;
-    classDef subNode fill:#f8fafc,stroke:#cbd5e1,stroke-width:1px,color:#334155;
-    
-    S1["1. สร้างตาราง K-Map<br>(ตามลำดับ Gray Code)"]:::mainNode
-    S2["2. ใส่ค่า 1, 0, X ลงในเซลล์<br>(ตามข้อกำหนดของฟังก์ชัน)"]:::mainNode
-    
-    S3["3. จัดกลุ่ม 1 (SOP) หรือ 0 (POS)"]:::mainNode
-    
-    subgraph S3_Rules ["กฎการจัดกลุ่ม (Grouping Rules)"]
-        R3_1["จัดกลุ่มที่ใหญ่ที่สุดก่อนเสมอ (เริ่มจากกลุ่มใหญ่ก่อน)"]:::subNode
-        R3_2["จำนวนกลุ่มต้องน้อยที่สุด"]:::subNode
-        R3_3["ขนาดกลุ่มต้องเป็นรูปสี่เหลี่ยมขนาด 2ⁿ"]:::subNode
-        R3_4["เชื่อมขอบชนขอบได้ (Wrap-Around)"]:::subNode
-        R3_5["ซ้อนทับกลุ่มเดิมได้ แต่ทุกช่อง 1 ต้องอยู่ในกลุ่ม"]:::subNode
-        R3_6["นำ Don't Care (X) มาร่วมกลุ่มเพื่อขยายขนาด"]:::subNode
-    end
-    
-    S4["4. อ่านตัวแปรจากแต่ละกลุ่ม"]:::mainNode
-    
-    subgraph S4_Rules ["หลักการอ่านค่าตัวแปร"]
-        R4_1["ตัวแปรที่เปลี่ยนค่า ➔ ตัดออก"]:::subNode
-        R4_2["ตัวแปรที่คงที่ ➔ เก็บไว้"]:::subNode
-        R4_3["คงที่ 1 ➔ ปกติ (เช่น A)<br>คงที่ 0 ➔ Complement (เช่น Ā)"]:::subNode
-    end
-    
-    S5["5. เขียนสมการผลลัพธ์สุดท้าย"]:::mainNode
-    
-    subgraph S5_Out ["สมการผลลัพธ์"]
-        R5_1["SOP: OR ทุกกลุ่ม (บวกเข้าด้วยกัน)"]:::subNode
-        R5_2["POS: AND ทุกกลุ่ม (คูณเข้าด้วยกัน)"]:::subNode
-    end
+<div class="kmap-flow">
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 1</div>
+    <div class="kmap-flow__title">สร้างตาราง K-Map ตามจำนวนตัวแปร</div>
+    <div class="kmap-flow__desc">จัดเรียงป้ายแถวและคอลัมน์ตามลำดับ <b>Gray Code</b> (00, 01, 11, 10)</div>
+  </div>
+  
+  <div class="kmap-flow__arrow">↓</div>
+  
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 2</div>
+    <div class="kmap-flow__title">ใส่ค่าลงในเซลล์ตารางตามฟังก์ชัน</div>
+    <div class="kmap-flow__desc">เติมค่า <b>1, 0, หรือ X (Don't Care)</b> ลงในช่องเซลล์มินเทอมตามโจทย์กำหนด</div>
+  </div>
+  
+  <div class="kmap-flow__arrow">↓</div>
+  
+  <div class="kmap-flow__step kmap-flow__step--expand">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 3</div>
+    <div class="kmap-flow__title">จัดกลุ่ม 1 (SOP) หรือ 0 (POS)</div>
+    <div class="kmap-flow__sub-grid">
+      <div class="kmap-flow__rule">👉 <b>กลุ่มใหญ่สุดก่อน</b>: วงกลุ่มใหญ่ที่สุดก่อนเสมอ (ตรวจสอบ 16 ➔ 8 ➔ 4 ➔ 2 ➔ 1)</div>
+      <div class="kmap-flow__rule">🎯 <b>จำนวนกลุ่มน้อยสุด</b>: เพื่อลดปริมาณพจน์ที่จะนำมาเขียนเป็นสมการสุดท้าย</div>
+      <div class="kmap-flow__rule">📏 <b>ขนาดกลุ่มเป็น 2ⁿ</b>: ต้องเป็นรูปสี่เหลี่ยมผืนผ้าหรือจัตุรัสที่มีขนาด 1, 2, 4, 8, 16 เซลล์</div>
+      <div class="kmap-flow__rule">🔄 <b>เชื่อมต่อแบบวงกลม (Wrap-Around)</b>: สามารถรวมขอบซ้าย-ขวา หรือ บน-ล่าง เข้าเป็นกลุ่มเดียวกันได้</div>
+      <div class="kmap-flow__rule">👥 <b>ซ้อนทับกันได้</b>: เซลล์เป้าหมายสามารถใช้ร่วมกันหลายกลุ่มได้ แต่แต่ละกลุ่มต้องมีเซลล์ 1 ใหม่อย่างน้อย 1 ช่อง</div>
+      <div class="kmap-flow__rule">✖️ <b>ใช้ Don't Care (X) ช่วย</b>: นำช่อง X มาร่วมจัดกลุ่มเพื่อให้กลุ่มขยายใหญ่ขึ้นได้ แต่ไม่จำเป็นต้องวง X ครบทุกช่อง</div>
+    </div>
+  </div>
+  
+  <div class="kmap-flow__arrow">↓</div>
+  
+  <div class="kmap-flow__step kmap-flow__step--expand">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 4</div>
+    <div class="kmap-flow__title">อ่านค่าตัวแปรผลลัพธ์จากแต่ละกลุ่ม</div>
+    <div class="kmap-flow__sub-grid">
+      <div class="kmap-flow__rule">🚫 <b>ตัวแปรที่เปลี่ยนค่า</b>: มีการเปลี่ยนสถานะจาก 0 ↔ 1 ภายในขอบเขตกลุ่ม ➔ <b>ให้ตัดออก</b></div>
+      <div class="kmap-flow__rule">✅ <b>ตัวแปรที่คงค่าเดิม</b>: คงสภาพเดิมตลอดพื้นที่ในกลุ่ม ➔ <b>ให้เก็บรักษาไว้</b></div>
+      <div class="kmap-flow__rule">💡 <b>ลักษณะตัวแปร</b>: หากค่าคงที่ 1 ➔ เขียนตัวแปรปกติ (เช่น A) | หากค่าคงที่ 0 ➔ เขียนตัวแปรกลับบาร์ (เช่น Ā)</div>
+    </div>
+  </div>
+  
+  <div class="kmap-flow__arrow">↓</div>
+  
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 5</div>
+    <div class="kmap-flow__title">เขียนสมการลดรูปสุดท้าย</div>
+    <div class="kmap-flow__desc">
+      <b>SOP:</b> นำผลลัพธ์แต่ละกลุ่ม (พจน์คูณ/AND) มาเชื่อมกันด้วยเครื่องหมายบวก <b>OR (+)</b><br>
+      <b>POS:</b> นำผลลัพธ์แต่ละกลุ่ม (พจน์บวก/OR) มาเชื่อมกันด้วยเครื่องหมายคูณ <b>AND (·)</b>
+    </div>
+  </div>
+</div>
 
-    %% Flow Connections
-    S1 --> S2
-    S2 --> S3
-    S3 --> S3_Rules
-    S3_Rules --> S4
-    S4 --> S4_Rules
-    S4_Rules --> S5
-    S5 --> S5_Out
-```
 
 
 ---
