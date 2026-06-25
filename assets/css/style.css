@@ -2314,20 +2314,22 @@ table.schedule tbody tr:hover { background: #f8fafc; }
   width: 100%;
 }
 .kmap-flow__step {
-  background: var(--card);
-  border: 1px solid var(--line);
+  background: #f8faff;
+  border: 1px solid #e0e7ff;
+  border-left: 5px solid var(--indigo);
   border-radius: 12px;
   padding: 16px 20px;
   width: 100%;
   max-width: 650px;
   box-shadow: var(--shadow-sm);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
   box-sizing: border-box;
 }
 .kmap-flow__step:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
-  border-color: var(--indigo);
+  border-color: var(--indigo-dark);
+  background: #f0f4ff;
 }
 .kmap-flow__step--expand {
   max-width: 750px;
@@ -2370,7 +2372,7 @@ table.schedule tbody tr:hover { background: #f8fafc; }
   font-size: 0.85rem;
   color: var(--text);
   line-height: 1.5;
-  background: #f8fafc;
+  background: #ffffff;
   padding: 8px 12px;
   border-radius: 8px;
   border-left: 3px solid var(--indigo);
