@@ -20,17 +20,45 @@ $$\text{Output} = f(\text{Current Inputs})$$
 
 ### กระบวนการออกแบบวงจรเชิงผสม:
 
-```
-1. กำหนดปัญหา (สร้าง Truth Table)
-          ↓
-2. เขียนสมการบูลีน (SOP / POS)
-          ↓
-3. ลดรูปสมการ (K-Map / Algebra)
-          ↓
-4. วาดวงจรด้วยเกต
-          ↓
-5. ตรวจสอบความถูกต้อง
-```
+<div class="kmap-flow">
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 1</div>
+    <div class="kmap-flow__title">กำหนดปัญหา (สร้าง Truth Table)</div>
+    <div class="kmap-flow__desc">วิเคราะห์โจทย์และข้อกำหนดเพื่อระบุจำนวนตัวแปรอินพุตและเอาต์พุต จากนั้นสร้างตารางความจริง (Truth Table) เพื่อแสดงความสัมพันธ์ทั้งหมด</div>
+  </div>
+  
+  <div class="kmap-flow__arrow">↓</div>
+  
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 2</div>
+    <div class="kmap-flow__title">เขียนสมการบูลีน (SOP / POS)</div>
+    <div class="kmap-flow__desc">เขียนสมการบูลีนเริ่มต้นจากตารางความจริง โดยเลือกเขียนในรูปแบบผลรวมของผลคูณ <b>SOP</b> (พิจารณาช่องที่เอาต์พุตเป็น 1) หรือผลคูณของผลรวม <b>POS</b> (พิจารณาช่องที่เอาต์พุตเป็น 0)</div>
+  </div>
+  
+  <div class="kmap-flow__arrow">↓</div>
+  
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 3</div>
+    <div class="kmap-flow__title">ลดรูปสมการ (K-Map / Algebra)</div>
+    <div class="kmap-flow__desc">ลดรูปสมการบูลีนให้มีโครงสร้างที่สั้นและง่ายที่สุด โดยใช้ตารางคาร์โนห์ (K-Map) เพื่อจับกลุ่มตัวแปร หรือใช้กฎและทฤษฎีพีชคณิตบูลีน (Boolean Algebra)</div>
+  </div>
+  
+  <div class="kmap-flow__arrow">↓</div>
+  
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 4</div>
+    <div class="kmap-flow__title">วาดวงจรด้วยเกต</div>
+    <div class="kmap-flow__desc">นำสมการบูลีนที่ลดรูปเสร็จสิ้นแล้วมาวาดเป็นแผนภาพวงจรลอจิก (Logic Diagram) โดยเชื่อมต่อด้วยเกตพื้นฐาน เช่น AND, OR, NOT, NAND, NOR หรือ XOR</div>
+  </div>
+  
+  <div class="kmap-flow__arrow">↓</div>
+  
+  <div class="kmap-flow__step">
+    <div class="kmap-flow__badge">ขั้นตอนที่ 5</div>
+    <div class="kmap-flow__title">ตรวจสอบความถูกต้อง</div>
+    <div class="kmap-flow__desc">ตรวจสอบว่าวงจรที่วาดทำงานได้ถูกต้องตรงตามตารางความจริงที่กำหนดไว้ในขั้นตอนแรกสุดในทุกเงื่อนไขอินพุต</div>
+  </div>
+</div>
 
 แบ่งเนื้อหาเป็น 2 ส่วน:
 - **ส่วนที่ 1:** วงจรคำนวณทางคณิตศาสตร์ (Arithmetic Circuits)
