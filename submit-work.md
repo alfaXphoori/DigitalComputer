@@ -105,7 +105,6 @@ assignments:
 <tr>
 <th>สัปดาห์</th>
 <th>หัวข้อ</th>
-<th>งานที่ต้องส่ง</th>
 <th>กำหนดส่ง</th>
 <th>ส่งงาน</th>
 </tr>
@@ -115,7 +114,6 @@ assignments:
 <tr>
 <td><span class="wk-num">{{ a.n }}</span></td>
 <td>{{ a.topic }}</td>
-<td>{{ a.work }}</td>
 <td>{{ a.due }}</td>
 <td>
 {% if a.form and a.form != "#" %}<a class="up-btn" href="{{ a.form }}" target="_blank" rel="noopener">📝 ส่งงาน</a>{% else %}<span class="up-pending">รอลิงก์</span>{% endif %}
