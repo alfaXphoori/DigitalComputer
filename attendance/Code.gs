@@ -62,7 +62,7 @@ function buildSummary_(ss) {
   if (sheet) {
     var values = sheet.getDataRange().getValues();
     for (var r = 1; r < values.length; r++) {
-      var d = String(values[r][1]).trim();
+      var d = dateStr_(values[r][1]);
       var id = String(values[r][2]).trim();
       if (!d || !id) continue;
       dateSet[d] = true;
@@ -281,7 +281,7 @@ function checkedToday_(ss, today) {
   var values = sheet.getDataRange().getValues();
   var out = [];
   for (var r = 1; r < values.length; r++) {
-    if (String(values[r][1]) === today) out.push(String(values[r][2]).trim());
+    if (dateStr_(values[r][1]) === today) out.push(String(values[r][2]).trim());
   }
   return out;
 }
@@ -300,6 +300,12 @@ function removeToday_(ss, today, id) {
 
 function today_() {
   return Utilities.formatDate(new Date(), TIMEZONE, 'yyyy-MM-dd');
+}
+
+/** แปลงค่าจากคอลัมน์วันที่ให้เป็นสตริง yyyy-MM-dd เสมอ (กันกรณีชีตแปลงเป็น Date object) */
+function dateStr_(v) {
+  if (v instanceof Date) return Utilities.formatDate(v, TIMEZONE, 'yyyy-MM-dd');
+  return String(v == null ? '' : v).trim();
 }
 
 function parseBody_(e) {

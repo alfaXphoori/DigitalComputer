@@ -100,10 +100,14 @@ details.as-matrix summary { cursor: pointer; font-weight: 600; color: var(--indi
     return 'lo';
   }
 
+  function pad2(n) { return ('0' + n).slice(-2); }
   function shortDate(d) {
-    if (!d || d.length < 10) return d;
-    var p = d.split('-'); // [yyyy, mm, dd]
-    return p[2] + '/' + p[1] + '/' + p[0];
+    if (!d) return d;
+    var p = String(d).split('-');
+    if (p.length === 3 && p[0].length === 4) return p[2] + '/' + p[1] + '/' + p[0];
+    var dt = new Date(d);
+    if (!isNaN(dt.getTime())) return pad2(dt.getDate()) + '/' + pad2(dt.getMonth() + 1) + '/' + dt.getFullYear();
+    return d;
   }
 
   function renderTable() {
