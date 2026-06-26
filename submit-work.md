@@ -12,12 +12,12 @@ assignments:
     topic: บทนำรายวิชาและระบบดิจิทัล
     work: ใบงานที่ 1 — รู้จักชุดทดลอง/เครื่องมือวัด และฝึกแทนค่า–นับในเลขฐานต่าง ๆ
     due: ก่อนคาบสัปดาห์ที่ 2
-    form: "#"
+    form: "https://docs.google.com/forms/d/e/1FAIpQLSegDeNM_e7nUyxzTOFfhPb0uRIzSxXeZwv0vZMan_6zA9R-uQ/viewform"
   - n: 2
     topic: เลขคณิตในระบบดิจิทัลและรหัสดิจิทัล
     work: ใบงานที่ 2 — การคำนวณเลขฐานสอง (บวก/ลบด้วยคอมพลีเมนต์) และรหัส BCD/Gray/Parity
     due: ก่อนคาบสัปดาห์ที่ 3
-    form: "#"
+    form: "https://docs.google.com/forms/d/e/1FAIpQLScPYWADqOMQnfpcAqS27xMqH-dkEWBwNeXvdObdAvd7aGezbg/viewform"
   - n: 3
     topic: ลอจิกเกตพื้นฐาน
     work: ใบงานที่ 3 — ต่อและทดสอบลอจิกเกต 7408/7432/7404/7400/7402/7486
