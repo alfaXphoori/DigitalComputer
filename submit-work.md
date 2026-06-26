@@ -86,7 +86,6 @@ assignments:
 ---
 
 <style>
-.submit-intro { background: #f8fafc; border: 1px solid var(--line); border-left: 4px solid var(--indigo, #4f46e5); border-radius: 10px; padding: 16px 20px; margin: 1.2em 0; }
 .up-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; font-weight: 600; font-size: .9rem; background: var(--indigo, #4f46e5); color: #fff !important; white-space: nowrap; }
 .up-btn:hover { text-decoration: none; opacity: .9; transform: translateY(-1px); }
 .up-pending { display: inline-block; padding: 5px 12px; border-radius: 8px; font-size: .85rem; background: #f1f5f9; color: #64748b; border: 1px dashed #cbd5e1; }
@@ -97,34 +96,6 @@ assignments:
 # 📤 ส่งงานรายสัปดาห์
 
 > ช่องทางส่ง **ใบงานและงานปฏิบัติ** ของรายวิชา ตรรกศาสตร์ของดิจิตอลคอมพิวเตอร์ — ส่งงานผ่าน **Google Form** ของแต่ละสัปดาห์ตามตารางด้านล่าง
-
-## วิธีส่งงาน
-
-<div class="submit-intro">
-
-1. กดปุ่ม **📝 ส่งงาน** ของสัปดาห์ที่ต้องการ → จะเปิด Google Form ของสัปดาห์นั้น
-2. **ลงชื่อเข้า Google ด้วยอีเมลของมหาวิทยาลัย** (`@ksu.ac.th`) ก่อนกรอกฟอร์ม
-3. กรอกชื่อ–รหัสนักศึกษา และ **แนบไฟล์งาน** ตามที่ฟอร์มกำหนด
-4. กด **ส่ง (Submit)** และตรวจสอบว่าได้รับข้อความยืนยันการส่งเรียบร้อย
-
-</div>
-
-## กติกาการตั้งชื่อไฟล์
-
-ตั้งชื่อไฟล์ก่อนแนบเข้าฟอร์มตามรูปแบบนี้เพื่อให้ตรวจง่ายและไม่สับสน:
-
-```
-รหัสนักศึกษา_ชื่อ_labXX.pdf
-
-ตัวอย่าง: 6701001_สมชาย_lab03.pdf
-```
-
-| ประเด็น | ข้อกำหนด |
-|:---|:---|
-| **รูปแบบไฟล์** | PDF เป็นหลัก (รูปวงจร/ภาพถ่ายรวมเป็น PDF เดียว) — โค้ด Verilog แนบ `.v` เพิ่มได้ |
-| **ขนาดไฟล์** | ไม่เกิน 25 MB ต่อไฟล์ |
-| **งานกลุ่ม** | ใส่รายชื่อ–รหัสสมาชิกทุกคนในหน้าแรก แล้วส่ง **ฟอร์มเดียว** ต่อกลุ่ม |
-| **กำหนดส่ง** | ภายในเวลาที่ระบุในคอลัมน์ "กำหนดส่ง" (โดยปริยายคือก่อนเริ่มคาบเรียนสัปดาห์ถัดไป) |
 
 ## ตารางส่งงานรายสัปดาห์
 
