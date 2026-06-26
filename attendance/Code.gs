@@ -39,6 +39,10 @@ function doGet(e) {
     return jsonOut_(buildSummary_(ss));
   }
 
+  if (mode === 'submissions') {
+    return jsonOut_(buildSubmissions_(ss));
+  }
+
   var today = today_();
   return jsonOut_({
     ok: true,
@@ -146,6 +150,76 @@ function readRoster_(ss) {
     if (id && name) out.push({ id: id, name: name });
   }
   return out;
+}
+
+/**
+ * สรุปการส่งงาน: อ่านแท็บคำตอบของฟอร์มที่ชื่อ W1, W2, ... (ลิงก์มาจาก Google Form)
+ * หาคอลัมน์ที่หัวตารางมีคำว่า "รหัส" หรือ "studentId" แล้วเทียบกับทะเบียนรายชื่อ
+ */
+function buildSubmissions_(ss) {
+  var roster = readRoster_(ss);
+  var sheets = ss.getSheets();
+  var weekData = {}; // week -> { normId: true }
+  var weeks = [];
+
+  for (var i = 0; i < sheets.length; i++) {
+    var m = String(sheets[i].getName()).trim().match(/^W\s*(\d+)$/i);
+    if (!m) continue;
+    var wk = parseInt(m[1], 10);
+    weekData[wk] = readSubmittedIds_(sheets[i]);
+    weeks.push(wk);
+  }
+  weeks.sort(function (a, b) { return a - b; });
+
+  var rosterOut = roster.map(function (s) {
+    var key = normId_(s.id);
+    var sub = {};
+    var c = 0;
+    for (var k = 0; k < weeks.length; k++) {
+      var has = !!weekData[weeks[k]][key];
+      sub[weeks[k]] = has;
+      if (has) c++;
+    }
+    return { id: s.id, name: s.name, submitted: sub, count: c };
+  });
+
+  var counts = {};
+  weeks.forEach(function (wk) {
+    var cnt = 0;
+    rosterOut.forEach(function (s) { if (s.submitted[wk]) cnt++; });
+    counts[wk] = cnt;
+  });
+
+  return { ok: true, weeks: weeks, counts: counts, totalStudents: roster.length, roster: rosterOut };
+}
+
+/** อ่านรหัสนักศึกษาที่ส่งงานจากแท็บคำตอบฟอร์ม 1 แท็บ คืน { normId: true } */
+function readSubmittedIds_(sheet) {
+  var out = {};
+  var values = sheet.getDataRange().getValues();
+  if (values.length < 2) return out;
+
+  var header = values[0].map(function (h) { return String(h).trim().toLowerCase(); });
+  var col = -1;
+  for (var c = 0; c < header.length; c++) {
+    if (header[c].indexOf('รหัส') !== -1 ||
+        header[c].indexOf('studentid') !== -1 ||
+        header[c].indexOf('student id') !== -1) { col = c; break; }
+  }
+  if (col === -1) return out; // ไม่พบคอลัมน์รหัสนักศึกษา
+
+  for (var r = 1; r < values.length; r++) {
+    var v = normId_(values[r][col]);
+    if (v) out[v] = true;
+  }
+  return out;
+}
+
+/** ตัดให้เหลือเฉพาะเลขรหัสส่วนหน้า (ก่อน '-') เพื่อเทียบให้ตรงแม้พิมพ์ต่างรูปแบบ */
+function normId_(x) {
+  var s = String(x == null ? '' : x).trim();
+  s = s.split('-')[0];
+  return s.replace(/[^0-9]/g, '');
 }
 
 /** คืนแท็บ Attendance (สร้างใหม่พร้อมหัวตารางถ้ายังไม่มี) */

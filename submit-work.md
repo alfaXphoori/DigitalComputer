@@ -86,6 +86,10 @@ assignments:
 ---
 
 <style>
+.seg-menu { display: inline-flex; gap: 4px; background: #f1f5f9; padding: 4px; border-radius: 12px; margin: .2em 0 1.1em; flex-wrap: wrap; }
+.seg { padding: 9px 18px; border-radius: 9px; font-weight: 600; font-size: .95rem; color: #475569; text-decoration: none; }
+.seg:hover { color: var(--indigo, #4f46e5); text-decoration: none; }
+.seg.is-active { background: #fff; color: var(--indigo-dark, #3730a3); box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,.08)); }
 .up-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; font-weight: 600; font-size: .9rem; background: var(--indigo, #4f46e5); color: #fff !important; white-space: nowrap; }
 .up-btn:hover { text-decoration: none; opacity: .9; transform: translateY(-1px); }
 .up-pending { display: inline-block; padding: 5px 12px; border-radius: 8px; font-size: .85rem; background: #f1f5f9; color: #64748b; border: 1px dashed #cbd5e1; }
@@ -94,6 +98,11 @@ assignments:
 </style>
 
 # 📤 ส่งงานรายสัปดาห์
+
+<div class="seg-menu">
+  <a class="seg is-active" href="{{ '/submit-work.html' | relative_url }}">📤 ส่งงาน</a>
+  <a class="seg" href="{{ '/submission-check.html' | relative_url }}">📊 ตรวจการส่ง</a>
+</div>
 
 > ช่องทางส่ง **ใบงานและงานปฏิบัติ** ของรายวิชา ตรรกศาสตร์ของดิจิตอลคอมพิวเตอร์ — ส่งงานผ่าน **Google Form** ของแต่ละสัปดาห์ตามตารางด้านล่าง
 
