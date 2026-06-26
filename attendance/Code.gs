@@ -130,9 +130,26 @@ function isTeacher_(key) {
   return k !== '' && String(key || '') === k;
 }
 
-/** อ่านทะเบียนรายชื่อจากแท็บแรก คืน [{ id, name }] */
+/** หาแท็บทะเบียนรายชื่อจากหัวคอลัมน์ (ไม่ยึดตำแหน่งแท็บ เพราะอาจมีแท็บฟอร์มแทรก) */
+function rosterSheet_(ss) {
+  var sheets = ss.getSheets();
+  for (var i = 0; i < sheets.length; i++) {
+    var name = String(sheets[i].getName()).trim();
+    if (/^W\s*\d+$/i.test(name) || name === ATT_SHEET_NAME) continue;
+    if (sheets[i].getLastColumn() < 1 || sheets[i].getLastRow() < 1) continue;
+    var header = sheets[i].getRange(1, 1, 1, sheets[i].getLastColumn())
+      .getValues()[0].map(function (h) { return String(h).trim().toLowerCase(); });
+    if (header.indexOf('studentid') !== -1 &&
+        (header.indexOf('fullname') !== -1 || header.indexOf('name') !== -1)) {
+      return sheets[i];
+    }
+  }
+  return sheets[0]; // สำรอง
+}
+
+/** อ่านทะเบียนรายชื่อ คืน [{ id, name }] */
 function readRoster_(ss) {
-  var sheet = ss.getSheets()[0];
+  var sheet = rosterSheet_(ss);
   var values = sheet.getDataRange().getValues();
   if (values.length < 2) return [];
 
