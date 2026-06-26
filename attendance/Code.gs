@@ -154,29 +154,36 @@ function readRoster_(ss) {
 
 /**
  * สรุปการส่งงาน: อ่านแท็บคำตอบของฟอร์มที่ชื่อ W1, W2, ... (ลิงก์มาจาก Google Form)
- * หาคอลัมน์ที่หัวตารางมีคำว่า "รหัส" หรือ "studentId" แล้วเทียบกับทะเบียนรายชื่อ
+ * จับคู่กับทะเบียนรายชื่อด้วย "รหัสนักศึกษา" หรือ "ชื่อ-สกุล" (อย่างใดอย่างหนึ่งที่ตรง)
  */
 function buildSubmissions_(ss) {
   var roster = readRoster_(ss);
+
+  // ทำดัชนีไว้จับคู่: ตามรหัส และตามชื่อ → คืนเป็น studentId มาตรฐานของทะเบียน
+  var idx = { byId: {}, byName: {} };
+  roster.forEach(function (s) {
+    idx.byId[normId_(s.id)] = s.id;
+    idx.byName[normName_(s.name)] = s.id;
+  });
+
   var sheets = ss.getSheets();
-  var weekData = {}; // week -> { normId: true }
+  var weekData = {}; // week -> { rosterId: true }
   var weeks = [];
 
   for (var i = 0; i < sheets.length; i++) {
     var m = String(sheets[i].getName()).trim().match(/^W\s*(\d+)$/i);
     if (!m) continue;
     var wk = parseInt(m[1], 10);
-    weekData[wk] = readSubmittedIds_(sheets[i]);
+    weekData[wk] = readSubmitted_(sheets[i], idx);
     weeks.push(wk);
   }
   weeks.sort(function (a, b) { return a - b; });
 
   var rosterOut = roster.map(function (s) {
-    var key = normId_(s.id);
     var sub = {};
     var c = 0;
     for (var k = 0; k < weeks.length; k++) {
-      var has = !!weekData[weeks[k]][key];
+      var has = !!weekData[weeks[k]][s.id];
       sub[weeks[k]] = has;
       if (has) c++;
     }
@@ -193,24 +200,32 @@ function buildSubmissions_(ss) {
   return { ok: true, weeks: weeks, counts: counts, totalStudents: roster.length, roster: rosterOut };
 }
 
-/** อ่านรหัสนักศึกษาที่ส่งงานจากแท็บคำตอบฟอร์ม 1 แท็บ คืน { normId: true } */
-function readSubmittedIds_(sheet) {
+/** อ่านคำตอบ 1 แท็บ จับคู่กับทะเบียน คืน { rosterId: true } ของคนที่ส่งแล้ว */
+function readSubmitted_(sheet, idx) {
   var out = {};
   var values = sheet.getDataRange().getValues();
   if (values.length < 2) return out;
 
   var header = values[0].map(function (h) { return String(h).trim().toLowerCase(); });
-  var col = -1;
+  var idCol = -1, nameCol = -1;
   for (var c = 0; c < header.length; c++) {
-    if (header[c].indexOf('รหัส') !== -1 ||
-        header[c].indexOf('studentid') !== -1 ||
-        header[c].indexOf('student id') !== -1) { col = c; break; }
+    if (idCol === -1 && (header[c].indexOf('รหัส') !== -1 ||
+        header[c].indexOf('studentid') !== -1 || header[c].indexOf('student id') !== -1)) idCol = c;
+    if (nameCol === -1 && (header[c].indexOf('ชื่อ') !== -1 ||
+        header[c] === 'name' || header[c].indexOf('fullname') !== -1 || header[c].indexOf('full name') !== -1)) nameCol = c;
   }
-  if (col === -1) return out; // ไม่พบคอลัมน์รหัสนักศึกษา
 
   for (var r = 1; r < values.length; r++) {
-    var v = normId_(values[r][col]);
-    if (v) out[v] = true;
+    var matched = null;
+    if (idCol !== -1) {
+      var k1 = normId_(values[r][idCol]);
+      if (k1 && idx.byId[k1]) matched = idx.byId[k1];
+    }
+    if (!matched && nameCol !== -1) {
+      var k2 = normName_(values[r][nameCol]);
+      if (k2 && idx.byName[k2]) matched = idx.byName[k2];
+    }
+    if (matched) out[matched] = true;
   }
   return out;
 }
@@ -220,6 +235,16 @@ function normId_(x) {
   var s = String(x == null ? '' : x).trim();
   s = s.split('-')[0];
   return s.replace(/[^0-9]/g, '');
+}
+
+/** ตัดคำนำหน้าชื่อและช่องว่างออก เพื่อเทียบชื่อให้ตรงแม้เว้นวรรคต่างกัน */
+function normName_(x) {
+  var s = String(x == null ? '' : x).trim();
+  var titles = ['นางสาว', 'เด็กชาย', 'เด็กหญิง', 'ด.ช.', 'ด.ญ.', 'น.ส.', 'นาย', 'นาง'];
+  for (var i = 0; i < titles.length; i++) {
+    if (s.indexOf(titles[i]) === 0) { s = s.substring(titles[i].length); break; }
+  }
+  return s.replace(/\s+/g, '');
 }
 
 /** คืนแท็บ Attendance (สร้างใหม่พร้อมหัวตารางถ้ายังไม่มี) */
