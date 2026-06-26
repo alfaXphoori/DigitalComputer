@@ -5,6 +5,10 @@ description: สรุปการมาเรียนทั้งเทอม 
 ---
 
 <style>
+.seg-menu { display: inline-flex; gap: 4px; background: #f1f5f9; padding: 4px; border-radius: 12px; margin: .2em 0 1.1em; flex-wrap: wrap; }
+.seg { padding: 9px 18px; border-radius: 9px; font-weight: 600; font-size: .95rem; color: #475569; text-decoration: none; }
+.seg:hover { color: var(--indigo, #4f46e5); text-decoration: none; }
+.seg.is-active { background: #fff; color: var(--indigo-dark, #3730a3); box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,.08)); }
 .as-bar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin: .4em 0 1em; font-size: .95rem; }
 .as-stat { background: #eef2ff; color: var(--indigo-dark, #3730a3); border-radius: 999px; padding: 4px 14px; font-weight: 600; font-size: .9rem; }
 .as-link { color: var(--indigo, #4f46e5); }
@@ -32,7 +36,12 @@ details.as-matrix summary { cursor: pointer; font-weight: 600; color: var(--indi
 
 # 📊 สรุปการมาเรียนทั้งเทอม
 
-> รวมจำนวนวันที่มาเรียนของนักศึกษาแต่ละคน คิดจากบันทึกในระบบ <a class="as-link" href="{{ '/check-in.html' | relative_url }}">เช็คชื่อเข้าห้อง</a>
+<div class="seg-menu">
+  <a class="seg" href="{{ '/check-in.html' | relative_url }}">✅ เช็คชื่อ</a>
+  <a class="seg is-active" href="{{ '/attendance-summary.html' | relative_url }}">📊 สรุปการมาเรียน</a>
+</div>
+
+> รวมจำนวนวันที่มาเรียนของนักศึกษาแต่ละคน คิดจากบันทึกในระบบเช็คชื่อเข้าห้อง
 
 <div class="as-bar">
   <span class="as-stat" id="as-days">—</span>
