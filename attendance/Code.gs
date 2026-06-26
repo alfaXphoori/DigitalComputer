@@ -31,8 +31,14 @@ function setTeacherKey() {
   PropertiesService.getScriptProperties().setProperty('TEACHER_KEY', 'เปลี่ยนรหัสนี้');
 }
 
-function doGet() {
+function doGet(e) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var mode = (e && e.parameter && e.parameter.mode) ? String(e.parameter.mode) : '';
+
+  if (mode === 'summary') {
+    return jsonOut_(buildSummary_(ss));
+  }
+
   var today = today_();
   return jsonOut_({
     ok: true,
@@ -40,6 +46,35 @@ function doGet() {
     roster: readRoster_(ss),
     checked: checkedToday_(ss, today)
   });
+}
+
+/** สรุปการมาเรียนทั้งเทอม: นับจำนวนวันที่มาเรียนต่อคน + รายการวันที่มีคาบเรียน */
+function buildSummary_(ss) {
+  var roster = readRoster_(ss);
+  var sheet = ss.getSheetByName(ATT_SHEET_NAME);
+  var dateSet = {};
+  var perStudent = {}; // id -> { date: true }
+
+  if (sheet) {
+    var values = sheet.getDataRange().getValues();
+    for (var r = 1; r < values.length; r++) {
+      var d = String(values[r][1]).trim();
+      var id = String(values[r][2]).trim();
+      if (!d || !id) continue;
+      dateSet[d] = true;
+      if (!perStudent[id]) perStudent[id] = {};
+      perStudent[id][d] = true;
+    }
+  }
+
+  var dates = Object.keys(dateSet).sort();
+  var rosterOut = roster.map(function (s) {
+    var pres = perStudent[s.id] || {};
+    var presentDates = dates.filter(function (d) { return pres[d]; });
+    return { id: s.id, name: s.name, count: presentDates.length, present: presentDates };
+  });
+
+  return { ok: true, dates: dates, totalDays: dates.length, roster: rosterOut };
 }
 
 function doPost(e) {
