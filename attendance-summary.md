@@ -100,7 +100,11 @@ details.as-matrix summary { cursor: pointer; font-weight: 600; color: var(--indi
     return 'lo';
   }
 
-  function shortDate(d) { return d.length >= 10 ? d.slice(5).replace('-', '/') : d; }
+  function shortDate(d) {
+    if (!d || d.length < 10) return d;
+    var p = d.split('-'); // [yyyy, mm, dd]
+    return p[2] + '/' + p[1] + '/' + p[0];
+  }
 
   function renderTable() {
     var q = (elSearch.value || '').trim().toLowerCase();
