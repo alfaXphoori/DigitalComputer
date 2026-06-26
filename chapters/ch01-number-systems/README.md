@@ -924,8 +924,6 @@ G₀ = B₁ ⊕ B₀ = 0 ⊕ 1 = 1
 | 2-out-of-5 | 5 | Non-weighted | ตรวจจับได้ | บาร์โค้ด, ไปรษณีย์ |
 | Gray Code | n | Non-weighted | ไม่มี | Encoder, K-map |
 | ASCII | 7/8 | Character | ด้วย parity bit | ข้อความทั่วไป |
-| EBCDIC | 8 | Character | ไม่มี | IBM Mainframe |
-| Unicode (UTF-8) | 8–32 | Character | ในตัว | ระบบสมัยใหม่ทุกชนิด |
 | Hamming | n+r | Error-correcting | แก้ไข 1 บิต | RAM, การสื่อสาร |
 
 ---
@@ -1037,16 +1035,6 @@ $$C_4 C_2 C_1 = 101_2 = 5_{10}$$
 > **syndrome = 5** หมายความว่า **บิตตำแหน่งที่ 5 ผิด** → แก้โดย **พลิกบิตที่ 5** กลับ: `0110111` → `0110011` ✓ ได้ข้อมูลเดิม `1011` คืนมา
 
 ถ้า syndrome = `000` แสดงว่า **ไม่มีข้อผิดพลาด**
-
-#### SECDED — เพิ่มการตรวจจับ 2 บิต
-
-รหัสแฮมมิงพื้นฐาน **แก้** ได้ 1 บิต แต่ถ้าผิด 2 บิตจะแปลผลผิด การเพิ่ม parity bit รวม (overall parity) อีก 1 ตัวคุมทุกบิต จะได้รหัส **SECDED (Single Error Correction, Double Error Detection)** — แก้ 1 บิต และ **ตรวจจับ** (แต่ไม่แก้) 2 บิตได้ นิยมใช้ใน **หน่วยความจำ ECC RAM**
-
-| ชนิด | ตรวจจับ | แก้ไข |
-|:---|:---:|:---:|
-| Parity bit เดี่ยว | 1 บิต | ✗ |
-| Hamming (SEC) | 1 บิต | 1 บิต |
-| Hamming + overall parity (SECDED) | 2 บิต | 1 บิต |
 
 ---
 
