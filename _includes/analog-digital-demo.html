@@ -7,7 +7,7 @@
   </div>
 
   <div class="ad-stage">
-    <svg viewBox="0 0 760 360" preserveAspectRatio="xMidYMid meet" role="img" aria-label="แอนิเมชันเปรียบเทียบสัญญาณแอนะล็อกแบบคลื่นไซน์ต่อเนื่อง กับสัญญาณดิจิทัลแบบขั้นบันไดที่ได้จากการสุ่มตัวอย่างและควอนไทซ์" style="overflow:hidden;">
+    <svg viewBox="0 0 760 360" preserveAspectRatio="xMidYMid meet" role="img" aria-label="แอนิเมชันเปรียบเทียบสัญญาณแอนะล็อกแบบคลื่นไซน์ต่อเนื่อง กับสัญญาณดิจิทัลแบบคลื่นสี่เหลี่ยม 0/1 ที่ได้จากการสุ่มตัวอย่างและเปรียบเทียบกับระดับอ้างอิง" style="overflow:hidden;">
       <defs>
         <clipPath id="ad-clip">
           <rect x="0" y="0" width="760" height="360" />
@@ -24,24 +24,19 @@
         <line x1="570" y1="20" x2="570" y2="350" />
       </g>
 
-      <!-- Fixed quantization level lines (digital panel, 8 levels / 3-bit) -->
-      <g stroke="rgba(148,163,184,0.15)" stroke-width="1">
-        <line x1="0" y1="220" x2="760" y2="220" />
+      <!-- Fixed logic-level guide lines (digital panel, 2 levels / binary) -->
+      <g stroke="rgba(148,163,184,0.18)" stroke-width="1" stroke-dasharray="4 4">
         <line x1="0" y1="235" x2="760" y2="235" />
-        <line x1="0" y1="250" x2="760" y2="250" />
-        <line x1="0" y1="265" x2="760" y2="265" />
-        <line x1="0" y1="280" x2="760" y2="280" />
-        <line x1="0" y1="295" x2="760" y2="295" />
-        <line x1="0" y1="310" x2="760" y2="310" />
-        <line x1="0" y1="325" x2="760" y2="325" />
-        <line x1="0" y1="340" x2="760" y2="340" />
+        <line x1="0" y1="320" x2="760" y2="320" />
       </g>
 
       <!-- Fixed panel labels -->
       <text x="14" y="28" fill="#22d3ee" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700">Analog — สัญญาณต่อเนื่อง (Continuous)</text>
-      <text x="14" y="200" fill="#fbbf24" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700">Digital — สัญญาณเป็นขั้น (Sampled &amp; Quantized)</text>
+      <text x="14" y="200" fill="#fbbf24" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700">Digital — คลื่นสี่เหลี่ยม 0/1 (Square Wave)</text>
+      <text x="14" y="239" fill="#fbbf24" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700">1</text>
+      <text x="14" y="324" fill="#fbbf24" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700">0</text>
 
-      <!-- Scrolling group: analog sine + sample dots + digital staircase -->
+      <!-- Scrolling group: analog sine + sample dots + digital square wave -->
       <g clip-path="url(#ad-clip)">
         <g id="ad-scroll-group">
           <animateTransform attributeName="transform" type="translate" from="0 0" to="-190 0" dur="3.5s" repeatCount="indefinite" />
@@ -75,9 +70,9 @@
             <circle cx="950.0" cy="110.0" r="3.5" />
           </g>
 
-          <!-- Digital sample-and-hold staircase (3-bit / 8-level quantization) -->
-          <path d="M 0.0,287.5 L 47.5,287.5 L 47.5,227.5 L 95.0,227.5 L 95.0,272.5 L 142.5,272.5 L 142.5,332.5 L 190.0,332.5 L 190.0,287.5 L 237.5,287.5 L 237.5,227.5 L 285.0,227.5 L 285.0,272.5 L 332.5,272.5 L 332.5,332.5 L 380.0,332.5 L 380.0,287.5 L 427.5,287.5 L 427.5,227.5 L 475.0,227.5 L 475.0,272.5 L 522.5,272.5 L 522.5,332.5 L 570.0,332.5 L 570.0,287.5 L 617.5,287.5 L 617.5,227.5 L 665.0,227.5 L 665.0,272.5 L 712.5,272.5 L 712.5,332.5 L 760.0,332.5 L 760.0,287.5 L 807.5,287.5 L 807.5,227.5 L 855.0,227.5 L 855.0,272.5 L 902.5,272.5 L 902.5,332.5 L 950.0,332.5 L 950.0,287.5"
-                stroke="#fbbf24" stroke-width="3" fill="none" stroke-linecap="square" stroke-linejoin="miter" />
+          <!-- Digital square wave (binary 0/1, period 190px, 50% duty, phase-matched to sine's upper/lower half) -->
+          <path d="M 0.0,235.0 L 95.0,235.0 L 95.0,320.0 L 190.0,320.0 L 190.0,235.0 L 285.0,235.0 L 285.0,320.0 L 380.0,320.0 L 380.0,235.0 L 475.0,235.0 L 475.0,320.0 L 570.0,320.0 L 570.0,235.0 L 665.0,235.0 L 665.0,320.0 L 760.0,320.0 L 760.0,235.0 L 855.0,235.0 L 855.0,320.0 L 950.0,320.0"
+                stroke="#fbbf24" stroke-width="3" fill="none" />
         </g>
       </g>
     </svg>
@@ -85,7 +80,7 @@
 
   <div class="ad-expl">
     <strong>📌 แอนะล็อก vs ดิจิทัล</strong>
-    <span>สัญญาณ <b style="color:#22d3ee">แอนะล็อก (Analog)</b> เป็นสัญญาณ <b>ต่อเนื่อง</b> มีค่าได้ทุกระดับ เช่น เสียง อุณหภูมิ แรงดันไฟฟ้า ส่วนสัญญาณ <b style="color:#fbbf24">ดิจิทัล (Digital)</b> เป็นสัญญาณ <b>ไม่ต่อเนื่อง</b> มีเฉพาะระดับที่กำหนด ได้จากการ <b>สุ่มตัวอย่าง (Sampling)</b> ตามจังหวะ แล้ว <b>ควอนไทซ์ (Quantization)</b> ให้เป็นระดับใกล้ที่สุด ก่อนเข้ารหัสเป็นเลขฐานสอง 0/1 — นี่คือเหตุผลที่ระบบดิจิทัลทุกชนิดทำงานด้วยเลขฐานสอง</span>
+    <span>สัญญาณ <b style="color:#22d3ee">แอนะล็อก (Analog)</b> เป็นสัญญาณ <b>ต่อเนื่อง</b> มีค่าได้ทุกระดับ เช่น เสียง อุณหภูมิ แรงดันไฟฟ้า ส่วนสัญญาณ <b style="color:#fbbf24">ดิจิทัล (Digital)</b> เป็นสัญญาณ <b>ไม่ต่อเนื่อง</b> มีเพียง 2 ระดับเท่านั้น คือ <b>คลื่นสี่เหลี่ยม 0/1</b> ได้จากการ <b>สุ่มตัวอย่าง (Sampling)</b> ตามจังหวะ แล้วเปรียบเทียบกับ <b>ระดับอ้างอิง (Threshold)</b> ว่าสูงหรือต่ำกว่า เพื่อตัดสินเป็นค่า 0 หรือ 1 — นี่คือเหตุผลที่ระบบดิจิทัลทุกชนิดทำงานด้วยเลขฐานสอง</span>
   </div>
 </div>
 
