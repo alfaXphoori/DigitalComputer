@@ -34,14 +34,12 @@ details.as-matrix summary { cursor: pointer; font-weight: 600; color: var(--indi
 .as-matrix .as-table th.date, .as-matrix .as-table td.date { text-align: center; white-space: nowrap; font-size: .8rem; }
 </style>
 
-# 📊 สรุปการมาเรียนทั้งเทอม
+# 📊 สรุปการมาเรียน
 
 <div class="seg-menu">
   <a class="seg" href="{{ '/check-in.html' | relative_url }}">✅ เช็คชื่อ</a>
   <a class="seg is-active" href="{{ '/attendance-summary.html' | relative_url }}">📊 สรุปการมาเรียน</a>
 </div>
-
-> รวมจำนวนวันที่มาเรียนของนักศึกษาแต่ละคน คิดจากบันทึกในระบบเช็คชื่อเข้าห้อง
 
 <div class="as-bar">
   <span class="as-stat" id="as-days">—</span>
