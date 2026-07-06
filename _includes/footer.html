@@ -427,7 +427,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var W = getSignalData(name);
         var val = W[stepIdx] !== undefined ? W[stepIdx] : 0;
         
-        var readoutEl = demo.querySelector('.td-readout--' + name.toLowerCase());
+        var readoutEl = demo.getElementsByClassName('td-readout--' + name.toLowerCase())[0];
         if (!readoutEl) return;
         
         var valSpan = readoutEl.querySelector('.val');
