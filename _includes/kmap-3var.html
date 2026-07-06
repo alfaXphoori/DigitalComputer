@@ -1,12 +1,12 @@
-<div class="kmap-demo" id="kmap-main">
+<div class="kmap-demo" id="kmap-3var">
   <div class="kmap-header">
     <span class="kmap-title">🔬 เครื่องมือเรียนรู้ K-Map 3 ตัวแปร (Interactive K-Map Tool)</span>
   </div>
   
   <div class="kmap-controls">
     <div class="kmap-presets-wrap">
-      <label for="kmap-preset-select">ชุดตัวอย่าง:</label>
-      <select id="kmap-preset-select" class="kmap-select">
+      <label for="kmap-3var-preset-select">ชุดตัวอย่าง:</label>
+      <select id="kmap-3var-preset-select" class="kmap-select">
         <option value="custom" selected>กำหนดเอง (คลิกตาราง)</option>
         <option value="clear">ล้างตาราง (0 ทั้งหมด)</option>
         <option value="pair">กลุ่ม 2 ช่อง (Pair)</option>
@@ -15,7 +15,7 @@
         <option value="dontcare">การใช้ Don't Care (X)</option>
       </select>
     </div>
-    <button class="kmap-btn kmap-btn--reset" id="kmap-reset-btn">🔄 รีเซ็ตตาราง</button>
+    <button class="kmap-btn kmap-btn--reset" id="kmap-3var-reset-btn">🔄 รีเซ็ตตาราง</button>
   </div>
 
   <div class="kmap-workspace">
@@ -80,7 +80,7 @@
       
       <!-- SVG Overlay for drawing loops -->
       <svg class="kmap-svg" viewBox="0 0 380 190" preserveAspectRatio="xMidYMid meet">
-        <g id="kmap-loops-group"></g>
+        <g id="kmap-3var-loops-group"></g>
       </svg>
     </div>
   </div>
@@ -88,16 +88,16 @@
   <div class="kmap-results">
     <div class="kmap-result-row">
       <span class="kmap-result-label">สมการผลลัพธ์:</span>
-      <div class="kmap-output-expr" id="kmap-expr-display">F = 0</div>
+      <div class="kmap-output-expr" id="kmap-3var-expr-display">F = 0</div>
     </div>
     <div class="kmap-result-row">
       <span class="kmap-result-label">Minterm Form:</span>
-      <div class="kmap-output-minterms" id="kmap-minterms-display">F = ∑ m()</div>
+      <div class="kmap-output-minterms" id="kmap-3var-minterms-display">F = ∑ m()</div>
     </div>
   </div>
 
   <div class="kmap-explanations-title">🔍 คำอธิบายการจับกลุ่ม (Step-by-Step Explanation):</div>
-  <div class="kmap-explanations" id="kmap-expl-display">
+  <div class="kmap-explanations" id="kmap-3var-expl-display">
     <p class="kmap-placeholder-desc">คลิกที่ช่องในตารางเพื่อใส่ค่า 1 หรือ X แล้วดูการจับกลุ่มและวิเคราะห์คำอธิบายการลดรูปที่นี่</p>
   </div>
 </div>
