@@ -581,17 +581,6 @@ $$F_{\text{safe}} = AB + \overline{A}C + BC$$
 
 ---
 
-## 3.11 ทฤษฎีการกระจายของแชนนอน (Shannon's Expansion Theorem)
-
-ฟังก์ชันบูลีนใดๆ สามารถกระจายรอบตัวแปรใดตัวแปรหนึ่ง (เช่น A) ได้ดังนี้:
-
-$$ f(A, B, C, \dots) = A \cdot f(1, B, C, \dots) + \overline{A} \cdot f(0, B, C, \dots) $$
-
-วิธีนี้มีประโยชน์มากในการออกแบบโครงสร้าง Multiplexer และระบบ FPGAs สมัยใหม่ที่ใช้ LUT (Look-Up Tables)
-
-ตัวอย่าง $F(A,B,C)=AB+\overline{A}C$ สามารถมองเป็น 2-to-1 MUX ได้: ถ้า $A=1$ เลือก $B$ และถ้า $A=0$ เลือก $C$
-
----
 
 ## Cheat Sheet: สรุปทฤษฎีบทที่ใช้บ่อย
 
