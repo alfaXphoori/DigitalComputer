@@ -2119,6 +2119,333 @@ document.addEventListener("DOMContentLoaded", function() {
     requestAnimationFrame(animate);
   }
 
+  /* ============================================================
+     K-Map Interactive Grouping Widget JS
+     ============================================================ */
+  const kmapWidget = document.getElementById('kmap-main');
+  if (kmapWidget) {
+    const cells = kmapWidget.querySelectorAll('.kmap-cell--interactive');
+    const loopsGroup = kmapWidget.querySelector('#kmap-loops-group');
+    const exprDisplay = kmapWidget.querySelector('#kmap-expr-display');
+    const mintermsDisplay = kmapWidget.querySelector('#kmap-minterms-display');
+    const explDisplay = kmapWidget.querySelector('#kmap-expl-display');
+    const presetSelect = kmapWidget.querySelector('#kmap-preset-select');
+    const resetBtn = kmapWidget.querySelector('#kmap-reset-btn');
+
+    // State for cells: 0, 1, or 'X'
+    let cellStates = Array(8).fill(0);
+
+    const ALL_GROUPS = [
+      // Size 8
+      { cells: [0, 1, 2, 3, 4, 5, 6, 7], term: "1", html: "1", explanation: "ทุกช่องในตารางเป็น 1 หรือ X ทำให้ลดรูปเหลือ 1 (วงจรส่งออกเป็นจริงเสมอ)" },
+
+      // Size 4
+      { cells: [0, 1, 2, 3], term: "A̅", html: '<span class="kmap-bar">A</span>', explanation: "ครอบคลุมแถวบนทั้งหมด (A=0) ทำให้ตัวแปร B, C ตัดกันออกหมด เหลือเพียง <span class=\"overline\">A</span>" },
+      { cells: [4, 5, 6, 7], term: "A", html: 'A', explanation: "ครอบคลุมแถวล่างทั้งหมด (A=1) ทำให้ตัวแปร B, C ตัดกันออกหมด เหลือเพียง A" },
+      { cells: [0, 1, 4, 5], term: "B̅", html: '<span class="kmap-bar">B</span>', explanation: "ครอบคลุมคอลัมน์ 00 และ 01 ทั้งสองแถว (A เปลี่ยน, C เปลี่ยน) เหลือ B คงที่ที่ 0 (<span class=\"overline\">B</span>)" },
+      { cells: [1, 3, 5, 7], term: "C", html: 'C', explanation: "ครอบคลุมคอลัมน์ 01 และ 11 ทั้งสองแถว (A เปลี่ยน, B เปลี่ยน) เหลือ C คงที่ที่ 1 (C)" },
+      { cells: [3, 2, 7, 6], term: "B", html: 'B', explanation: "ครอบคลุมคอลัมน์ 11 และ 10 ทั้งสองแถว (A เปลี่ยน, C เปลี่ยน) เหลือ B คงที่ที่ 1 (B)" },
+      { cells: [2, 0, 6, 4], term: "C̅", html: '<span class="kmap-bar">C</span>', explanation: "ครอบคลุมคอลัมน์ 10 และ 00 (วนขอบซ้าย-ขวา) ทั้งสองแถว (A เปลี่ยน, B เปลี่ยน) เหลือ C คงที่ที่ 0 (<span class=\"overline\">C</span>)" },
+
+      // Size 2 (Horizontal)
+      { cells: [0, 1], term: "A̅B̅", html: '<span class="kmap-bar">A</span><span class="kmap-bar">B</span>', explanation: "จัดกลุ่ม m0, m1 ในแถว A=0 (<span class=\"overline\">A</span>) และคอลัมน์ 00, 01 (C เปลี่ยน) เหลือ B คงที่ที่ 0 (<span class=\"overline\">B</span>)" },
+      { cells: [1, 3], term: "A̅C", html: '<span class="kmap-bar">A</span>C', explanation: "จัดกลุ่ม m1, m3 ในแถว A=0 (<span class=\"overline\">A</span>) และคอลัมน์ 01, 11 (B เปลี่ยน) เหลือ C คงที่ที่ 1 (C)" },
+      { cells: [3, 2], term: "A̅B", html: '<span class="kmap-bar">A</span>B', explanation: "จัดกลุ่ม m3, m2 ในแถว A=0 (<span class=\"overline\">A</span>) และคอลัมน์ 11, 10 (C เปลี่ยน) เหลือ B คงที่ที่ 1 (B)" },
+      { cells: [2, 0], term: "A̅C̅", html: '<span class="kmap-bar">A</span><span class="kmap-bar">C</span>', explanation: "จัดกลุ่ม m2, m0 (วนขอบซ้าย-ขวา) ในแถว A=0 (<span class=\"overline\">A</span>) และคอลัมน์ 10, 00 (B เปลี่ยน) เหลือ C คงที่ที่ 0 (<span class=\"overline\">C</span>)" },
+      { cells: [4, 5], term: "AB̅", html: 'A<span class="kmap-bar">B</span>', explanation: "จัดกลุ่ม m4, m5 ในแถว A=1 (A) และคอลัมน์ 00, 01 (C เปลี่ยน) เหลือ B คงที่ที่ 0 (<span class=\"overline\">B</span>)" },
+      { cells: [5, 7], term: "AC", html: 'AC', explanation: "จัดกลุ่ม m5, m7 ในแถว A=1 (A) และคอลัมน์ 01, 11 (B เปลี่ยน) เหลือ C คงที่ที่ 1 (C)" },
+      { cells: [7, 6], term: "AB", html: 'AB', explanation: "จัดกลุ่ม m7, m6 ในแถว A=1 (A) และคอลัมน์ 11, 10 (C เปลี่ยน) เหลือ B คงที่ที่ 1 (B)" },
+      { cells: [6, 4], term: "AC̅", html: 'A<span class="kmap-bar">C</span>', explanation: "จัดกลุ่ม m6, m4 (วนขอบซ้าย-ขวา) ในแถว A=1 (A) และคอลัมน์ 10, 00 (B เปลี่ยน) เหลือ C คงที่ที่ 0 (<span class=\"overline\">C</span>)" },
+
+      // Size 2 (Vertical)
+      { cells: [0, 4], term: "B̅C̅", html: '<span class="kmap-bar">B</span><span class="kmap-bar">C</span>', explanation: "จัดกลุ่ม m0, m4 ในคอลัมน์ BC=00 (<span class=\"overline\">B</span><span class=\"overline\">C</span>) ทั้งสองแถว (A เปลี่ยนจาก 0->1 ถูกตัดออก)" },
+      { cells: [1, 5], term: "B̅C", html: '<span class="kmap-bar">B</span>C', explanation: "จัดกลุ่ม m1, m5 ในคอลัมน์ BC=01 (<span class=\"overline\">B</span>C) ทั้งสองแถว (A เปลี่ยนจาก 0->1 ถูกตัดออก)" },
+      { cells: [3, 7], term: "BC", html: 'BC', explanation: "จัดกลุ่ม m3, m7 ในคอลัมน์ BC=11 (BC) ทั้งสองแถว (A เปลี่ยนจาก 0->1 ถูกตัดออก)" },
+      { cells: [2, 6], term: "BC̅", html: 'B<span class="kmap-bar">C</span>', explanation: "จัดกลุ่ม m2, m6 ในคอลัมน์ BC=10 (B<span class=\"overline\">C</span>) ทั้งสองแถว (A เปลี่ยนจาก 0->1 ถูกตัดออก)" },
+
+      // Size 1
+      { cells: [0], term: "A̅B̅C̅", html: '<span class="kmap-bar">A</span><span class="kmap-bar">B</span><span class="kmap-bar">C</span>', explanation: "ช่อง m0 (แถว A=0, คอลัมน์ BC=00) ไม่สามารถจับกลุ่มร่วมกับช่องข้างเคียงใดๆ ได้" },
+      { cells: [1], term: "A̅B̅C", html: '<span class="kmap-bar">A</span><span class="kmap-bar">B</span>C', explanation: "ช่อง m1 (แถว A=0, คอลัมน์ BC=01) ไม่สามารถจับกลุ่มร่วมกับช่องข้างเคียงใดๆ ได้" },
+      { cells: [3], term: "A̅BC", html: '<span class="kmap-bar">A</span>BC', explanation: "ช่อง m3 (แถว A=0, คอลัมน์ BC=11) ไม่สามารถจับกลุ่มร่วมกับช่องข้างเคียงใดๆ ได้" },
+      { cells: [2], term: "A̅BC̅", html: '<span class="kmap-bar">A</span>B<span class="kmap-bar">C</span>', explanation: "ช่อง m2 (แถว A=0, คอลัมน์ BC=10) ไม่สามารถจับกลุ่มร่วมกับช่องข้างเคียงใดๆ ได้" },
+      { cells: [4], term: "AB̅C̅", html: 'A<span class="kmap-bar">B</span><span class="kmap-bar">C</span>', explanation: "ช่อง m4 (แถว A=1, คอลัมน์ BC=00) ไม่สามารถจับกลุ่มร่วมกับช่องข้างเคียงใดๆ ได้" },
+      { cells: [5], term: "AB̅C", html: 'A<span class="kmap-bar">B</span>C', explanation: "ช่อง m5 (แถว A=1, คอลัมน์ BC=01) ไม่สามารถจับกลุ่มร่วมกับช่องข้างเคียงใดๆ ได้" },
+      { cells: [7], term: "ABC", html: 'ABC', explanation: "ช่อง m7 (แถว A=1, คอลัมน์ BC=11) ไม่สามารถจับกลุ่มร่วมกับช่องข้างเคียงใดๆ ได้" },
+      { cells: [6], term: "ABC̅", html: 'AB<span class="kmap-bar">C</span>', explanation: "ช่อง m6 (แถว A=1, คอลัมน์ BC=10) ไม่สามารถจับกลุ่มร่วมกับช่องข้างเคียงใดๆ ได้" }
+    ];
+
+    function idxToCoord(idx) {
+      const mapping = {
+        0: { r: 0, c: 0 },
+        1: { r: 0, c: 1 },
+        3: { r: 0, c: 2 },
+        2: { r: 0, c: 3 },
+        4: { r: 1, c: 0 },
+        5: { r: 1, c: 1 },
+        7: { r: 1, c: 2 },
+        6: { r: 1, c: 3 }
+      };
+      return mapping[idx];
+    }
+
+    function updateGridDisplay() {
+      cells.forEach(cell => {
+        const idx = parseInt(cell.dataset.index);
+        const val = cellStates[idx];
+        cell.dataset.value = val;
+        cell.querySelector('.kmap-cell-val').textContent = val;
+      });
+    }
+
+    function calculateKMap() {
+      let validGroups = ALL_GROUPS.filter(g => {
+        let hasOne = false;
+        let onlyOneOrX = true;
+        for (let c of g.cells) {
+          if (cellStates[c] === 0) onlyOneOrX = false;
+          if (cellStates[c] === 1) hasOne = true;
+        }
+        return onlyOneOrX && hasOne;
+      });
+
+      let primeImplicants = validGroups.filter(g1 => {
+        let isSubset = validGroups.some(g2 => {
+          if (g2.cells.length <= g1.cells.length) return false;
+          return g1.cells.every(c => g2.cells.includes(c));
+        });
+        return !isSubset;
+      });
+
+      let ones = [];
+      for (let i = 0; i < 8; i++) {
+        if (cellStates[i] === 1) ones.push(i);
+      }
+
+      if (ones.length === 0) {
+        exprDisplay.innerHTML = "F = 0";
+        mintermsDisplay.textContent = "F = ∑ m()";
+        explDisplay.innerHTML = '<p class="kmap-placeholder-desc">ไม่มี Minterm ที่เป็น 1 ฟังก์ชันมีค่าคงที่เท่ากับ 0</p>';
+        loopsGroup.innerHTML = '';
+        return;
+      }
+
+      let chosenGroups = [];
+      let coveredOnes = new Set();
+
+      let oneToPIs = {};
+      ones.forEach(o => {
+        oneToPIs[o] = primeImplicants.filter(pi => pi.cells.includes(o));
+      });
+
+      primeImplicants.forEach(pi => {
+        let isEssential = pi.cells.some(c => {
+          return cellStates[c] === 1 && oneToPIs[c].length === 1;
+        });
+        if (isEssential) {
+          chosenGroups.push(pi);
+          pi.cells.forEach(c => {
+            if (cellStates[c] === 1) coveredOnes.add(c);
+          });
+        }
+      });
+
+      let remainingOnes = ones.filter(o => !coveredOnes.has(o));
+      let remainingPIs = primeImplicants.filter(pi => !chosenGroups.includes(pi));
+
+      while (remainingOnes.length > 0) {
+        let bestPI = null;
+        let maxCovered = -1;
+        
+        remainingPIs.forEach(pi => {
+          let count = pi.cells.filter(c => remainingOnes.includes(c)).length;
+          if (count > maxCovered) {
+            maxCovered = count;
+            bestPI = pi;
+          } else if (count === maxCovered && bestPI) {
+            if (pi.cells.length > bestPI.cells.length) {
+              bestPI = pi;
+            }
+          }
+        });
+        
+        if (bestPI && maxCovered > 0) {
+          chosenGroups.push(bestPI);
+          bestPI.cells.forEach(c => {
+            if (cellStates[c] === 1) coveredOnes.add(c);
+          });
+          remainingOnes = ones.filter(o => !coveredOnes.has(o));
+          remainingPIs = remainingPIs.filter(pi => pi !== bestPI);
+        } else {
+          break;
+        }
+      }
+
+      renderOutput(chosenGroups, ones);
+    }
+
+    function renderOutput(groups, ones) {
+      loopsGroup.innerHTML = '';
+      
+      if (groups.length === 1 && groups[0].term === "1") {
+        exprDisplay.innerHTML = "F = 1";
+        mintermsDisplay.textContent = "F = ∑ m(" + ones.join(', ') + ")";
+        explDisplay.innerHTML = '<div class="kmap-expl-list"><div class="kmap-expl-item"><span class="kmap-expl-term kmap-color-0">1</span> ครอบคลุมเซลล์ทั้งหมดในตาราง ได้ผลลัพธ์เป็น 1 คงที่</div></div>';
+        
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('class', 'kmap-loop kmap-color-0');
+        rect.setAttribute('x', '84');
+        rect.setAttribute('y', '44');
+        rect.setAttribute('width', '292');
+        rect.setAttribute('height', '142');
+        rect.setAttribute('rx', '15');
+        rect.setAttribute('ry', '15');
+        loopsGroup.appendChild(rect);
+        return;
+      }
+
+      groups.sort((a, b) => b.cells.length - a.cells.length);
+
+      let exprHtml = 'F = ';
+      let explHtml = '<ul class="kmap-expl-list">';
+
+      groups.forEach((g, gIdx) => {
+        const colorClass = 'kmap-color-' + (gIdx % 5);
+        
+        if (gIdx > 0) exprHtml += ' + ';
+        exprHtml += `<span class="kmap-term-wrap"><span class="kmap-term ${colorClass}" data-loop-index="${gIdx}">${g.html}</span></span>`;
+        
+        explHtml += `<li class="kmap-expl-item"><span class="kmap-expl-term ${colorClass}">${g.term}</span>${g.explanation} (คลุมเซลล์ m${g.cells.sort().join(', m')})</li>`;
+
+        drawGroupLoop(g, gIdx);
+      });
+
+      explHtml += '</ul>';
+      exprDisplay.innerHTML = exprHtml;
+      mintermsDisplay.textContent = "F = ∑ m(" + ones.sort((a,b)=>a-b).join(', ') + ")";
+      explDisplay.innerHTML = explHtml;
+
+      const termElements = kmapWidget.querySelectorAll('.kmap-term');
+      termElements.forEach(termEl => {
+        termEl.addEventListener('mouseenter', () => {
+          const lIdx = termEl.dataset.loopIndex;
+          const allLoops = loopsGroup.querySelectorAll('.kmap-loop');
+          allLoops.forEach((loop) => {
+            if (loop.dataset.loopIndex == lIdx) {
+              loop.classList.add('highlighted');
+            } else {
+              loop.classList.add('dimmed');
+            }
+          });
+          termEl.classList.add('highlighted');
+        });
+
+        termEl.addEventListener('mouseleave', () => {
+          const allLoops = loopsGroup.querySelectorAll('.kmap-loop');
+          allLoops.forEach(loop => {
+            loop.classList.remove('highlighted');
+            loop.classList.remove('dimmed');
+          });
+          termEl.classList.remove('highlighted');
+        });
+      });
+    }
+
+    function drawGroupLoop(group, index) {
+      const coords = group.cells.map(idxToCoord);
+      const rows = coords.map(c => c.r);
+      const cols = coords.map(c => c.c);
+      
+      const minR = Math.min(...rows);
+      const maxR = Math.max(...rows);
+      const minC = Math.min(...cols);
+      const maxC = Math.max(...cols);
+      
+      const uniqueCols = new Set(cols);
+      const colorClass = 'kmap-color-' + (index % 5);
+
+      const wraps = uniqueCols.has(0) && uniqueCols.has(3) && !uniqueCols.has(1) && !uniqueCols.has(2);
+
+      if (wraps) {
+        const y = 40 + minR * 75 + 4;
+        const height = (maxR - minR + 1) * 75 - 8;
+        
+        const pathL = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        pathL.setAttribute('class', `kmap-loop ${colorClass}`);
+        pathL.setAttribute('d', `M 80,${y} L 110,${y} A 12,12 0 0,1 110,${y + height} L 80,${y + height} Z`);
+        pathL.dataset.loopIndex = index;
+        loopsGroup.appendChild(pathL);
+
+        const pathR = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        pathR.setAttribute('class', `kmap-loop ${colorClass}`);
+        pathR.setAttribute('d', `M 380,${y} L 350,${y} A 12,12 0 0,0 350,${y + height} L 380,${y + height} Z`);
+        pathR.dataset.loopIndex = index;
+        loopsGroup.appendChild(pathR);
+      } else {
+        const x = 80 + minC * 75 + 4;
+        const y = 40 + minR * 75 + 4;
+        const width = (maxC - minC + 1) * 75 - 8;
+        const height = (maxR - minR + 1) * 75 - 8;
+        
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('class', `kmap-loop ${colorClass}`);
+        rect.setAttribute('x', x);
+        rect.setAttribute('y', y);
+        rect.setAttribute('width', width);
+        rect.setAttribute('height', height);
+        rect.setAttribute('rx', '15');
+        rect.setAttribute('ry', '15');
+        rect.dataset.loopIndex = index;
+        loopsGroup.appendChild(rect);
+      }
+    }
+
+    cells.forEach(cell => {
+      cell.addEventListener('click', () => {
+        const idx = parseInt(cell.dataset.index);
+        const curVal = cellStates[idx];
+        
+        let nextVal = 0;
+        if (curVal === 0) nextVal = 1;
+        else if (curVal === 1) nextVal = 'X';
+        
+        cellStates[idx] = nextVal;
+        presetSelect.value = 'custom';
+        
+        updateGridDisplay();
+        calculateKMap();
+      });
+    });
+
+    const presets = {
+      clear: [0, 0, 0, 0, 0, 0, 0, 0],
+      pair: [0, 1, 0, 1, 0, 0, 0, 0],
+      quad: [1, 1, 1, 1, 0, 0, 0, 0],
+      wrap: [1, 0, 1, 0, 1, 0, 1, 0],
+      dontcare: [0, 'X', 0, 'X', 0, 1, 0, 1]
+    };
+
+    presetSelect.addEventListener('change', () => {
+      const p = presetSelect.value;
+      if (p !== 'custom' && presets[p]) {
+        cellStates = [...presets[p]];
+        updateGridDisplay();
+        calculateKMap();
+      }
+    });
+
+    resetBtn.addEventListener('click', () => {
+      cellStates = Array(8).fill(0);
+      presetSelect.value = 'custom';
+      updateGridDisplay();
+      calculateKMap();
+    });
+
+    cellStates = [...presets.pair];
+    presetSelect.value = 'pair';
+    updateGridDisplay();
+    calculateKMap();
+  }
+
 });
 </script>
 
