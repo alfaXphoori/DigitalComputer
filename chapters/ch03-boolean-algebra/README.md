@@ -4,6 +4,8 @@
 
 ---
 
+<div class="chapter-tab-content" data-tab-name="Concept" data-tab-icon="💡" id="concept" markdown="1">
+
 ## 3.1 บทนำ
 
 **พีชคณิตบูลีน (Boolean Algebra)** คือระบบคณิตศาสตร์ที่ใช้ในการวิเคราะห์และ **ลดรูป** วงจรตรรกะ โดยตัวแปรมีค่าได้เพียง `0` หรือ `1` เท่านั้น
@@ -704,8 +706,44 @@ function checkAnswers() {
   document.getElementById('quiz-result').innerHTML = resultText;
 }
 </script>
+</div>
 
----
+<div class="chapter-tab-content" data-tab-name="Interactive Sim" data-tab-icon="🎮" id="sim" markdown="1">
+
+## Interactive Simulators (ตัวจำลองพีชคณิตบูลีน)
+
+เครื่องมือจำลองเหล่านี้ออกแบบมาเพื่อช่วยสร้างความเข้าใจผ่านการโต้ตอบและลงมือเล่น (Simulate-First)
+
+### 1. เครื่องมือลดรูปสมการบูลีน (Boolean Simplifier Explorer)
+คลิกที่ปุ่มตัวอย่างฟังก์ชันตรรกะ เพื่อดูผลการลดรูปทีละขั้นตอนพร้อมคำอธิบายทฤษฎีและกฎทางคณิตศาสตร์ของบูลีนที่นำมาประยุกต์ใช้ในแต่ละสเต็ป:
+
+{% include boolean-simplifier.html %}
+
+</div>
+
+<div class="chapter-tab-content" data-tab-name="Waveform / Truth Table" data-tab-icon="📊" id="waveform" markdown="1">
+
+## Reference Tables (แผ่นสรุปทฤษฎีบูลีนและลอจิกคู่ขนาน)
+
+สรุปกฎสำคัญของพีชคณิตบูลีน (Boolean Laws) ทั้งหมดที่ต้องจดจำไปใช้ในการออกแบบวงจรลอจิก:
+
+### 1. กฎพื้นฐาน (Boolean Rules)
+- **Identity:** $A \cdot 1 = A$ และ $A + 0 = A$
+- **Null / Domination:** $A \cdot 0 = 0$ และ $A + 1 = 1$
+- **Idempotent:** $A \cdot A = A$ และ $A + A = A$
+- **Inverse / Complement:** $A \cdot \overline{A} = 0$ และ $A + \overline{A} = 1$
+- **Double Negation:** $\overline{\overline{A}} = A$
+
+### 2. กฎการจัดรูป (Algebraic Laws)
+- **Commutative (สลับที่):** $A + B = B + A$ และ $A \cdot B = B \cdot A$
+- **Associative (เปลี่ยนกลุ่ม):** $(A+B)+C = A+(B+C)$ และ $(A\cdot B)\cdot C = A\cdot (B\cdot C)$
+- **Distributive (แจกแจง):** $A(B+C) = AB + AC$ และ $A + BC = (A+B)(A+C)$
+- **De Morgan's Theorem:** $\overline{A \cdot B} = \overline{A} + \overline{B}$ และ $\overline{A + B} = \overline{A} \cdot \overline{B}$
+- **Absorption (ดูดซึม):** $A + AB = A$ และ $A(A+B) = A$
+
+</div>
+
+<div class="chapter-tab-content" data-tab-name="Challenge" data-tab-icon="🏆" id="challenge" markdown="1">
 
 ## แบบฝึกหัดท้ายบท
 
@@ -732,3 +770,5 @@ function checkAnswers() {
 8. เขียน $A\odot B=AB+\overline{A}\overline{B}$ แล้ว complement ทั้งสมการ จะได้ $A\overline{B}+\overline{A}B$
 9. $F=1$ เฉพาะเมื่อ $C=0$ และอย่างน้อยหนึ่งตัวใน $A,B$ เป็น `1`
 10. เทอม $BC$ เป็น consensus term จึงลดได้เป็น $F=AB+\overline{A}C$
+
+</div>
