@@ -25,6 +25,7 @@
 | **13** | **การออกแบบวงจรเชิงลำดับและ FSM** | Mealy/Moore, state diagram, state table, การออกแบบ FSM | [บทที่ 8 การออกแบบวงจรเชิงลำดับและ FSM](chapters/ch08-fsm/) |
 | **14** | **หน่วยความจำ PLD และการแปลงสัญญาณ** | RAM/ROM, PLD, DAC/ADC, ความละเอียดและอัตราการสุ่ม | [บทที่ 9 หน่วยความจำ PLD และ ADC/DAC](chapters/ch09-memory-interfacing/) |
 | **15** | **แนะนำ HDL: Verilog + EDA Playground** | module/port, assign/always, testbench, การจำลองบน EDA Playground | [บทที่ 10 แนะนำ HDL: Verilog](chapters/ch10-hdl-verilog/) |
+| **เสริม** | **สถาปัตยกรรมคอมพิวเตอร์เบื้องต้น** | โครงสร้าง CPU, Von Neumann, Instruction Cycle, 8-bit ALU/PC Verilog | [บทที่ 11 สถาปัตยกรรมคอมพิวเตอร์](chapters/ch11-computer-architecture/) |
 | **—** | **🟧 สอบปลายภาค (Final Exam)** | **ครอบคลุมเนื้อหาสัปดาห์ที่ 9–15 \| สัดส่วน 25%** | [summary.md](chapters/summary.md) |
 
 ---

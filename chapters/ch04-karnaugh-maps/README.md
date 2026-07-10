@@ -583,6 +583,9 @@ $$\boxed{F = (B + C)(\overline{A} + \overline{B})}$$
 
 ---
 
+<details>
+<summary>คลิกเพื่อดูเฉลยแนวคิดแบบฝึกหัด</summary>
+
 ### เฉลยแนวคิดแบบฝึกหัด
 
 1. **เฉลย: $F = \overline{A} + BC$**
@@ -624,3 +627,5 @@ $$\boxed{F = (B + C)(\overline{A} + \overline{B})}$$
    * **SOP:** $F = \overline{A}\,\overline{B}\,\overline{C} + \overline{A}\,B\,C + A\,\overline{B}\,C + A\,B\,\overline{C}$ (เกิดจากมินเทอมเดี่ยวทั้ง 4 ช่องที่ไม่สามารถจับคู่กันได้เลย)
    * **POS:** $F = (A + B + \overline{C})(A + \overline{B} + C)(\overline{A} + B + C)(\overline{A} + \overline{B} + \overline{C})$ (จับกลุ่ม 0 เดี่ยวทั้ง 4 ช่อง)
    * **เปรียบเทียบ:** ทั้งสองรูปแบบมีความซับซ้อนและใช้จำนวนเกตเท่ากัน (4 เกตสำหรับระดับแรก และ 1 เกตสำหรับระดับที่สอง พร้อมตัวกลับค่าลอจิกอินพุต)
+
+</details>
