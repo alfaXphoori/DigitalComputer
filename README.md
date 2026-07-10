@@ -22,7 +22,7 @@
 | **10** | **ฟลิปฟลอป** | ฟลิปฟลอป D/JK/T, Trigger, ตารางสถานะ/ตารางกระตุ้น, timing diagram | [บทที่ 6 สัญญาณนาฬิกาและฟลิปฟลอป](chapters/ch06-flip-flops/) |
 | **11** | **วงจรนับและเรจิสเตอร์** | ตัวนับ asynchronous/synchronous, mod-N, โครงสร้างเรจิสเตอร์, โหมด SISO/SIPO/PISO/PIPO | [บทที่ 7 วงจรนับและเรจิสเตอร์](chapters/ch07-counters-registers/) |
 | **12** | **การออกแบบวงจรเชิงลำดับและ FSM** | Mealy/Moore, state diagram, state table, การออกแบบ FSM | [บทที่ 8 การออกแบบวงจรเชิงลำดับและ FSM](chapters/ch08-fsm/) |
-| **13** | **หน่วยความจำ PLD และการแปลงสัญญาณ** | RAM/ROM, PLD, DAC/ADC, ความละเอียดและอัตราการสุ่ม | [บทที่ 9 หน่วยความจำ PLD และ ADC/DAC](chapters/ch09-memory-interfacing/) |
+| **13** | **หน่วยความจำ PLD และการแปลงสัญญาณ** | RAM/ROM, PLD, DAC/ADC, ความละเอียดและอัตราการสุ่มตัวอย่าง (Resolution & Sampling Rate) | [บทที่ 9 หน่วยความจำ PLD และ ADC/DAC](chapters/ch09-memory-interfacing/) |
 | **14** | **แนะนำ HDL: Verilog + EDA Playground** | module/port, assign/always, testbench, การจำลองบน EDA Playground | [บทที่ 10 แนะนำ HDL: Verilog](chapters/ch10-hdl-verilog/) |
 | **15** | **สถาปัตยกรรมคอมพิวเตอร์เบื้องต้น** | โครงสร้าง CPU, Von Neumann, Instruction Cycle, 8-bit ALU/PC Verilog | [บทที่ 11 สถาปัตยกรรมคอมพิวเตอร์](chapters/ch11-computer-architecture/) |
 | **—** | **🟧 สอบปลายภาค (Final Exam)** | **ครอบคลุมเนื้อหาสัปดาห์ที่ 9–15 \| สัดส่วน 25%** | [summary.md](chapters/summary.md) |
@@ -36,8 +36,8 @@
 | จิตพิสัย การเข้าเรียนและการมีส่วนร่วมในชั้นเรียน | 10 | CLO4 |
 | ใบงานและแบบฝึกหัด | 30 | CLO1, CLO2, CLO3 |
 | สอบปฏิบัติ | 15 | CLO3, CLO4 |
-| สอบกลางภาค | 20 | CLO1, CLO2 |
-| สอบปลายภาค | 25 | CLO2, CLO3 |
+| สอบกลางภาค | 20 | CLO1, CLO2, CLO3 (บางส่วน) |
+| สอบปลายภาค | 25 | CLO3, CLO4 |
 | **รวม** | **100** | |
 
 ---
