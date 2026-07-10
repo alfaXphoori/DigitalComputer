@@ -121,6 +121,232 @@ graph TD
 
 **SAP-1** เป็นโมเดลคอมพิวเตอร์อย่างง่ายที่ออกแบบโดย Albert Paul Malvino เพื่อประกอบการสอนสถาปัตยกรรมคอมพิวเตอร์เบื้องต้น มีขนาดบัสข้อมูล 8 บิต และบัสที่อยู่ 4 บิต (อ้างอิงหน่วยความจำได้ 16 Bytes)
 
+### แผนภาพจำลองการทำงานเชิงแอนิเมชัน (SAP-1 Animated Operation)
+แผนภาพด้านล่างจำลองการทำงานในระดับรีจิสเตอร์และบัส (Register-Transfer level) ของคำสั่ง **`LDA 9h`** (โหลดข้อมูลจากแรมที่อยู่ 9h เข้าสะสมที่ Accumulator) ทีละจังหวะเวลา (T-States) หมุนเวียนต่อเนื่องโดยอัตโนมัติ:
+
+<svg viewBox="0 0 720 480" role="img" aria-label="เครื่องจำลองการทำงาน SAP-1 (SAP-1 Animated Simulator)" style="width:100%; max-width:680px; height:auto; display:block; margin:1.25rem auto; font-family:'Segoe UI',system-ui,sans-serif;">
+  <defs>
+    <!-- เงาตกกระทบสำหรับกล่อง -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+  
+  <style>
+    /* สไตล์ทั่วไป */
+    .bg { fill: #f8fafc; rx: 12px; }
+    .block { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2px; }
+    .title-text { font-size: 11px; fill: #64748b; font-weight: bold; }
+    .lbl-text { font-size: 13px; fill: #1e293b; font-weight: 700; }
+    .val-text { font-size: 13px; fill: #0f172a; font-family: monospace; font-weight: bold; }
+    .bus-main { fill: none; stroke: #e2e8f0; stroke-width: 16px; stroke-linecap: round; }
+    .bus-con { fill: none; stroke: #cbd5e1; stroke-width: 4px; }
+    
+    /* แมปปิ้งแอนิเมชันสำหรับกล่อง */
+    .anim-pc { animation: pc-block-anim 12s infinite; }
+    .anim-mar { animation: mar-block-anim 12s infinite; }
+    .anim-ram { animation: ram-block-anim 12s infinite; }
+    .anim-ir { animation: ir-block-anim 12s infinite; }
+    .anim-ac { animation: ac-block-anim 12s infinite; }
+    .anim-cu { animation: cu-block-anim 12s infinite; }
+    
+    /* สายสัญญาณแบบวิ่ง */
+    .active-signal { fill: none; stroke-width: 4px; stroke-linecap: round; stroke-dasharray: 6 12; }
+    .sig-t1 { animation: dash-flow 0.5s linear infinite, path-t1-anim 12s infinite; }
+    .sig-t3 { animation: dash-flow 0.5s linear infinite, path-t3-anim 12s infinite; }
+    .sig-t4 { animation: dash-flow 0.5s linear infinite, path-t4-anim 12s infinite; }
+    .sig-t5 { animation: dash-flow 0.5s linear infinite, path-t5-anim 12s infinite; }
+    
+    /* แอนิเมชันแสดงค่าใน Register */
+    .val-pc-0 { animation: pc-val-0-anim 12s infinite; }
+    .val-pc-1 { animation: pc-val-1-anim 12s infinite; }
+    .val-mar-0 { animation: mar-val-init-anim 12s infinite; }
+    .val-mar-9 { animation: mar-val-exec-anim 12s infinite; }
+    .val-ir-x { animation: ir-val-init-anim 12s infinite; }
+    .val-ir-lda { animation: ir-val-lda-anim 12s infinite; }
+    .val-ac-0 { animation: ac-val-init-anim 12s infinite; }
+    .val-ac-data { animation: ac-val-exec-anim 12s infinite; }
+    
+    /* แอนิเมชันแสดงคำอธิบายข้อความ */
+    .txt-t1 { animation: show-t1 12s infinite; }
+    .txt-t2 { animation: show-t2 12s infinite; }
+    .txt-t3 { animation: show-t3 12s infinite; }
+    .txt-t4 { animation: show-t4 12s infinite; }
+    .txt-t5 { animation: show-t5 12s infinite; }
+    .txt-t6 { animation: show-t6 12s infinite; }
+    
+    /* วงรอบเวลา (T-States: T1-T6 ใช้เวลาเฟสละ 2 วินาที, รวม 12 วินาที) */
+    @keyframes dash-flow { to { stroke-dashoffset: -36; } }
+    
+    @keyframes show-t1 { 0%, 15% { opacity: 1; } 16.6%, 100% { opacity: 0; } }
+    @keyframes show-t2 { 0%, 15% { opacity: 0; } 16.6%, 31.6% { opacity: 1; } 33.3%, 100% { opacity: 0; } }
+    @keyframes show-t3 { 0%, 31.6% { opacity: 0; } 33.3%, 48.3% { opacity: 1; } 50%, 100% { opacity: 0; } }
+    @keyframes show-t4 { 0%, 48.3% { opacity: 0; } 50%, 65% { opacity: 1; } 66.6%, 100% { opacity: 0; } }
+    @keyframes show-t5 { 0%, 65% { opacity: 0; } 66.6%, 81.6% { opacity: 1; } 83.3%, 100% { opacity: 0; } }
+    @keyframes show-t6 { 0%, 81.6% { opacity: 0; } 83.3%, 98% { opacity: 1; } 100% { opacity: 0; } }
+    
+    @keyframes path-t1-anim { 0%, 15% { opacity: 1; stroke: #10b981; } 16.6%, 100% { opacity: 0; } }
+    @keyframes path-t3-anim { 0%, 31.6% { opacity: 0; } 33.3%, 48.3% { opacity: 1; stroke: #3b82f6; } 50%, 100% { opacity: 0; } }
+    @keyframes path-t4-anim { 0%, 48.3% { opacity: 0; } 50%, 65% { opacity: 1; stroke: #8b5cf6; } 66.6%, 100% { opacity: 0; } }
+    @keyframes path-t5-anim { 0%, 65% { opacity: 0; } 66.6%, 81.6% { opacity: 1; stroke: #f97316; } 83.3%, 100% { opacity: 0; } }
+    
+    @keyframes pc-block-anim { 0%, 33.3% { stroke: #10b981; fill: #ecfdf5; stroke-width: 3px; } 33.4%, 100% { stroke: #cbd5e1; fill: #ffffff; stroke-width: 2px; } }
+    @keyframes mar-block-anim { 0%, 16.6% { stroke: #3b82f6; fill: #eff6ff; stroke-width: 3px; } 50%, 66.6% { stroke: #3b82f6; fill: #eff6ff; stroke-width: 3px; } 16.7%, 49.9% { stroke: #cbd5e1; fill: #ffffff; stroke-width: 2px; } 66.7%, 100% { stroke: #cbd5e1; fill: #ffffff; stroke-width: 2px; } }
+    @keyframes ram-block-anim { 33.3%, 50% { stroke: #06b6d4; fill: #ecfeff; stroke-width: 3px; } 66.6%, 83.3% { stroke: #06b6d4; fill: #ecfeff; stroke-width: 3px; } 0%, 33.2% { stroke: #cbd5e1; fill: #ffffff; stroke-width: 2px; } 50.1%, 66.5% { stroke: #cbd5e1; fill: #ffffff; stroke-width: 2px; } 83.4%, 100% { stroke: #cbd5e1; fill: #ffffff; stroke-width: 2px; } }
+    @keyframes ir-block-anim { 33.3%, 66.6% { stroke: #8b5cf6; fill: #f5f3ff; stroke-width: 3px; } 0%, 33.2% { stroke: #cbd5e1; fill: #ffffff; stroke-width: 2px; } 66.7%, 100% { stroke: #cbd5e1; fill: #ffffff; stroke-width: 2px; } }
+    @keyframes ac-block-anim { 66.6%, 100% { stroke: #f97316; fill: #fff7ed; stroke-width: 3px; } 0%, 66.5% { stroke: #cbd5e1; fill: #ffffff; stroke-width: 2px; } }
+    @keyframes cu-block-anim { 16.6%, 66.6% { stroke: #ec4899; fill: #fdf2f8; stroke-width: 3px; } 0%, 16.5% { stroke: #cbd5e1; fill: #ffffff; stroke-width: 2px; } 66.7%, 100% { stroke: #cbd5e1; fill: #ffffff; stroke-width: 2px; } }
+
+    @keyframes pc-val-0-anim { 0%, 16.6% { opacity: 1; } 16.61%, 100% { opacity: 0; } }
+    @keyframes pc-val-1-anim { 0%, 16.6% { opacity: 0; } 16.61%, 100% { opacity: 1; } }
+    @keyframes mar-val-init-anim { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+    @keyframes mar-val-exec-anim { 0%, 50% { opacity: 0; } 50.01%, 100% { opacity: 1; } }
+    @keyframes ir-val-init-anim { 0%, 33.3% { opacity: 1; } 33.31%, 100% { opacity: 0; } }
+    @keyframes ir-val-lda-anim { 0%, 33.3% { opacity: 0; } 33.31%, 100% { opacity: 1; } }
+    @keyframes ac-val-init-anim { 0%, 83.3% { opacity: 1; } 83.31%, 100% { opacity: 0; } }
+    @keyframes ac-val-exec-anim { 0%, 83.3% { opacity: 0; } 83.31%, 100% { opacity: 1; } }
+  </style>
+
+  <rect width="720" height="480" class="bg"/>
+  
+  <!-- แกนบัสหลัก W-Bus -->
+  <path d="M 360 40 L 360 380" class="bus-main" />
+  <text x="360" y="25" text-anchor="middle" font-size="12" font-weight="800" fill="#475569">W-BUS (8-Bit)</text>
+  
+  <!-- เส้นทางเชื่อมต่อเข้าหาบัส -->
+  <path d="M 170 65 L 360 65" class="bus-con"/>
+  <path d="M 170 145 L 360 145" class="bus-con"/>
+  <path d="M 170 225 L 360 225" class="bus-con"/>
+  <path d="M 170 315 L 360 315" class="bus-con"/>
+  <path d="M 360 65 L 550 65" class="bus-con"/>
+  <path d="M 360 225 L 550 225" class="bus-con"/>
+  <path d="M 360 315 L 550 315" class="bus-con"/>
+
+  <!-- บล็อกฝั่งซ้าย -->
+  <!-- Program Counter (PC) -->
+  <g transform="translate(50, 40)" filter="url(#shadow)">
+    <rect width="120" height="50" rx="6" class="block anim-pc" />
+    <text x="10" y="18" class="title-text">Program Counter</text>
+    <text x="10" y="38" class="lbl-text">PC:</text>
+    <text x="45" y="38" class="val-text val-pc-0">0000 (0h)</text>
+    <text x="45" y="38" class="val-text val-pc-1">0001 (1h)</text>
+  </g>
+  
+  <!-- Memory Address Register (MAR) -->
+  <g transform="translate(50, 120)" filter="url(#shadow)">
+    <rect width="120" height="50" rx="6" class="block anim-mar" />
+    <text x="10" y="18" class="title-text">Memory Address Reg</text>
+    <text x="10" y="38" class="lbl-text">MAR:</text>
+    <text x="50" y="38" class="val-text val-mar-0">0000 (0h)</text>
+    <text x="50" y="38" class="val-text val-mar-9">1001 (9h)</text>
+  </g>
+
+  <!-- RAM (16x8) -->
+  <g transform="translate(50, 200)" filter="url(#shadow)">
+    <rect width="120" height="60" rx="6" class="block anim-ram" />
+    <text x="10" y="15" class="title-text">RAM (16x8)</text>
+    <text x="10" y="32" font-size="11" fill="#475569" font-weight="600">@0h: 0000 1001</text>
+    <text x="10" y="48" font-size="11" fill="#475569" font-weight="600">@9h: 0101 0101</text>
+  </g>
+  
+  <!-- Accumulator (AC) -->
+  <g transform="translate(50, 290)" filter="url(#shadow)">
+    <rect width="120" height="50" rx="6" class="block anim-ac" />
+    <text x="10" y="18" class="title-text">Accumulator</text>
+    <text x="10" y="38" class="lbl-text">AC:</text>
+    <text x="40" y="38" class="val-text val-ac-0">0000 0000</text>
+    <text x="40" y="38" class="val-text val-ac-data">0101 0101</text>
+  </g>
+
+  <!-- บล็อกฝั่งขวา -->
+  <!-- Instruction Register (IR) -->
+  <g transform="translate(550, 40)" filter="url(#shadow)">
+    <rect width="120" height="50" rx="6" class="block anim-ir" />
+    <text x="10" y="18" class="title-text">Instruction Reg (IR)</text>
+    <text x="10" y="38" class="lbl-text">IR:</text>
+    <text x="35" y="38" class="val-text val-ir-x">XXXX XXXX</text>
+    <text x="35" y="38" class="val-text val-ir-lda">0000 1001</text>
+  </g>
+  
+  <!-- Control Unit (CU) -->
+  <g transform="translate(550, 120)" filter="url(#shadow)">
+    <rect width="120" height="50" rx="6" class="block anim-cu" />
+    <text x="10" y="18" class="title-text">Control Unit</text>
+    <text x="10" y="38" class="lbl-text" fill="#ec4899">CON:</text>
+    <text x="50" y="38" class="val-text" fill="#ec4899">Active Signals</text>
+  </g>
+  
+  <!-- B Register -->
+  <g transform="translate(550, 200)" filter="url(#shadow)">
+    <rect width="120" height="50" rx="6" class="block" />
+    <text x="10" y="18" class="title-text">B Register</text>
+    <text x="10" y="38" class="lbl-text">B:</text>
+    <text x="30" y="38" class="val-text">0000 0000</text>
+  </g>
+  
+  <!-- Adder/Subtractor (ALU) -->
+  <g transform="translate(550, 290)" filter="url(#shadow)">
+    <rect width="120" height="50" rx="6" class="block" />
+    <text x="10" y="18" class="title-text">Adder / Subtractor</text>
+    <text x="10" y="38" class="lbl-text" fill="#8b5cf6">ALU:</text>
+    <text x="45" y="38" class="val-text" fill="#8b5cf6">A + B</text>
+  </g>
+  
+  <!-- เชื่อมต่อจาก IR ลงมา CU ตรง ๆ -->
+  <path d="M 610 90 L 610 120" class="bus-con" stroke="#8b5cf6" stroke-width="3"/>
+
+  <!-- เส้นสตรีมสัญญาณแบบเคลื่อนที่แบบระบุสเตต -->
+  <!-- T1: PC -> MAR -->
+  <path d="M 170 65 L 360 65 L 360 145 L 170 145" class="active-signal sig-t1" />
+  
+  <!-- T3: RAM -> IR -->
+  <path d="M 170 225 L 360 225 L 360 65 L 550 65" class="active-signal sig-t3" />
+  
+  <!-- T4: IR -> MAR -->
+  <path d="M 550 65 L 360 65 L 360 145 L 170 145" class="active-signal sig-t4" />
+  
+  <!-- T5: RAM -> AC -->
+  <path d="M 170 225 L 360 225 L 360 315 L 170 315" class="active-signal sig-t5" />
+
+  <!-- แผงคำอธิบายสถานะด้านล่าง -->
+  <g transform="translate(50, 390)" filter="url(#shadow)">
+    <rect width="620" height="65" fill="#1e293b" rx="6"/>
+    <circle cx="25" cy="32" r="10" fill="#f43f5e" />
+    <text x="25" y="36" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">i</text>
+    
+    <!-- Step T1 -->
+    <g class="txt-t1">
+      <text x="50" y="28" class="desc-text" fill="#f43f5e" font-weight="bold">จังหวะ T1 (Fetch): ส่งที่อยู่คำสั่งจาก PC ไป MAR</text>
+      <text x="50" y="48" font-size="11.5" fill="#94a3b8">PC ส่งค่าตำแหน่ง '0000' วิ่งผ่านบัสหลัก (W-Bus) ไปบันทึกที่ MAR เพื่อใช้อ้างอิงแรม</text>
+    </g>
+    <!-- Step T2 -->
+    <g class="txt-t2">
+      <text x="50" y="28" class="desc-text" fill="#10b981" font-weight="bold">จังหวะ T2 (Fetch): ตัวนับโปรแกรม PC เพิ่มค่า</text>
+      <text x="50" y="48" font-size="11.5" fill="#94a3b8">ค่าใน PC จะเพิ่มขึ้น 1 โดยอัตโนมัติ (PC = 0001) เพื่อรอรับการดึงคำสั่งถัดไป</text>
+    </g>
+    <!-- Step T3 -->
+    <g class="txt-t3">
+      <text x="50" y="28" class="desc-text" fill="#3b82f6" font-weight="bold">จังหวะ T3 (Fetch): อ่านคำสั่งจาก RAM เข้าไปเก็บใน IR</text>
+      <text x="50" y="48" font-size="11.5" fill="#94a3b8">แรมส่งคำสั่ง ณ ตำแหน่ง 0h คือ '0000 1001' (LDA 9h) ผ่าน W-Bus เข้าไปโหลดลง IR</text>
+    </g>
+    <!-- Step T4 -->
+    <g class="txt-t4">
+      <text x="50" y="28" class="desc-text" fill="#a855f7" font-weight="bold">จังหวะ T4 (Execute): ส่งที่อยู่ของข้อมูลจาก IR ไปยัง MAR</text>
+      <text x="50" y="48" font-size="11.5" fill="#94a3b8">IR ส่งค่าตำแหน่ง Operand 4 บิตล่าง (คือ '1001' หรือ 9h) ผ่าน W-Bus เข้า MAR อีกครั้ง</text>
+    </g>
+    <!-- Step T5 -->
+    <g class="txt-t5">
+      <text x="50" y="28" class="desc-text" fill="#f97316" font-weight="bold">จังหวะ T5 (Execute): นำข้อมูลจากแรมโหลดเก็บเข้า Accumulator (AC)</text>
+      <text x="50" y="48" font-size="11.5" fill="#94a3b8">แรมดึงข้อมูลที่เก็บในตำแหน่ง 9h (คือ '0101 0101') ส่งออกไปยัง W-Bus เพื่อบันทึกเข้าสะสมใน AC</text>
+    </g>
+    <!-- Step T6 -->
+    <g class="txt-t6">
+      <text x="50" y="28" class="desc-text" fill="#10b981" font-weight="bold">จังหวะ T6 (Done): สิ้นสุดคำสั่งอย่างสมบูรณ์</text>
+      <text x="50" y="48" font-size="11.5" fill="#94a3b8">คำสั่ง LDA 9h สำเร็จสมบูรณ์ โดยมีข้อมูล 0101 0101 ใน AC และเครื่องพร้อมเริ่มทำงานในรอบใหม่</text>
+    </g>
+  </g>
+</svg>
+
 ### ชุดคำสั่งของ SAP-1 (Instruction Set):
 | คำสั่ง (Mnemonic) | รหัสการทำงาน (Opcode) | คำอธิบายการทำงาน |
 |:---:|:---:|---|
