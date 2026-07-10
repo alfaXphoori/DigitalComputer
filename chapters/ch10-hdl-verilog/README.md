@@ -10,6 +10,8 @@
 
 ---
 
+<div class="chapter-tab-content" data-tab-name="Concept" data-tab-icon="💡" id="concept" markdown="1">
+
 ## 10.1 บทนำ: ทำไมต้องใช้ HDL
 
 ตลอดเก้าบทที่ผ่านมา เราออกแบบวงจรดิจิทัลด้วยการวาด **แผนผังวงจร (schematic)** คือวางเกตทีละตัวแล้วลากสายเชื่อม วิธีนี้เห็นภาพดีสำหรับวงจรเล็ก แต่เมื่อระบบใหญ่ขึ้น เช่น หน่วยประมวลผลที่มีเกตหลายล้านตัว การวาดมือเป็นไปไม่ได้เลย
@@ -522,7 +524,62 @@ endmodule
 
 บทนี้แนะนำการออกแบบวงจรดิจิทัลด้วยภาษา Verilog ตั้งแต่โครงสร้าง module/port, ความต่างของ `wire` กับ `reg`, สามระดับการบรรยาย (gate-level, dataflow, behavioral), การเขียนวงจรคอมบิเนชันและเชิงลำดับ, การเขียน testbench และการจำลองจริงบน EDA Playground เป้าหมายไม่ใช่ให้เขียน Verilog เก่ง แต่ให้เห็นว่าทุกเรื่องที่เรียนมาตลอดเทอมสามารถบรรยายเป็นข้อความและสังเคราะห์เป็นฮาร์ดแวร์ได้ ซึ่งเป็นพื้นฐานสำคัญของการออกแบบระบบดิจิทัลสมัยใหม่
 
+</div>
+
+<div class="chapter-tab-content" data-tab-name="Interactive Sim" data-tab-icon="🎮" id="sim" markdown="1">
+
+## Interactive Simulators (จำลองโค้ด Verilog ออนไลน์แบบ One-Click)
+
+คลิกที่ลิงก์ด้านล่างเพื่อเปิดโปรเจกต์ EDA Playground ที่เตรียมซอร์สโค้ดและ Testbench ไว้ให้พร้อมแล้ว เพื่อกดทดสอบรันวงจรด้วยปุ่ม Run ด้านซ้ายบนเบราว์เซอร์ได้ทันทีโดยไม่ต้องลงโปรแกรม:
+
+### 1) วงจรบวกเต็ม 1 บิต (Full Adder Dataflow Simulation)
+จำลองการส่งค่า Carry Out และการลดรูปสมการ Full Adder ในระดับการส่งถ่ายข้อมูล:
+- [👉 Run Full Adder Example on EDA Playground](https://www.edaplayground.com/x/5c9s)
+
 ---
+
+### 2) วงจรนับ 4 บิต (Behavioral 4-Bit Counter Simulation)
+จำลองพฤติกรรมวงจรนับ 0-15 ตามสัญญาณนาฬิกา พร้อมดูคลื่น Timing Diagram บน EPWave:
+- [👉 Run 4-Bit Counter Example on EDA Playground](https://www.edaplayground.com/x/5c9t)
+
+---
+
+### 3) วงจรท้าทาย: สัญญาณไฟจราจร FSM (Traffic Light FSM Simulation)
+จำลองสถานะ Green -> Yellow -> Red ควบคุมผ่านอินพุตเงื่อนไขเวลา:
+- [👉 Run FSM Traffic Light Example on EDA Playground](https://www.edaplayground.com/x/5c9u)
+
+</div>
+
+<div class="chapter-tab-content" data-tab-name="Waveform / Truth Table" data-tab-icon="📊" id="waveform" markdown="1">
+
+## Simulation Outputs (ผลการทดสอบรูปคลื่นและรายงาน)
+
+เมื่อนักศึกษารัน Testbench บน EDA Playground หรือโปรแกรมจำลองอื่น จะได้รับรายงานผลลัพธ์ผ่านช่องคอนโซล (Console Log) ดังตัวอย่างต่อไปนี้:
+
+### 1. รายงานผลลัพธ์ของ Full Adder Testbench (Console Log)
+```text
+At time 0 ns: A=0, B=0, Cin=0 -> Sum=0, Cout=0
+At time 10 ns: A=0, B=1, Cin=0 -> Sum=1, Cout=0
+At time 20 ns: A=1, B=0, Cin=0 -> Sum=1, Cout=0
+At time 30 ns: A=1, B=1, Cin=0 -> Sum=0, Cout=1
+At time 40 ns: A=0, B=0, Cin=1 -> Sum=1, Cout=0
+At time 50 ns: A=0, B=1, Cin=1 -> Sum=0, Cout=1
+At time 60 ns: A=1, B=0, Cin=1 -> Sum=0, Cout=1
+At time 70 ns: A=1, B=1, Cin=1 -> Sum=1, Cout=1
+```
+
+---
+
+### 2. รูปคลื่นจำลองการทำงาน (Timing Diagram Waveform)
+เอาต์พุตของ **4-bit Counter** จะแสดงสถานะบวกค่าขึ้นจาก `0000` $\to$ `0001` $\to$ `0010` ทุกๆ รอบสัญญาณนาฬิกาขาขึ้น (Rising Edge of CLK) ดังนี้:
+
+- **CLK:** คลื่นสี่เหลี่ยมขึ้น/ลงอย่างสม่ำเสมอ
+- **Reset:** เป็น 1 ในช่วงสเต็ปแรกเพื่อเคลียร์ค่าเป็น 0 และลดกลับเป็น 0 เพื่อเริ่มนับ
+- **Count[3:0]:** แสดงค่า 0, 1, 2, 3, 4, 5... สอดคล้องกับขอบขาขึ้น
+
+</div>
+
+<div class="chapter-tab-content" data-tab-name="Challenge" data-tab-icon="🏆" id="challenge" markdown="1">
 
 ## แบบฝึกหัดท้ายบท
 
@@ -537,3 +594,5 @@ endmodule
 5. ออกแบบ FSM ตรวจจับลำดับ "101" (จากบทที่ 8) เป็น Verilog โดยใช้ `always` สองบล็อก พร้อม testbench ทดสอบสตรีมอินพุต
 
 6. อธิบายความแตกต่างของผลการจำลองเมื่อเปลี่ยน `<=` เป็น `=` ในโมดูล `counter4` พร้อมเหตุผล
+
+</div>
