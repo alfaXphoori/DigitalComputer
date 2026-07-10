@@ -593,7 +593,9 @@ C ── NOT ─┘
 - **Fan-in:** จำนวนอินพุตสูงสุดที่เกตตัวหนึ่งสามารถรับได้ (เช่น 2-input, 4-input)
 - **Fan-out:** จำนวนเกต (โหลด) สูงสุดที่เอาต์พุตหนึ่งสามารถขับได้โดยแรงดันยังอยู่ในมาตรฐาน (เช่น 1 TTL เอาต์พุต ขับได้ 10 TTL อินพุต)
 - **Propagation Delay ($t_{pd}$):** เวลาที่สัญญาณอินพุตใช้ในการส่งผลให้เอาต์พุตเปลี่ยนแปลง
-- **Power Dissipation:** กำลังไฟฟ้าที่ไอซีบริโภค</div>
+- **Power Dissipation:** กำลังไฟฟ้าที่ไอซีบริโภค
+
+</div>
 
 <div class="chapter-tab-content" data-tab-name="Interactive Sim" data-tab-icon="🎮" id="sim" markdown="1">
 

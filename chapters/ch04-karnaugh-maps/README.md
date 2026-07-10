@@ -557,7 +557,9 @@ $$\boxed{F = (B + C)(\overline{A} + \overline{B})}$$
 ## 4.14 การกำจัด Static Hazard ด้วย K-Map
 
 ในวงจรจริง การกระโดดข้ามจาก Prime Implicant กลุ่มหนึ่งไปยังอีกกลุ่มหนึ่งอาจเกิด Static Hazard ได้
-**วิธีแก้:** ให้เพิ่มการจับกลุ่มคร่อมระหว่าง Prime Implicant ทั้งสอง (เพิ่ม Redundant Group) เพื่อให้ครอบคลุมการเปลี่ยนสถานะ</div>
+**วิธีแก้:** ให้เพิ่มการจับกลุ่มคร่อมระหว่าง Prime Implicant ทั้งสอง (เพิ่ม Redundant Group) เพื่อให้ครอบคลุมการเปลี่ยนสถานะ
+
+</div>
 
 <div class="chapter-tab-content" data-tab-name="Interactive Sim" data-tab-icon="🎮" id="sim" markdown="1">
 
