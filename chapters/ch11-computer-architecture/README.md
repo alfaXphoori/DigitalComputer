@@ -91,13 +91,40 @@
 
 การทำงานของคอมพิวเตอร์คือวงรอบที่เกิดขึ้นซ้ำๆ อย่างไม่มีที่สิ้นสุด ตราบเท่าที่มีกระแสไฟฟ้าเลี้ยงระบบ เรียกว่า **วงจรอ่านและประมวลผลคำสั่ง (Instruction Cycle)** แบ่งออกเป็น 3 ขั้นตอนหลัก:
 
-```mermaid
-graph TD
-    A[เริ่มสัญญาณนาฬิกา] --> B[1. Fetch ดึงคำสั่ง]
-    B --> C[2. Decode ถอดรหัสคำสั่ง]
-    C --> D[3. Execute ประมวลผลคำสั่ง]
-    D --> B
-```
+<svg viewBox="0 0 500 180" role="img" aria-label="วงจรการทำงานของคำสั่ง" style="width:100%; max-width:500px; height:auto; display:block; margin:1.25rem auto; font-family:'Segoe UI',system-ui,sans-serif;">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 7 5 L 0 8.5 z" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect width="500" height="180" fill="#f8fafc" rx="10"/>
+  
+  <!-- 1. Fetch -->
+  <rect x="20" y="40" width="120" height="60" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="80" y="65" text-anchor="middle" font-size="14" font-weight="700" fill="#1e40af">1. Fetch</text>
+  <text x="80" y="85" text-anchor="middle" font-size="11" fill="#1e40af">ดึงคำสั่งจาก RAM</text>
+  
+  <!-- Arrow 1 -> 2 -->
+  <path d="M 140 70 L 172 70" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- 2. Decode -->
+  <rect x="180" y="40" width="120" height="60" rx="8" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+  <text x="240" y="65" text-anchor="middle" font-size="14" font-weight="700" fill="#9a3412">2. Decode</text>
+  <text x="240" y="85" text-anchor="middle" font-size="11" fill="#9a3412">ถอดรหัส Opcode</text>
+  
+  <!-- Arrow 2 -> 3 -->
+  <path d="M 300 70 L 332 70" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- 3. Execute -->
+  <rect x="340" y="40" width="120" height="60" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="400" y="65" text-anchor="middle" font-size="14" font-weight="700" fill="#065f46">3. Execute</text>
+  <text x="400" y="85" text-anchor="middle" font-size="11" fill="#065f46">ประมวลผลคำสั่ง</text>
+  
+  <!-- Loop back path -->
+  <path d="M 400 100 L 400 135 L 80 135 L 80 108" fill="none" stroke="#64748b" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+  <text x="240" y="150" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">กลับไปเริ่มรอบ Fetch คำสั่งถัดไป</text>
+</svg>
+
 
 ### รายละเอียดในแต่ละขั้นตอน:
 1. **Fetch (การดึงคำสั่ง):**
@@ -359,36 +386,115 @@ graph TD
 ### แผนภาพลำดับการประมวลผลคำสั่ง (Instruction Execution Flowchart)
 แผนภูมิแสดงขั้นตอนการทำงานในแต่ละสเตตเวลา (T-States: T1–T6) ของแต่คำสั่งในระดับฮาร์ดแวร์:
 
-```mermaid
-flowchart TD
-    %% การระบุสไตล์ของบล็อก
-    classDef startEnd fill:#f8fafc,stroke:#475569,stroke-width:2px,rx:10px;
-    classDef process fill:#eff6ff,stroke:#2563eb,stroke-width:2px;
-    classDef condition fill:#fff7ed,stroke:#ea580c,stroke-width:2px;
-    classDef action fill:#ecfdf5,stroke:#059669,stroke-width:2px;
-    classDef halt fill:#fef2f2,stroke:#dc2626,stroke-width:2px;
+<svg viewBox="0 0 720 540" role="img" aria-label="แผนภาพลำดับการประมวลผลคำสั่ง" style="width:100%; max-width:720px; height:auto; display:block; margin:1.25rem auto; font-family:'Segoe UI',system-ui,sans-serif;">
+  <defs>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 7 5 L 0 8.5 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 7 5 L 0 8.5 z" fill="#64748b"/>
+    </marker>
+    <filter id="shadow-flow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.08"/>
+    </filter>
+  </defs>
 
-    Start([เริ่มรอบสัญญาณนาฬิกา - Fetch Cycle]) :::startEnd
-    Start --> T1["<b>T1 State:</b><br>MAR &larr; PC<br>(ส่ง Address ไปยัง MAR)"] :::process
-    T1 --> T2["<b>T2 State:</b><br>PC &larr; PC + 1<br>(เพิ่มค่าตัวชี้คำสั่ง)"] :::process
-    T2 --> T3["<b>T3 State:</b><br>IR &larr; RAM[MAR]<br>(ดึงคำสั่งเก็บเข้า IR)"] :::process
-    
-    T3 --> Dec{<b>Decode Cycle:</b><br>ถอดรหัส Opcode จาก IR[7:4]} :::condition
-    
-    Dec -- "0000 (LDA)" --> LDA["<b>Execute (T4-T6):</b><br>T4: MAR &larr; IR[3:0]<br>T5: AC &larr; RAM[MAR]<br>T6: NOP (ว่าง)"] :::action
-    Dec -- "0001 (ADD)" --> ADD["<b>Execute (T4-T6):</b><br>T4: MAR &larr; IR[3:0]<br>T5: B &larr; RAM[MAR]<br>T6: AC &larr; AC + B"] :::action
-    Dec -- "0010 (SUB)" --> SUB["<b>Execute (T4-T6):</b><br>T4: MAR &larr; IR[3:0]<br>T5: B &larr; RAM[MAR]<br>T6: AC &larr; AC - B"] :::action
-    Dec -- "1110 (OUT)" --> OUT["<b>Execute (T4-T6):</b><br>T4: Output Register &larr; AC<br>T5: NOP<br>T6: NOP"] :::action
-    Dec -- "1111 (HLT)" --> HLT["<b>Execute (T4-T6):</b><br>T4: Halt Clock<br>(หยุดการทำงานของตัวสร้างคล็อก)"] :::halt
-    
-    LDA --> End([วนรอบกลับไปเริ่ม Fetch ใหม่]) :::startEnd
-    ADD --> End
-    SUB --> End
-    OUT --> End
-    HLT --> Stop([หยุดการทำงาน - CPU Halted]) :::startEnd
+  <rect width="720" height="540" fill="#f8fafc" rx="12"/>
 
-    End --> Start
-```
+  <!-- Start -->
+  <rect x="270" y="20" width="180" height="35" rx="17.5" fill="#f1f5f9" stroke="#475569" stroke-width="2" filter="url(#shadow-flow)"/>
+  <text x="360" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="#334155">เริ่มรอบสัญญาณนาฬิกา (Fetch Cycle)</text>
+
+  <!-- Arrow Start -> T1 -->
+  <path d="M 360 55 L 360 74" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+
+  <!-- T1 -->
+  <rect x="270" y="75" width="180" height="42" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="2" filter="url(#shadow-flow)"/>
+  <text x="360" y="93" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af">T1 State</text>
+  <text x="360" y="108" text-anchor="middle" font-size="11" fill="#1e40af">MAR &larr; PC (ส่ง Address ไป MAR)</text>
+
+  <!-- Arrow T1 -> T2 -->
+  <path d="M 360 117 L 360 134" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+
+  <!-- T2 -->
+  <rect x="270" y="135" width="180" height="42" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="2" filter="url(#shadow-flow)"/>
+  <text x="360" y="153" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af">T2 State</text>
+  <text x="360" y="168" text-anchor="middle" font-size="11" fill="#1e40af">PC &larr; PC + 1 (เพิ่มค่า PC)</text>
+
+  <!-- Arrow T2 -> T3 -->
+  <path d="M 360 177 L 360 194" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+
+  <!-- T3 -->
+  <rect x="270" y="195" width="180" height="42" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="2" filter="url(#shadow-flow)"/>
+  <text x="360" y="213" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af">T3 State</text>
+  <text x="360" y="228" text-anchor="middle" font-size="11" fill="#1e40af">IR &larr; RAM[MAR] (ดึงคำสั่งเข้า IR)</text>
+
+  <!-- Arrow T3 -> Decode -->
+  <path d="M 360 237 L 360 254" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+
+  <!-- Decode (Diamond) -->
+  <polygon points="360,255 430,290 360,325 290,290" fill="#fff7ed" stroke="#ea580c" stroke-width="2" filter="url(#shadow-flow)"/>
+  <text x="360" y="287" text-anchor="middle" font-size="11" font-weight="700" fill="#9a3412">Decode Cycle</text>
+  <text x="360" y="302" text-anchor="middle" font-size="11" font-weight="700" fill="#9a3412">IR[7:4]</text>
+
+  <!-- Branch lines from Decode -->
+  <path d="M 290 290 L 85 290 L 85 334" fill="none" stroke="#ea580c" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <text x="140" y="283" text-anchor="middle" font-size="10" fill="#ea580c" font-weight="700">0000 (LDA)</text>
+
+  <path d="M 315 302 L 225 302 L 225 334" fill="none" stroke="#ea580c" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <text x="235" y="318" font-size="10" fill="#ea580c" font-weight="700">0001 (ADD)</text>
+
+  <path d="M 360 325 L 360 334" fill="none" stroke="#ea580c" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <text x="370" y="331" font-size="10" fill="#ea580c" font-weight="700">0010 (SUB)</text>
+
+  <path d="M 405 302 L 495 302 L 495 334" fill="none" stroke="#ea580c" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <text x="485" y="318" text-anchor="end" font-size="10" fill="#ea580c" font-weight="700">1110 (OUT)</text>
+
+  <path d="M 430 290 L 635 290 L 635 334" fill="none" stroke="#ea580c" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <text x="580" y="283" text-anchor="middle" font-size="10" fill="#ea580c" font-weight="700">1111 (HLT)</text>
+
+  <!-- Execute Boxes -->
+  <rect x="30" y="335" width="110" height="90" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="2" filter="url(#shadow-flow)"/>
+  <text x="85" y="355" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">Execute LDA</text>
+  <text x="85" y="375" text-anchor="middle" font-size="10" fill="#065f46">T4: MAR &larr; IR[3:0]</text>
+  <text x="85" y="392" text-anchor="middle" font-size="10" fill="#065f46">T5: AC &larr; RAM[MAR]</text>
+  <text x="85" y="409" text-anchor="middle" font-size="10" fill="#065f46">T6: NOP (ว่าง)</text>
+
+  <rect x="170" y="335" width="110" height="90" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="2" filter="url(#shadow-flow)"/>
+  <text x="225" y="355" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">Execute ADD</text>
+  <text x="225" y="375" text-anchor="middle" font-size="10" fill="#065f46">T4: MAR &larr; IR[3:0]</text>
+  <text x="225" y="392" text-anchor="middle" font-size="10" fill="#065f46">T5: B &larr; RAM[MAR]</text>
+  <text x="225" y="409" text-anchor="middle" font-size="10" fill="#065f46">T6: AC &larr; AC + B</text>
+
+  <rect x="310" y="335" width="110" height="90" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="2" filter="url(#shadow-flow)"/>
+  <text x="365" y="355" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">Execute SUB</text>
+  <text x="365" y="375" text-anchor="middle" font-size="10" fill="#065f46">T4: MAR &larr; IR[3:0]</text>
+  <text x="365" y="392" text-anchor="middle" font-size="10" fill="#065f46">T5: B &larr; RAM[MAR]</text>
+  <text x="365" y="409" text-anchor="middle" font-size="10" fill="#065f46">T6: AC &larr; AC - B</text>
+
+  <rect x="440" y="335" width="110" height="90" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="2" filter="url(#shadow-flow)"/>
+  <text x="495" y="355" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">Execute OUT</text>
+  <text x="495" y="375" text-anchor="middle" font-size="10" fill="#065f46">T4: OutReg &larr; AC</text>
+  <text x="495" y="392" text-anchor="middle" font-size="10" fill="#065f46">T5: NOP (ว่าง)</text>
+  <text x="495" y="409" text-anchor="middle" font-size="10" fill="#065f46">T6: NOP (ว่าง)</text>
+
+  <rect x="580" y="335" width="110" height="90" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="2" filter="url(#shadow-flow)"/>
+  <text x="635" y="355" text-anchor="middle" font-size="11" font-weight="700" fill="#991b1b">Execute HLT</text>
+  <text x="635" y="375" text-anchor="middle" font-size="10" fill="#991b1b">T4: Halt Clock</text>
+  <text x="635" y="392" text-anchor="middle" font-size="10" fill="#991b1b">(หยุดจ่ายสัญญาณ)</text>
+  <text x="635" y="409" text-anchor="middle" font-size="10" fill="#b91c1c" font-weight="bold">SYSTEM HALT</text>
+
+  <!-- Return Flow paths to Start -->
+  <path d="M 85 425 L 85 450 L 330 450 L 330 480" fill="none" stroke="#64748b" stroke-width="2"/>
+  <path d="M 225 425 L 225 450" fill="none" stroke="#64748b" stroke-width="2"/>
+  <path d="M 365 425 L 365 450" fill="none" stroke="#64748b" stroke-width="2"/>
+  <path d="M 495 425 L 495 450 L 380 450 L 380 480" fill="none" stroke="#64748b" stroke-width="2"/>
+
+  <!-- Return Connection -->
+  <path d="M 360 480 L 360 500" fill="none" stroke="#64748b" stroke-width="2"/>
+  <path d="M 360 500 L 15 500 L 15 35 L 270 35" fill="none" stroke="#64748b" stroke-dasharray="3 3" stroke-width="2" marker-end="url(#arrow-gray)"/>
+  <text x="140" y="495" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">เริ่มรอบ Fetch คำสั่งถัดไป</text>
+</svg>
 
 ---
 
