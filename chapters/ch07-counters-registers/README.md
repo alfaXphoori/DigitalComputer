@@ -4,6 +4,8 @@
 
 ---
 
+<div class="chapter-tab-content" data-tab-name="Concept" data-tab-icon="💡" id="concept" markdown="1">
+
 ## 7.1 บทนำ
 
 **Counter** และ **Register** เป็นวงจร Sequential พื้นฐานที่สร้างจาก Flip-Flop:
@@ -652,7 +654,51 @@ Register คือกลุ่ม Flip-Flop ที่เก็บข้อมู
 | **74374** | Octal D FF Register (3-state) | Parallel |
 | **74377** | Octal D FF with Enable | Parallel |
 
+</div>
+
+<div class="chapter-tab-content" data-tab-name="Interactive Sim" data-tab-icon="🎮" id="sim" markdown="1">
+
+## Interactive Simulators (ห้องทดลองวงจรนับและรีจิสเตอร์)
+
+เครื่องมือจำลองเหล่านี้ออกแบบมาเพื่อช่วยสร้างความเข้าใจผ่านการโต้ตอบและลงมือเล่น (Simulate-First)
+
+### 1. ตัวจำลองการทำงานของวงจรนับ (Counter Visualizer)
+จำลองลักษณะการนับเลขฐานสอง เปรียบเทียบความเร็วและการเปลี่ยนแปลงของระดับบิตในโหมด Asynchronous และ Synchronous:
+
+{% include binary-counter.html %}
+
 ---
+
+### 2. แอนิเมชันเลื่อนข้อมูลในรีจิสเตอร์ (Shift Register Animation)
+ทดลองเลื่อนข้อมูลบิต 0/1 เข้าและออกจากทรานสิสเตอร์หน่วยความจำในโหมด SISO / SIPO และโหมดอื่นๆ เพื่อสังเกตทิศทางข้อมูล:
+
+{% include shift-register.html %}
+
+</div>
+
+<div class="chapter-tab-content" data-tab-name="Waveform / Truth Table" data-tab-icon="📊" id="waveform" markdown="1">
+
+## Reference Tables (ตารางคุณสมบัติไอซีวงจรนับและเรจิสเตอร์)
+
+ข้อมูลสรุปคุณสมบัติไอซีตระกูล Counters และ Registers ในห้องปฏิบัติการ:
+
+| รหัส IC | ชื่อฟังก์ชันการทำงาน | ประเภทลอจิก |
+|:---:|:---|:---|
+| **7490** | Decade Counter (MOD-10) | Asynchronous |
+| **7493** | 4-bit Binary Counter (MOD-16) | Asynchronous |
+| **74160** | Decade Counter with Clear | Synchronous |
+| **74163** | 4-bit Binary Counter | Synchronous |
+| **74191** | 4-bit Up/Down Counter | Synchronous |
+| **74194** | 4-bit Universal Shift Register | Universal |
+| **74164** | 8-bit SIPO Shift Register | Shift |
+| **74165** | 8-bit PISO Shift Register | Shift |
+| **74166** | 8-bit PISO (sync load) | Shift |
+| **74374** | Octal D FF Register (3-state) | Parallel |
+| **74377** | Octal D FF with Enable | Parallel |
+
+</div>
+
+<div class="chapter-tab-content" data-tab-name="Challenge" data-tab-icon="🏆" id="challenge" markdown="1">
 
 ## แบบฝึกหัดท้ายบท
 
@@ -664,3 +710,5 @@ Register คือกลุ่ม Flip-Flop ที่เก็บข้อมู
 6. อธิบายข้อแตกต่างระหว่าง Ring Counter และ Johnson Counter พร้อม Timing Diagram
 7. ต่อวงจร MOD-10 Counter + 7-Segment Display บน **Tinkercad** โดยใช้ IC 7490 + 4511
 8. ใช้ IC 74194 ต่อวงจร 4-bit Ring Counter — วาดวงจรและ Timing Diagram 4 clock cycles
+
+</div>
