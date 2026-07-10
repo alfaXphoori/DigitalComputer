@@ -4,6 +4,8 @@
 
 ---
 
+<div class="chapter-tab-content" data-tab-name="Concept" data-tab-icon="💡" id="concept" markdown="1">
+
 ## 6.1 บทนำ: Combinational vs Sequential
 
 | เกณฑ์ | Combinational | Sequential |
@@ -505,7 +507,71 @@ FF ส่วนใหญ่มี **Preset (PRE)** และ **Clear (CLR)** ส
                                       Q1 --> [T FF, T=1] --> Q2 (÷8)
 ```
 
+</div>
+
+<div class="chapter-tab-content" data-tab-name="Interactive Sim" data-tab-icon="🎮" id="sim" markdown="1">
+
+## Interactive Simulators (ห้องทดลองวงจรซีเควนเชียลเบื้องต้น)
+
+เครื่องมือจำลองเหล่านี้ออกแบบมาเพื่อช่วยสร้างความเข้าใจผ่านการโต้ตอบและลงมือเล่น (Simulate-First)
+
+### 1. ตัวจำลองฟลิปฟลอปเชิงโต้ตอบ (Flip-Flop Simulator)
+เลือกเกตตรรกะหรือฟลิปฟลอปเพื่อทดลองป้อนสัญญาณอินพุต สังเกตเอาต์พุต และขั้นตอนการเปลี่ยนแปลงสถานะ:
+
+{% include flipflop-demo.html %}
+
 ---
+
+### 2. วิเคราะห์สัญญาณนาฬิกา (Clock Signal Simulator)
+เรียนรู้ลักษณะคลื่นสี่เหลี่ยม ความถี่, คาบเวลา และ Duty Cycle:
+
+{% include clock-demo.html %}
+
+---
+
+### 3. เครื่องมือคำนวณวงจรสัญญาณนาฬิกา 555 (555 Timer Calculator Sim)
+ปรับเลื่อนความต้านทาน $R_1, R_2$ และความจุตัวเก็บประจุ $C$ เพื่อคำนวณและจำลองกราฟการชาร์จ/ประจุไฟฟ้าของตัวเก็บประจุแบบ Astable:
+
+{% include 555-timer-sim.html %}
+
+---
+
+### 4. ตัวจำลองวงจรลอจิกซีเควนเชียลแบบผสม (Sequential Logic Playground)
+จำลองลักษณะการทำงานของหน่วยความจำลอจิกในระบบปิด:
+
+{% include seq-logic-demo.html %}
+
+</div>
+
+<div class="chapter-tab-content" data-tab-name="Waveform / Truth Table" data-tab-icon="📊" id="waveform" markdown="1">
+
+## Reference Tables (ตารางลักษณะและตารางกระตุ้นของฟลิปฟลอป)
+
+ใช้ตารางกระตุ้น (Excitation Tables) และตารางแสดงสถานะ (State Tables) เหล่านี้สำหรับการเรียนและออกแบบวงจร FSM หรือ Counter:
+
+### 1. ตารางคุณลักษณะ (Characteristic Tables)
+
+| ชนิดฟังก์ชัน | อินพุตป้อนเข้า | เอาต์พุตถัดไป $Q(t+1)$ | รายละเอียดและพฤติกรรม |
+|:---:|:---:|:---:|:---|
+| **SR** | $S=0, R=0$ <br> $S=0, R=1$ <br> $S=1, R=0$ <br> $S=1, R=1$ | $Q(t)$ <br> $0$ <br> $1$ <br> ไม่นิยาม (Invalid) | คงสถานะเดิม <br> รีเซ็ต (Reset) <br> เซ็ต (Set) <br> ห้ามใช้งานอินพุตนี้ |
+| **D** | $D=0$ <br> $D=1$ | $0$ <br> $1$ | ส่งผ่านข้อมูลอินพุตไปเอาต์พุต (Data transparent) |
+| **JK** | $J=0, K=0$ <br> $J=0, K=1$ <br> $J=1, K=0$ <br> $J=1, K=1$ | $Q(t)$ <br> $0$ <br> $1$ <br> $\overline{Q(t)}$ | คงสถานะเดิม <br> รีเซ็ต <br> เซ็ต <br> สลับค่าลอจิก (Toggle) |
+| **T** | $T=0$ <br> $T=1$ | $Q(t)$ <br> $\overline{Q(t)}$ | คงสถานะเดิม <br> สลับค่าลอจิก (Toggle) |
+
+---
+
+### 2. ตารางกระตุ้น (Excitation Tables)
+
+| ทิศทางสถานะ $Q(t) \to Q(t+1)$ | อินพุต SR | อินพุต D | อินพุต JK | อินพุต T |
+|:---:|:---:|:---:|:---:|:---:|
+| **$0 \to 0$** | $S=0, R=X$ | $D=0$ | $J=0, K=X$ | $T=0$ |
+| **$0 \to 1$** | $S=1, R=0$ | $D=1$ | $J=1, K=X$ | $T=1$ |
+| **$1 \to 0$** | $S=0, R=1$ | $D=0$ | $J=X, K=1$ | $T=1$ |
+| **$1 \to 1$** | $S=X, R=0$ | $D=1$ | $J=X, K=0$ | $T=0$ |
+
+</div>
+
+<div class="chapter-tab-content" data-tab-name="Challenge" data-tab-icon="🏆" id="challenge" markdown="1">
 
 ## แบบฝึกหัดท้ายบท
 
@@ -517,3 +583,5 @@ FF ส่วนใหญ่มี **Preset (PRE)** และ **Clear (CLR)** ส
 6. สร้าง D Flip-Flop จาก NAND gates 4 ตัว (วาดแผนผัง)
 7. ต่อวงจร JK FF บน **Tinkercad** โดยใช้ IC 7473 ในโหมด Toggle และแสดงผลด้วย LED
 8. อธิบายว่าทำไมต้องมี Setup Time และ Hold Time — เกิดอะไรขึ้นถ้าละเมิดเงื่อนไขนี้
+
+</div>
