@@ -356,6 +356,40 @@ graph TD
 | **OUT** (Output AC) | `1110` | ส่งข้อมูลใน Accumulator ไปยังพอร์ตแสดงผลภายนอก (LED) |
 | **HLT** (Halt) | `1111` | หยุดการทำงานของ CPU ทั้งหมด |
 
+### แผนภาพลำดับการประมวลผลคำสั่ง (Instruction Execution Flowchart)
+แผนภูมิแสดงขั้นตอนการทำงานในแต่ละสเตตเวลา (T-States: T1–T6) ของแต่คำสั่งในระดับฮาร์ดแวร์:
+
+```mermaid
+flowchart TD
+    %% การระบุสไตล์ของบล็อก
+    classDef startEnd fill:#f8fafc,stroke:#475569,stroke-width:2px,rx:10px;
+    classDef process fill:#eff6ff,stroke:#2563eb,stroke-width:2px;
+    classDef condition fill:#fff7ed,stroke:#ea580c,stroke-width:2px;
+    classDef action fill:#ecfdf5,stroke:#059669,stroke-width:2px;
+    classDef halt fill:#fef2f2,stroke:#dc2626,stroke-width:2px;
+
+    Start([เริ่มรอบสัญญาณนาฬิกา - Fetch Cycle]) :::startEnd
+    Start --> T1["<b>T1 State:</b><br>MAR &larr; PC<br>(ส่ง Address ไปยัง MAR)"] :::process
+    T1 --> T2["<b>T2 State:</b><br>PC &larr; PC + 1<br>(เพิ่มค่าตัวชี้คำสั่ง)"] :::process
+    T2 --> T3["<b>T3 State:</b><br>IR &larr; RAM[MAR]<br>(ดึงคำสั่งเก็บเข้า IR)"] :::process
+    
+    T3 --> Dec{<b>Decode Cycle:</b><br>ถอดรหัส Opcode จาก IR[7:4]} :::condition
+    
+    Dec -- "0000 (LDA)" --> LDA["<b>Execute (T4-T6):</b><br>T4: MAR &larr; IR[3:0]<br>T5: AC &larr; RAM[MAR]<br>T6: NOP (ว่าง)"] :::action
+    Dec -- "0001 (ADD)" --> ADD["<b>Execute (T4-T6):</b><br>T4: MAR &larr; IR[3:0]<br>T5: B &larr; RAM[MAR]<br>T6: AC &larr; AC + B"] :::action
+    Dec -- "0010 (SUB)" --> SUB["<b>Execute (T4-T6):</b><br>T4: MAR &larr; IR[3:0]<br>T5: B &larr; RAM[MAR]<br>T6: AC &larr; AC - B"] :::action
+    Dec -- "1110 (OUT)" --> OUT["<b>Execute (T4-T6):</b><br>T4: Output Register &larr; AC<br>T5: NOP<br>T6: NOP"] :::action
+    Dec -- "1111 (HLT)" --> HLT["<b>Execute (T4-T6):</b><br>T4: Halt Clock<br>(หยุดการทำงานของตัวสร้างคล็อก)"] :::halt
+    
+    LDA --> End([วนรอบกลับไปเริ่ม Fetch ใหม่]) :::startEnd
+    ADD --> End
+    SUB --> End
+    OUT --> End
+    HLT --> Stop([หยุดการทำงาน - CPU Halted]) :::startEnd
+
+    End --> Start
+```
+
 ---
 
 ## 11.5 การออกแบบชิ้นส่วน CPU ด้วย Verilog
