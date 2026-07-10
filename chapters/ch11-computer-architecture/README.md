@@ -411,7 +411,7 @@
   <!-- T1 -->
   <rect x="270" y="75" width="180" height="42" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="2" filter="url(#shadow-flow)"/>
   <text x="360" y="93" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af">T1 State</text>
-  <text x="360" y="108" text-anchor="middle" font-size="11" fill="#1e40af">MAR &larr; PC (ส่ง Address ไป MAR)</text>
+  <text x="360" y="108" text-anchor="middle" font-size="11" fill="#1e40af">MAR ← PC (ส่ง Address ไป MAR)</text>
 
   <!-- Arrow T1 -> T2 -->
   <path d="M 360 117 L 360 134" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow-gray)"/>
@@ -419,7 +419,7 @@
   <!-- T2 -->
   <rect x="270" y="135" width="180" height="42" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="2" filter="url(#shadow-flow)"/>
   <text x="360" y="153" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af">T2 State</text>
-  <text x="360" y="168" text-anchor="middle" font-size="11" fill="#1e40af">PC &larr; PC + 1 (เพิ่มค่า PC)</text>
+  <text x="360" y="168" text-anchor="middle" font-size="11" fill="#1e40af">PC ← PC + 1 (เพิ่มค่า PC)</text>
 
   <!-- Arrow T2 -> T3 -->
   <path d="M 360 177 L 360 194" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow-gray)"/>
@@ -427,7 +427,7 @@
   <!-- T3 -->
   <rect x="270" y="195" width="180" height="42" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="2" filter="url(#shadow-flow)"/>
   <text x="360" y="213" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af">T3 State</text>
-  <text x="360" y="228" text-anchor="middle" font-size="11" fill="#1e40af">IR &larr; RAM[MAR] (ดึงคำสั่งเข้า IR)</text>
+  <text x="360" y="228" text-anchor="middle" font-size="11" fill="#1e40af">IR ← RAM[MAR] (ดึงคำสั่งเข้า IR)</text>
 
   <!-- Arrow T3 -> Decode -->
   <path d="M 360 237 L 360 254" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow-gray)"/>
@@ -456,25 +456,25 @@
   <!-- Execute Boxes -->
   <rect x="30" y="335" width="110" height="90" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="2" filter="url(#shadow-flow)"/>
   <text x="85" y="355" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">Execute LDA</text>
-  <text x="85" y="375" text-anchor="middle" font-size="10" fill="#065f46">T4: MAR &larr; IR[3:0]</text>
-  <text x="85" y="392" text-anchor="middle" font-size="10" fill="#065f46">T5: AC &larr; RAM[MAR]</text>
+  <text x="85" y="375" text-anchor="middle" font-size="10" fill="#065f46">T4: MAR ← IR[3:0]</text>
+  <text x="85" y="392" text-anchor="middle" font-size="10" fill="#065f46">T5: AC ← RAM[MAR]</text>
   <text x="85" y="409" text-anchor="middle" font-size="10" fill="#065f46">T6: NOP (ว่าง)</text>
 
   <rect x="170" y="335" width="110" height="90" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="2" filter="url(#shadow-flow)"/>
   <text x="225" y="355" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">Execute ADD</text>
-  <text x="225" y="375" text-anchor="middle" font-size="10" fill="#065f46">T4: MAR &larr; IR[3:0]</text>
-  <text x="225" y="392" text-anchor="middle" font-size="10" fill="#065f46">T5: B &larr; RAM[MAR]</text>
-  <text x="225" y="409" text-anchor="middle" font-size="10" fill="#065f46">T6: AC &larr; AC + B</text>
+  <text x="225" y="375" text-anchor="middle" font-size="10" fill="#065f46">T4: MAR ← IR[3:0]</text>
+  <text x="225" y="392" text-anchor="middle" font-size="10" fill="#065f46">T5: B ← RAM[MAR]</text>
+  <text x="225" y="409" text-anchor="middle" font-size="10" fill="#065f46">T6: AC ← AC + B</text>
 
   <rect x="310" y="335" width="110" height="90" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="2" filter="url(#shadow-flow)"/>
   <text x="365" y="355" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">Execute SUB</text>
-  <text x="365" y="375" text-anchor="middle" font-size="10" fill="#065f46">T4: MAR &larr; IR[3:0]</text>
-  <text x="365" y="392" text-anchor="middle" font-size="10" fill="#065f46">T5: B &larr; RAM[MAR]</text>
-  <text x="365" y="409" text-anchor="middle" font-size="10" fill="#065f46">T6: AC &larr; AC - B</text>
+  <text x="365" y="375" text-anchor="middle" font-size="10" fill="#065f46">T4: MAR ← IR[3:0]</text>
+  <text x="365" y="392" text-anchor="middle" font-size="10" fill="#065f46">T5: B ← RAM[MAR]</text>
+  <text x="365" y="409" text-anchor="middle" font-size="10" fill="#065f46">T6: AC ← AC - B</text>
 
   <rect x="440" y="335" width="110" height="90" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="2" filter="url(#shadow-flow)"/>
   <text x="495" y="355" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">Execute OUT</text>
-  <text x="495" y="375" text-anchor="middle" font-size="10" fill="#065f46">T4: OutReg &larr; AC</text>
+  <text x="495" y="375" text-anchor="middle" font-size="10" fill="#065f46">T4: OutReg ← AC</text>
   <text x="495" y="392" text-anchor="middle" font-size="10" fill="#065f46">T5: NOP (ว่าง)</text>
   <text x="495" y="409" text-anchor="middle" font-size="10" fill="#065f46">T6: NOP (ว่าง)</text>
 
