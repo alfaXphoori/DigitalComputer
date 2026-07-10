@@ -4,6 +4,8 @@
 
 ---
 
+<div class="chapter-tab-content" data-tab-name="Concept" data-tab-icon="💡" id="concept" markdown="1">
+
 ## 5.1 บทนำ
 
 **วงจรเชิงผสม (Combinational Circuit)** — เอาต์พุตขึ้นอยู่กับ **อินพุตปัจจุบัน** เท่านั้น (ไม่มีหน่วยความจำ)
@@ -762,7 +764,63 @@ $$Y_0 = D \cdot \overline{S_1}\,\overline{S_0}, \quad Y_1 = D \cdot \overline{S_
 | **7447** | BCD→7-Seg Decoder | Active LOW, common-anode |
 | **4511** | BCD→7-Seg Decoder | Active HIGH, CMOS |
 
+</div>
+
+<div class="chapter-tab-content" data-tab-name="Interactive Sim" data-tab-icon="🎮" id="sim" markdown="1">
+
+## Interactive Simulators (ห้องทดลองวงจรเชิงผสม)
+
+เครื่องมือจำลองเหล่านี้ออกแบบมาเพื่อช่วยสร้างความเข้าใจผ่านการโต้ตอบและลงมือเล่น (Simulate-First)
+
+### 1. เครื่องมือต่อและวิเคราะห์เกตเชิงตรรกะ (Combinational Logic Playground)
+สังเกตผลลัพธ์ของสมการและการทำงานร่วมกันของเกต:
+
+{% include comb-logic-demo.html %}
+
 ---
+
+### 2. เครื่องมือบวกเลขฐานสอง (Adder Lab)
+ป้อนค่าตัวตั้ง A และ B เพื่อดูการบวกเลขฐานสองและเส้นทางสัญญาณตัวทด (Carry propagation):
+
+{% include adder-demo.html %}
+
+---
+
+### 3. ตัวจำลองการถอดรหัสและแสดงผล (7-Segment Decoder Simulator)
+ปรับสวิตช์อินพุต BCD (0-9) เพื่อจำลองการถอดรหัสของไอซี 7447 ส่งออกไปยังจอแสดงผล 7-Segment (Common Anode):
+
+{% include 7seg-decoder-sim.html %}
+
+---
+
+### 4. เครื่องมือท้าทายสร้างฟังก์ชันด้วยมัลติเพล็กเซอร์ (MUX Function Builder)
+ป้อนลอจิกอินพุต 0 หรือ 1 ที่ขาสัญญาณ $I_0 - I_7$ เพื่อสร้างฟังก์ชัน $F(A,B,C) = \sum m(1,3,5,6)$ ให้ถูกต้องและกดทดสอบคำตอบ:
+
+{% include mux-builder-sim.html %}
+
+</div>
+
+<div class="chapter-tab-content" data-tab-name="Waveform / Truth Table" data-tab-icon="📊" id="waveform" markdown="1">
+
+## Reference Tables (ตารางไอซีและมาตรฐานวงจรเชิงผสม)
+
+ตารางสรุปดิจิทัลไอซีในตระกูลวงจรเชิงผสม (Combinational ICs) ที่ต้องอ้างอิงในการเรียนและการปฏิบัติงาน:
+
+| รหัส IC | ชื่อฟังก์ชันการทำงาน | รายละเอียด / หมายเหตุ |
+|:---:|:---|:---|
+| **7483** | 4-bit Full Adder | พร้อมระบบ Fast Carry (Look-Ahead) |
+| **7485** | 4-bit Magnitude Comparator | เปรียบเทียบค่า A/B สามารถต่อขยายได้ |
+| **74138** | 3-to-8 Decoder / DEMUX 1-to-8 | เอาต์พุตลอจิกเป็น Active LOW |
+| **74139** | Dual 2-to-4 Decoder | บรรจุวงจรถอดรหัส 2 ตัวในไอซีตัวเดียว |
+| **74148** | 8-to-3 Priority Encoder | เข้ารหัสตามสิทธิ์ เอาต์พุต Active LOW |
+| **74151** | 8-to-1 Multiplexer (MUX) | เลือกสัญญาณ 8 ช่อง มีเอาต์พุตปกติและ complement |
+| **74153** | Dual 4-to-1 Multiplexer | บรรจุมัลติเพล็กเซอร์ 4 ช่อง 2 วงจร |
+| **7447** | BCD-to-7-Segment Decoder | ขับหน้าจอ Common-Anode (เอาต์พุต Active LOW) |
+| **4511** | BCD-to-7-Segment Decoder | ขับหน้าจอ Common-Cathode (เอาต์พุต Active HIGH) |
+
+</div>
+
+<div class="chapter-tab-content" data-tab-name="Challenge" data-tab-icon="🏆" id="challenge" markdown="1">
 
 ## แบบฝึกหัดท้ายบท
 
@@ -774,3 +832,5 @@ $$Y_0 = D \cdot \overline{S_1}\,\overline{S_0}, \quad Y_1 = D \cdot \overline{S_
 6. เปรียบเทียบข้อดีข้อเสียของ Normal Encoder กับ Priority Encoder
 7. ต่อวงจร 4-bit Adder + 7-Segment Display บน **Tinkercad** โดยใช้ IC 7483 + 4511
 8. ออกแบบวงจร 2's complement subtractor โดยใช้ IC 7483 + NOT gates
+
+</div>
