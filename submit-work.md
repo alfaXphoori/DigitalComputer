@@ -32,7 +32,7 @@ assignments:
     topic: พีชคณิตบูลีนและทฤษฎีบทเดอมอร์แกน
     work: ใบงานที่ 5 — พิสูจน์/ลดรูปสมการลอจิก และทดสอบวงจรก่อน–หลังลดรูป
     due: ก่อนคาบสัปดาห์ที่ 6
-    form: "#"
+    form: "https://docs.google.com/forms/d/e/1FAIpQLSfKddQL9-duCFYM-L2QNzJMWUCDN8EwjJnVPZh9BrtmV1OH6Q/viewform?usp=dialog"
   - n: 6
     topic: แผนผังคาร์โนห์ (Karnaugh Map)
     work: ใบงานที่ 6 — ออกแบบวงจรจากตารางความจริง ลดรูปด้วย K-map แล้วต่อทดสอบ
@@ -46,7 +46,7 @@ assignments:
   - n: 8
     topic: วงจรเปรียบเทียบ ถอด/ลงรหัส และมัลติเพล็กเซอร์
     work: ใบงานที่ 8 — ต่อ decoder ขับ 7-segment และทดลอง MUX 74151 / DEMUX 74138
-    due: ก่อนคาบสัปดาห์ที่ 9 · 🟧 สอบกลางภาค (สัปดาห์ 1–8)
+    due: ก่อนสอบกลางภาค (สัปดาห์ 1–8)
     form: "#"
   - n: 9
     topic: สัญญาณนาฬิกาและแลตช์
@@ -81,7 +81,7 @@ assignments:
   - n: 15
     topic: แนะนำ HDL — Verilog, EDA Playground และโปรเจกต์ย่อย
     work: ใบงานที่ 15 — Verilog (full adder/counter) + testbench บน EDA Playground และส่งโปรเจกต์ย่อย (นำเสนอในคาบ)
-    due: 🟧 สอบปลายภาค (สัปดาห์ 9–15) · นำเสนอในคาบสุดท้าย
+    due:  สอบปลายภาค (สัปดาห์ 9–15) 
     form: "#"
 ---
 
