@@ -37,7 +37,7 @@ assignments:
     topic: แผนผังคาร์โนห์ (Karnaugh Map)
     work: ใบงานที่ 6 — ออกแบบวงจรจากตารางความจริง ลดรูปด้วย K-map แล้วต่อทดสอบ
     due: ก่อนคาบสัปดาห์ที่ 7
-    form: "#"
+    form: "https://docs.google.com/forms/d/e/1FAIpQLScJVc9o1rgkTPJMNXg5FvY8dPYtynkD7Mf6arcLerjLsHWoZg/viewform?usp=dialog"
   - n: 7
     topic: วงจรคอมบิเนชันและวงจรคำนวณ
     work: ใบงานที่ 7 — ต่อ Half/Full Adder และวงจรบวกขนาน 4 บิตด้วย 7483
