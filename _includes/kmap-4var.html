@@ -2,7 +2,7 @@
   <div class="kmap-header">
     <span class="kmap-title">🔬 เครื่องมือเรียนรู้ K-Map 4 ตัวแปร (Interactive K-Map Tool)</span>
   </div>
-  
+
   <div class="kmap-controls">
     <div class="kmap-presets-wrap">
       <label for="kmap-4var-preset-select">ชุดตัวอย่าง:</label>
@@ -21,98 +21,98 @@
 
   <div class="kmap-workspace">
     <div class="kmap-grid-container" style="width: 380px; height: 340px;">
-      <!-- The Grid (AB is row, CD is column) -->
+      <!-- The Grid (CD is row, AB is column) -->
       <div class="kmap-grid" style="grid-template-rows: 40px repeat(4, 75px); height: 340px;">
         <!-- Corner header cell -->
         <div class="kmap-cell kmap-cell--header kmap-cell--corner">
           <div class="kmap-diagonal" style="transform: rotate(26.5deg);"></div>
-          <span class="kmap-diag-lbl kmap-diag-lbl--bc">CD</span>
-          <span class="kmap-diag-lbl kmap-diag-lbl--a">AB</span>
+          <span class="kmap-diag-lbl kmap-diag-lbl--bc">AB</span>
+          <span class="kmap-diag-lbl kmap-diag-lbl--a">CD</span>
         </div>
-        
+
         <!-- Column headers -->
         <div class="kmap-cell kmap-cell--header">00</div>
         <div class="kmap-cell kmap-cell--header">01</div>
         <div class="kmap-cell kmap-cell--header">11</div>
         <div class="kmap-cell kmap-cell--header">10</div>
-        
-        <!-- Row 0 header (AB=00) -->
+
+        <!-- Row 0 header (CD=00) -->
         <div class="kmap-cell kmap-cell--header">00</div>
-        
+
         <!-- Row 0 cells -->
         <div class="kmap-cell kmap-cell--interactive" data-index="0">
           <span class="kmap-minterm-idx">m0</span>
           <span class="kmap-cell-val">0</span>
         </div>
-        <div class="kmap-cell kmap-cell--interactive" data-index="1">
-          <span class="kmap-minterm-idx">m1</span>
-          <span class="kmap-cell-val">0</span>
-        </div>
-        <div class="kmap-cell kmap-cell--interactive" data-index="3">
-          <span class="kmap-minterm-idx">m3</span>
-          <span class="kmap-cell-val">0</span>
-        </div>
-        <div class="kmap-cell kmap-cell--interactive" data-index="2">
-          <span class="kmap-minterm-idx">m2</span>
-          <span class="kmap-cell-val">0</span>
-        </div>
-        
-        <!-- Row 1 header (AB=01) -->
-        <div class="kmap-cell kmap-cell--header">01</div>
-        
-        <!-- Row 1 cells -->
         <div class="kmap-cell kmap-cell--interactive" data-index="4">
           <span class="kmap-minterm-idx">m4</span>
+          <span class="kmap-cell-val">0</span>
+        </div>
+        <div class="kmap-cell kmap-cell--interactive" data-index="12">
+          <span class="kmap-minterm-idx">m12</span>
+          <span class="kmap-cell-val">0</span>
+        </div>
+        <div class="kmap-cell kmap-cell--interactive" data-index="8">
+          <span class="kmap-minterm-idx">m8</span>
+          <span class="kmap-cell-val">0</span>
+        </div>
+
+        <!-- Row 1 header (CD=01) -->
+        <div class="kmap-cell kmap-cell--header">01</div>
+
+        <!-- Row 1 cells -->
+        <div class="kmap-cell kmap-cell--interactive" data-index="1">
+          <span class="kmap-minterm-idx">m1</span>
           <span class="kmap-cell-val">0</span>
         </div>
         <div class="kmap-cell kmap-cell--interactive" data-index="5">
           <span class="kmap-minterm-idx">m5</span>
           <span class="kmap-cell-val">0</span>
         </div>
-        <div class="kmap-cell kmap-cell--interactive" data-index="7">
-          <span class="kmap-minterm-idx">m7</span>
-          <span class="kmap-cell-val">0</span>
-        </div>
-        <div class="kmap-cell kmap-cell--interactive" data-index="6">
-          <span class="kmap-minterm-idx">m6</span>
-          <span class="kmap-cell-val">0</span>
-        </div>
-
-        <!-- Row 2 header (AB=11) -->
-        <div class="kmap-cell kmap-cell--header">11</div>
-        
-        <!-- Row 2 cells -->
-        <div class="kmap-cell kmap-cell--interactive" data-index="12">
-          <span class="kmap-minterm-idx">m12</span>
-          <span class="kmap-cell-val">0</span>
-        </div>
         <div class="kmap-cell kmap-cell--interactive" data-index="13">
           <span class="kmap-minterm-idx">m13</span>
-          <span class="kmap-cell-val">0</span>
-        </div>
-        <div class="kmap-cell kmap-cell--interactive" data-index="15">
-          <span class="kmap-minterm-idx">m15</span>
-          <span class="kmap-cell-val">0</span>
-        </div>
-        <div class="kmap-cell kmap-cell--interactive" data-index="14">
-          <span class="kmap-minterm-idx">m14</span>
-          <span class="kmap-cell-val">0</span>
-        </div>
-
-        <!-- Row 3 header (AB=10) -->
-        <div class="kmap-cell kmap-cell--header">10</div>
-        
-        <!-- Row 3 cells -->
-        <div class="kmap-cell kmap-cell--interactive" data-index="8">
-          <span class="kmap-minterm-idx">m8</span>
           <span class="kmap-cell-val">0</span>
         </div>
         <div class="kmap-cell kmap-cell--interactive" data-index="9">
           <span class="kmap-minterm-idx">m9</span>
           <span class="kmap-cell-val">0</span>
         </div>
+
+        <!-- Row 2 header (CD=11) -->
+        <div class="kmap-cell kmap-cell--header">11</div>
+
+        <!-- Row 2 cells -->
+        <div class="kmap-cell kmap-cell--interactive" data-index="3">
+          <span class="kmap-minterm-idx">m3</span>
+          <span class="kmap-cell-val">0</span>
+        </div>
+        <div class="kmap-cell kmap-cell--interactive" data-index="7">
+          <span class="kmap-minterm-idx">m7</span>
+          <span class="kmap-cell-val">0</span>
+        </div>
+        <div class="kmap-cell kmap-cell--interactive" data-index="15">
+          <span class="kmap-minterm-idx">m15</span>
+          <span class="kmap-cell-val">0</span>
+        </div>
         <div class="kmap-cell kmap-cell--interactive" data-index="11">
           <span class="kmap-minterm-idx">m11</span>
+          <span class="kmap-cell-val">0</span>
+        </div>
+
+        <!-- Row 3 header (CD=10) -->
+        <div class="kmap-cell kmap-cell--header">10</div>
+
+        <!-- Row 3 cells -->
+        <div class="kmap-cell kmap-cell--interactive" data-index="2">
+          <span class="kmap-minterm-idx">m2</span>
+          <span class="kmap-cell-val">0</span>
+        </div>
+        <div class="kmap-cell kmap-cell--interactive" data-index="6">
+          <span class="kmap-minterm-idx">m6</span>
+          <span class="kmap-cell-val">0</span>
+        </div>
+        <div class="kmap-cell kmap-cell--interactive" data-index="14">
+          <span class="kmap-minterm-idx">m14</span>
           <span class="kmap-cell-val">0</span>
         </div>
         <div class="kmap-cell kmap-cell--interactive" data-index="10">
@@ -120,7 +120,7 @@
           <span class="kmap-cell-val">0</span>
         </div>
       </div>
-      
+
       <!-- SVG Overlay for drawing loops -->
       <svg class="kmap-svg" viewBox="0 0 380 340" preserveAspectRatio="xMidYMid meet" style="height: 340px;">
         <g id="kmap-4var-loops-group"></g>
